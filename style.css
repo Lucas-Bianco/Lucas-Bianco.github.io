@@ -1,575 +1,214 @@
-/*
-  Credit: Lucas Bianco
-  Source: https://github.com/Lucas-Bianco
-  License: MIT
-  The ONE stylesheet for the portfolio. Layout copied from the Tri-County FRC site.
-*/
-
-/* google fonts */
-@import url("https://fonts.googleapis.com/css2?family=League+Gothic&family=Source+Sans+3:wght@400;700&display=swap");
-
 /* =-=-=-=-=-=-=-=-=--
-   COLOR AND FONTS. Changes here will affect the whole site.
+   Lucas Bianco - personal site
+   One page, one stylesheet. Colors and fonts up top.
 =-=-=-=-=-=-=-=-=-- */
 :root {
-  --ink: #14161c;         /* dark bands + nav */
-  --ink-dark: #0d0f13;    /* footer */
-  --accent: #4fd1c5;      /* teal: tags, nav underline, buttons */
-  --text: #3d4352;        /* normal paragraph text */
-  --grey-bg: #f3f4f7;     /* light grey band behind sections */
-  --line: #d9dce6;        /* thin borders */
-  --white: #ffffff;
+  --bg: #fbfaf7;          /* warm off-white */
+  --text: #1f1f1d;
+  --muted: #6b6a66;       /* dates, notes */
+  --line: #e6e3dc;
+  --link: #9a3f1d;        /* rust, only used for links */
+  --todo: #fff1a8;
 
-  --heading-font: "League Gothic", "Arial Narrow", sans-serif;
-  --body-font: "Source Sans 3", Arial, sans-serif;
+  --font: ui-sans-serif, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
 
+/* dark mode follows the visitor's system setting */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161615;
+    --text: #e8e6e1;
+    --muted: #96948e;
+    --line: #2c2b28;
+    --link: #e39a72;
+    --todo: #5a4d12;
+  }
+}
+
+
 /* =-=-=-=-=-=-=-=-=--
-   GLOBAL RESETS
+   BASICS
 =-=-=-=-=-=-=-=-=-- */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-img {
-  max-width: 100%;          /* images never overflow on phones */
-  display: block;
-}
-
-/* =-=-=-=-=-=-=-=-=--
-   BODY AND TEXT
-=-=-=-=-=-=-=-=-=-- */
-html {
-  scroll-padding-top: 80px;  /* links like projects.html#jarvis stop below the sticky nav */
-}
-
 body {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background-color: var(--white);
+  background: var(--bg);
   color: var(--text);
-  font-family: var(--body-font);
-  font-size: 18px;
-  line-height: 1.6;
-  overflow-x: clip;         /* no sideways scrolling (clip keeps the sticky nav working) */
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
 }
 
-main { flex: 1; }
+/* the whole site is one narrow column, like a page of a resume */
+.page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 96px 20px 64px;
+}
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--heading-font);
-  font-weight: 400;          /* League Gothic is already bold-looking */
-  text-transform: uppercase;
-  line-height: 1;
-  color: var(--ink);
+h1 { font-size: 24px; font-weight: 600; letter-spacing: -0.01em; }
+h2 {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
   margin-bottom: 16px;
 }
+h3 { font-size: 16px; font-weight: 500; }
 
-h1 { font-size: 88px; }
-h2 { font-size: 48px; }
-h3 { font-size: 30px; }
-h4 { font-size: 24px; }
+p + p { margin-top: 12px; }
 
-p { margin-bottom: 16px; max-width: 65ch; }
+a {
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: color-mix(in srgb, var(--link) 35%, transparent);
+  transition: text-decoration-color 0.2s;
+}
+a:hover { text-decoration-color: var(--link); }
 
-a { color: var(--ink); }
+section { margin-top: 56px; }
+
+/* yellow highlight = something Lucas still needs to fill in */
+.todo { background: var(--todo); padding: 0 4px; border-radius: 3px; font-size: 14px; }
+
 
 /* =-=-=-=-=-=-=-=-=--
-   NAVIGATION BAR
+   INTRO
 =-=-=-=-=-=-=-=-=-- */
-nav {
-  background-color: var(--ink);
-  border-bottom: 3px solid var(--accent);
-  position: sticky;          /* nav stays at the top while you scroll */
-  top: 0;
-  z-index: 10;
-}
+.subtitle { color: var(--muted); margin-bottom: 20px; }
 
-nav ul {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;            /* lines the nav up with the page content */
+.inline-links {
   list-style: none;
   display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
-
-nav li { height: 64px; }
-
-nav a {
-  height: 100%;
-  padding: 0 22px;
-  display: flex;
-  align-items: center;
-  color: var(--white);
-  text-decoration: none;
-  text-transform: uppercase;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 2px;
-}
-
-nav a:hover { color: var(--accent); }
-
-/* the link for the page you are on */
-nav a.active { color: var(--accent); }
-
-/* pushes the logo to the left, links to the right */
-nav li:first-child { margin-right: auto; }
-
-.logo-container span {
-  font-family: var(--heading-font);
-  font-size: 30px;
-  font-weight: 400;
-  letter-spacing: 1px;
-  color: var(--white);
-}
-
-nav svg { fill: var(--white); }
-
-/* =-=-=-=-=-=-=-=-=--
-   SIDEBAR (MOBILE NAV)
-=-=-=-=-=-=-=-=-=-- */
-.sidebar {
-  position: fixed;
-  top: 0;
-  right: 0;
-  height: 100vh;
-  width: 260px;
-  z-index: 20;
-  background-color: var(--ink);
-  border-left: 3px solid var(--accent);
-  box-shadow: -10px 0 20px rgba(0, 0, 0, 0.3);
-  display: none;             /* hidden until the menu button adds "open" */
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  overflow-y: auto;          /* lets the menu scroll on short phones */
-}
-
-.sidebar.open { display: flex; }
-
-.sidebar li,
-.sidebar a { width: 100%; }
-
-/* =-=-=-=-=-=-=-=-=--
-   MENU BUTTON (HAMBURGER ICON)
-=-=-=-=-=-=-=-=-=-- */
-.menu-button { display: none; }  /* only shown on small screens, below */
-
-/* =-=-=-=-=-=-=-=-=--
-   PAGE LAYOUT
-=-=-=-=-=-=-=-=-=-- */
-.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-
-.section { padding: 80px 0; }
-
-.section-dark { background-color: var(--ink); color: #cfd3dc; }
-
-.section-dark h1,
-.section-dark h2,
-.section-dark h3,
-.section-dark h4,
-.section-dark a { color: var(--white); }
-
-.section-grey { background-color: var(--grey-bg); }
-
-.title-bar {
-  display: flex;
-  align-items: center;
   flex-wrap: wrap;
-  gap: 16px;
-  background-color: var(--ink);
-  padding: 14px 24px;
-  margin-bottom: 40px;
+  gap: 8px 20px;
+  margin-top: 20px;
 }
 
-.title-bar h2 { color: var(--white); font-size: 38px; margin-bottom: 0; }
+.plain-list { padding-left: 18px; }
+.plain-list li + li { margin-top: 4px; }
+.plain-list li::marker { color: var(--muted); }
 
-.two-columns {
+.note { color: var(--muted); font-size: 13px; margin-top: 12px; }
+
+
+/* =-=-=-=-=-=-=-=-=--
+   PROJECTS (click to open)
+=-=-=-=-=-=-=-=-=-- */
+.project { border-top: 1px solid var(--line); }
+.project:last-child { border-bottom: 1px solid var(--line); }
+
+.project summary {
+  list-style: none;           /* hide the default triangle */
+  cursor: pointer;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 48px;
-  align-items: center;
+  grid-template-columns: 1fr auto;
+  gap: 2px 16px;
+  padding: 14px 0;
 }
+.project summary::-webkit-details-marker { display: none; }
 
-/* Three cards in a row. Stacks on phones. */
-.three-columns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-
-/* one box inside two-columns / three-columns */
-.column { min-width: 0; }  /* long words can't stretch the grid wider than the screen */
-
-/* =-=-=-=-=-=-=-=-=--
-   PAGE HERO (big intro at the top of a page)
-=-=-=-=-=-=-=-=-=-- */
-.hero { padding: 100px 0; }
-
-.hero-text { font-size: 21px; margin-bottom: 32px; }
-
-/* photo of me on the home page hero */
-.hero img {
-  width: 100%;
-  max-width: 420px;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  justify-self: end;
-  border-radius: 8px;
-  border: 3px solid var(--accent);
-}
-
-/* =-=-=-=-=-=-=-=-=--
-   SMALL PIECES
-=-=-=-=-=-=-=-=-=-- */
-.tag {
+.project-name { font-weight: 500; }
+.project-name::after {          /* small + that turns into a - when open */
+  content: "+";
   display: inline-block;
-  background-color: var(--accent);
-  color: var(--ink);
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  padding: 5px 10px;
-  margin-bottom: 16px;
+  margin-left: 8px;
+  color: var(--muted);
+  transition: transform 0.25s;
 }
+.project[open] .project-name::after { transform: rotate(45deg); }
 
-.title-bar .tag { margin-bottom: 0; }
+.project-year { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+.project-blurb { grid-column: 1 / -1; color: var(--muted); }
 
-.button {
-  display: inline-block;
-  padding: 14px 24px;
-  border: 2px solid var(--ink);
-  color: var(--ink);
-  text-decoration: none;
-  text-transform: uppercase;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  transition: background-color 0.2s, color 0.2s;
-}
+.project summary:hover .project-name { color: var(--link); }
 
-.button:hover { background-color: var(--ink); color: var(--white); }
+.project-body { padding: 4px 0 20px; }
+.project[open] .project-body { animation: open-up 0.3s ease-out; }
 
-.button-accent {
-  background-color: var(--accent);
-  border-color: var(--accent);
-  color: var(--ink);
-}
+.stack { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+.links { display: flex; gap: 20px; }
 
-.button-accent:hover {
-  background-color: var(--white);
-  border-color: var(--white);
-  color: var(--ink);
-}
-
-.section-dark .button { border-color: var(--white); color: var(--white); }
-
-.section-dark .button:hover { background-color: var(--white); color: var(--ink); }
-
-.section-dark .button-accent { border-color: var(--accent); color: var(--ink); }
-
-.button-row { display: flex; flex-wrap: wrap; gap: 12px; }
-
-/* Fill-in text Lucas still has to replace (yellow so it stands out) */
-.todo { background-color: #fff3c4; color: #5c4700; outline: 1px dashed #b08900; }
-
-/* a one-line plain measured fact, e.g. "99 real phone scans · 100% precision" */
-.stat-line {
-  font-weight: 700;
-  color: var(--ink);
-  border-left: 3px solid var(--accent);
-  padding-left: 12px;
-}
-
-.section-dark .stat-line { color: var(--white); }
-
-/* a list of skills shown as small pill tags */
-.skill-list {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.skill-list li {
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background-color: var(--white);
-  padding: 4px 14px;
-  font-size: 14px;
-}
 
 /* =-=-=-=-=-=-=-=-=--
-   CARDS
+   EXPERIENCE / EDUCATION
 =-=-=-=-=-=-=-=-=-- */
-.card {
-  background-color: var(--white);
-  color: var(--text);
-  border: 1px solid var(--line);
-  border-top: 3px solid var(--accent);
-  padding: 28px;
+.timeline { list-style: none; }
+.timeline li {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 16px;
 }
+.timeline li + li { margin-top: 20px; }
+.timeline p { color: var(--muted); }
+.when { font-family: var(--mono); font-size: 13px; color: var(--muted); padding-top: 2px; }
 
-.card h3 { margin-bottom: 8px; }
-
-.card p:last-child { margin-bottom: 0; }
-
-.section-dark .card h3 { color: var(--ink); }  /* cards stay white, so keep headings dark */
-
-/* small uppercase line under a card heading, e.g. "2026 · Python · Computer vision" */
-.card-meta {
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: #6b7285;
-  margin-bottom: 14px;
-}
-
-/* "View project ->" style link at the bottom of a card */
-.card-link {
-  display: inline-block;
-  margin-top: 8px;
-  font-size: 14px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: var(--ink);
-  text-decoration: none;
-  border-bottom: 2px solid var(--accent);
-}
-
-.section-dark .card .card-link { color: var(--ink); }
-
-.card-link:hover { color: #2a9d93; }
 
 /* =-=-=-=-=-=-=-=-=--
-   TIMELINE (ol of dated steps)
+   SKILLS
 =-=-=-=-=-=-=-=-=-- */
-.timeline { list-style: none; border-left: 3px solid var(--line); margin-left: 6px; }
+.skills { display: grid; grid-template-columns: 96px 1fr; gap: 8px 16px; }
+.skills dt { color: var(--muted); }
 
-.timeline-item { position: relative; padding: 0 0 28px 28px; }
-
-/* the small teal dot on the line */
-.timeline-item::before {
-  content: "";
-  position: absolute;
-  left: -9px;
-  top: 6px;
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  background-color: var(--accent);
-}
-
-.timeline-date {
-  display: block;
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: #6b7285;
-  margin-bottom: 4px;
-}
 
 /* =-=-=-=-=-=-=-=-=--
    FOOTER
 =-=-=-=-=-=-=-=-=-- */
-footer {
-  background-color: var(--ink-dark);
-  border-top: 3px solid var(--accent);
-  color: #a9aebb;
-  font-size: 15px;
-}
+.footer { margin-top: 72px; padding-top: 20px; border-top: 1px solid var(--line); }
 
-footer ul { list-style: none; }
-
-footer a { color: #d5d8e0; text-decoration: none; }
-
-footer a:hover { color: var(--accent); }
-
-/* Four columns */
-.footer-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1.3fr;
-  gap: 48px;
-  padding-top: 64px;
-  padding-bottom: 48px;
-}
-
-.footer-logo { display: inline-block; margin-bottom: 16px; }
-
-.footer-logo span {
-  font-family: var(--heading-font);
-  font-size: 34px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--white);
-}
-
-.footer-about { max-width: 34ch; margin-bottom: 24px; }
-
-/* Small teal column titles */
-.footer-heading {
-  font-family: var(--body-font);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  color: var(--accent);
-  margin-bottom: 18px;
-}
-
-.footer-links li { margin-bottom: 10px; }
-
-footer address { font-style: normal; line-height: 1.7; }
-
-/* Round social media buttons */
-.social-links { display: flex; gap: 10px; }
-
-.social-links a {
-  width: 42px;
-  height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 50%;
-  color: var(--white);
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
-}
-
-.social-links a:hover {
-  background-color: var(--accent);
-  border-color: var(--accent);
-  color: var(--ink);
-}
-
-.social-links svg {
-  width: 20px;
-  height: 20px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.footer-bottom {
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-  padding: 20px 0;
-  font-size: 13px;
-  color: #858b99;
-}
-
-.footer-bottom p { margin-bottom: 0; max-width: none; }
 
 /* =-=-=-=-=-=-=-=-=--
-   SCROLL-DRIVEN EFFECTS (CSS only, kept subtle)
-   Only runs in browsers that support scroll timelines AND when the
-   visitor has not asked for reduced motion. Otherwise everything
-   is simply visible and the progress bar is hidden.
+   ANIMATIONS (kept small on purpose)
+   - sections fade in one after another on load
+   - project rows rise slightly as you scroll to them
+   - opening a project slides its text in
+   Everything is skipped if the visitor asked for reduced motion.
 =-=-=-=-=-=-=-=-=-- */
-.scroll-progress { display: none; }  /* hidden unless the block below turns it on */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes open-up {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: none; }
+}
 
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
+@media (prefers-reduced-motion: no-preference) {
+  .fade-in { animation: fade-up 0.6s ease-out both; }
+  .delay-1 { animation-delay: 0.08s; }
+  .delay-2 { animation-delay: 0.16s; }
+  .delay-3 { animation-delay: 0.24s; }
+  .delay-4 { animation-delay: 0.32s; }
 
-    /* thin teal bar at the very top that fills as you scroll the page */
-    .scroll-progress {
-      display: block;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 3px;
-      z-index: 30;
-      background-color: var(--accent);
-      transform-origin: left;
-      animation: grow-bar linear both;
-      animation-timeline: scroll(root);
-    }
-
-    /* fade in + rise 24px as it scrolls into view */
+  /* scroll-driven, only in browsers that support it */
+  @supports (animation-timeline: view()) {
     .reveal {
-      animation: rise-in linear both;
+      animation: fade-up linear both;
       animation-timeline: view();
-      animation-range: entry 0% entry 60%;
-    }
-
-    /* fade in + slide 24px from the left */
-    .reveal-left {
-      animation: slide-in linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 60%;
-    }
-
-    /* same as above, just a little later (put it next to .reveal or .reveal-left) */
-    .reveal-delay { animation-range: entry 15% entry 75%; }
-
-    /* hero content fades and moves up a little as you scroll past it */
-    .hero-fade {
-      animation: fade-up-out linear both;
-      animation-timeline: view();
-      animation-range: exit 0% exit 100%;
-    }
-
-    @keyframes grow-bar {
-      from { transform: scaleX(0); }
-      to   { transform: scaleX(1); }
-    }
-
-    @keyframes rise-in {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes slide-in {
-      from { opacity: 0; transform: translateX(-24px); }
-      to   { opacity: 1; transform: translateX(0); }
-    }
-
-    @keyframes fade-up-out {
-      from { opacity: 1; transform: translateY(0); }
-      to   { opacity: 0; transform: translateY(-24px); }
+      animation-range: entry 0% entry 40%;
     }
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .project[open] .project-body { animation: none; }
+}
+
 
 /* =-=-=-=-=-=-=-=-=--
-   RESPONSIVE DESIGN
+   PHONES
 =-=-=-=-=-=-=-=-=-- */
-
-/* Tablets and phones (below 800px wide) */
-@media (max-width: 800px) {
-  .hideOnMobile { display: none; }  /* hide normal nav links */
-  .menu-button { display: block; }  /* show hamburger icon */
-
-  h1 { font-size: 56px; }
-  h2 { font-size: 40px; }
-
-  .container { padding: 0 16px; }   /* 16px side gutter */
-  .section { padding: 56px 0; }
-  .hero { padding: 64px 0; }
-
-  .two-columns,
-  .three-columns {
-    grid-template-columns: 1fr;   /* stack everything */
-    gap: 24px;
-  }
-
-  .title-bar { padding: 12px 16px; }
-
-  .footer-grid {
-    grid-template-columns: 1fr 1fr;   /* 2 x 2 footer columns */
-    gap: 40px 32px;
-  }
-
-  .footer-brand { grid-column: 1 / -1; }  /* brand column spans the full width */
+@media (max-width: 520px) {
+  .page { padding-top: 56px; }
+  .timeline li, .skills { grid-template-columns: 1fr; gap: 2px; }
+  .skills dd { margin-bottom: 8px; }
 }
 
-/* Very small phones (below 500px wide) */
-@media (max-width: 500px) {
-  .sidebar { width: 100%; }  /* sidebar fills the screen */
-  .logo-container span { font-size: 24px; }
-  .footer-grid { grid-template-columns: 1fr; }  /* one column on small phones */
-}
+
+/* =-=-=-=-=-=-=-=-=--
+   404 PAGE
+=-=-=-=-=-=-=-=-=-- */
+.not-found { min-height: 70vh; display: flex; flex-direction: column; justify-content: center; }
