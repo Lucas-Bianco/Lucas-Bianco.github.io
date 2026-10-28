@@ -1,0 +1,261 @@
+<!--
+  Credit: Lucas Bianco
+  Source: https://github.com/Lucas-Bianco
+  License: MIT
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About | Lucas Bianco</title>
+  <!-- ===========================
+       SEARCH ENGINE + SHARING INFO
+       =========================== -->
+  <!-- Short summary shown under the link in Google results -->
+  <meta name="description" content="About Lucas Bianco, a student at Tri-County RVTHS in Franklin, MA: skills, a 2026 project timeline, and hobbies in robotics, 3D printing, and PC building.">
+  <meta name="author" content="Lucas Bianco">
+  <!-- The one "official" address for this page -->
+  <link rel="canonical" href="https://lucas-bianco.github.io/about.html">
+  <!-- Preview card when the link is shared (iMessage, Discord, LinkedIn, X) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Lucas Bianco">
+  <meta property="og:title" content="About | Lucas Bianco">
+  <meta property="og:description" content="About Lucas Bianco, a student at Tri-County RVTHS in Franklin, MA: skills, a 2026 project timeline, and hobbies in robotics, 3D printing, and PC building.">
+  <meta property="og:url" content="https://lucas-bianco.github.io/about.html">
+  <meta property="og:image" content="https://lucas-bianco.github.io/assets/me.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- Tab icon -->
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <meta name="theme-color" content="#14161c">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- thin bar that fills as you scroll (CSS only) -->
+  <div class="scroll-progress" aria-hidden="true"></div>
+
+  <!-- ===========================
+       NAVIGATION BAR
+       =========================== -->
+  <nav>
+    <!-- SIDEBAR MENU (MOBILE VIEW) -->
+    <ul class="sidebar">
+      <li onclick="hideSidebar()"><a href="#" aria-label="Close menu">
+        <svg xmlns="http://www.w3.org/2000/svg" height="26" width="26" viewBox="0 96 960 960"><path d="m249 849-42-42 231-231-231-231 42-42 231 231 231-231 42 42-231 231 231 231-42 42-231-231-231 231Z"/></svg>
+      </a></li>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="about.html" class="active">About</a></li>
+      <li><a href="https://github.com/Lucas-Bianco">GitHub</a></li>
+    </ul>
+
+    <!-- MAIN NAVBAR (DESKTOP VIEW) -->
+    <ul>
+      <li><a href="index.html" class="logo-container"><span>Lucas Bianco</span></a></li>
+      <li class="hideOnMobile"><a href="index.html">Home</a></li>
+      <li class="hideOnMobile"><a href="projects.html">Projects</a></li>
+      <li class="hideOnMobile"><a href="about.html" class="active">About</a></li>
+      <li class="hideOnMobile"><a href="https://github.com/Lucas-Bianco">GitHub</a></li>
+      <li class="menu-button" onclick="showSidebar()"><a href="#" aria-label="Open menu">
+        <svg xmlns="http://www.w3.org/2000/svg" height="26" width="26" viewBox="0 96 960 960"><path d="M120 816v-60h720v60H120Z M120 606v-60h720v60H120Z M120 396v-60h720v60H120Z"/></svg>
+      </a></li>
+    </ul>
+  </nav>
+
+  <script>
+    // Open/close the mobile sidebar by adding/removing the "open" class (styles live in style.css)
+    function showSidebar() { document.querySelector('.sidebar').classList.add('open') }
+    function hideSidebar() { document.querySelector('.sidebar').classList.remove('open') }
+  </script>
+
+  <main>
+
+    <!-- ===========================
+         PAGE HEADER
+         =========================== -->
+    <section class="section section-dark">
+      <div class="container">
+        <!-- hero-fade: content drifts up a little as you scroll past (CSS only) -->
+        <div class="hero-fade">
+          <span class="tag">About</span>
+          <h1>Hi, I'm Lucas</h1>
+          <p>I'm a <span class="todo">grade / class year</span> student at Tri-County RVTHS in Franklin, MA. I like building things that are a little too ambitious, then figuring out how to finish them.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ===========================
+         SKILLS
+         =========================== -->
+    <section class="section">
+      <div class="container">
+        <div class="title-bar">
+          <span class="tag">Skills</span>
+          <h2>What I Work With</h2>
+        </div>
+
+        <!-- three cards side by side (stack on mobile) -->
+        <div class="three-columns">
+          <div class="column card reveal">
+            <h3>Software</h3>
+            <ul class="skill-list">
+              <li>Python</li>
+              <li>JavaScript</li>
+              <li>HTML/CSS</li>
+              <li>FastAPI</li>
+              <li>React</li>
+              <li>Svelte</li>
+              <li>OpenCV / computer vision</li>
+              <li>Git</li>
+            </ul>
+          </div>
+          <div class="column card reveal reveal-delay">
+            <h3>Hardware</h3>
+            <ul class="skill-list">
+              <li>Raspberry Pi</li>
+              <li>Linux</li>
+            </ul>
+          </div>
+          <div class="column card reveal reveal-delay">
+            <h3>Making</h3>
+            <ul class="skill-list">
+              <li>SolidWorks</li>
+              <li>3D printing</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ===========================
+         THIS YEAR (TIMELINE)
+         =========================== -->
+    <section class="section section-grey">
+      <div class="container">
+        <div class="title-bar">
+          <span class="tag">2026</span>
+          <h2>This Year So Far</h2>
+        </div>
+
+        <!-- each item fades in as it scrolls into view -->
+        <ol class="timeline">
+          <li class="timeline-item reveal">
+            <span class="timeline-date">Jul</span>
+            <h3>ForexAI: backtests, then a pivot</h3>
+            <p>I built a signal scanner, then tested it honestly. Short-term direction had no real edge, so I turned it into a research and journal tool.</p>
+          </li>
+          <li class="timeline-item reveal">
+            <span class="timeline-date">Jul</span>
+            <h3>Pokémon card platform, phases 0–1c</h3>
+            <p>Photo in, card ID and price out. I set up the catalog, recognition, and scan testing on real phone photos.</p>
+          </li>
+          <li class="timeline-item reveal">
+            <span class="timeline-date">Jul</span>
+            <h3>HexaFlow site for NASA HUNCH</h3>
+            <p>A project website with a 3D model for my school's NASA HUNCH nanolab team.</p>
+          </li>
+          <li class="timeline-item reveal">
+            <span class="timeline-date">Aug–Sep</span>
+            <h3>Tri-County FRC revival + website</h3>
+            <p>Helping bring back a FIRST Robotics team for the 2027 rookie season, and hand-building the team site.</p>
+          </li>
+          <li class="timeline-item reveal">
+            <span class="timeline-date">Sep</span>
+            <h3>MakerWorld model sets started</h3>
+            <p>Designing printable model sets in SolidWorks and fit-testing SKÅDIS and Gridfinity parts. Still in progress.</p>
+          </li>
+          <li class="timeline-item reveal">
+            <span class="timeline-date">Sep–Oct</span>
+            <h3>Jarvis stage 0 + 1A deployed</h3>
+            <p>A local-first home hub on Raspberry Pis: wall kiosk, touchscreen, and phone app. I use it every day.</p>
+          </li>
+          <li class="timeline-item reveal">
+            <span class="timeline-date">Oct</span>
+            <h3>Paelyx Systems started</h3>
+            <p>An early-stage defense-tech site. In progress.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+
+    <!-- ===========================
+         HOBBIES
+         =========================== -->
+    <section class="section">
+      <div class="container">
+        <div class="title-bar">
+          <span class="tag">Off the clock</span>
+          <h2>Hobbies</h2>
+        </div>
+
+        <div class="reveal">
+          <ul class="skill-list">
+            <li>Robotics</li>
+            <li>3D printing</li>
+            <li>PC building</li>
+            <li>Photography</li>
+            <li>Video</li>
+            <li>Music</li>
+            <li>Sports</li>
+            <li>Pokémon</li>
+          </ul>
+          <p>A lot of my projects start as hobbies that got out of hand.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ===========================
+         CALL TO ACTION
+         =========================== -->
+    <section class="section section-dark">
+      <div class="container reveal">
+        <h2>See the work</h2>
+        <div class="button-row">
+          <a class="button button-accent" href="projects.html">View Projects</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer (KEEP SAME ON EACH PAGE) -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="footer-logo"><span>Lucas Bianco</span></a>
+        <p class="footer-about">Student builder from Franklin, MA: robots, AI, 3D printing, and websites.</p>
+        <ul class="social-links">
+          <li><a href="https://github.com/Lucas-Bianco" aria-label="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"/></svg></a></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="footer-heading">Explore</h2>
+        <ul class="footer-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="projects.html">Projects</a></li>
+          <li><a href="about.html" class="active">About</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="footer-heading">Elsewhere</h2>
+        <ul class="footer-links">
+          <li><a href="https://github.com/Lucas-Bianco">GitHub</a></li>
+          <li><a href="https://lucas-bianco.github.io/pokemon-card-platform/">Card Platform</a></li>
+          <li><span class="todo">MakerWorld profile link</span></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="footer-heading">Contact</h2>
+        <address>Franklin, MA<br><span class="todo">your contact email</span></address>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container"><p>&copy; 2026 Lucas Bianco</p></div>
+    </div>
+  </footer>
+</body>
+</html>

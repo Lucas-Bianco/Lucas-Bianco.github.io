@@ -1,0 +1,359 @@
+<!--
+  Credit: Lucas Bianco
+  Source: https://github.com/Lucas-Bianco
+  License: MIT
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects | Lucas Bianco</title>
+  <!-- ===========================
+       SEARCH ENGINE + SHARING INFO
+       =========================== -->
+  <!-- Short summary shown under the link in Google results -->
+  <meta name="description" content="Projects by Lucas Bianco: a Pokémon card recognition app, a Raspberry Pi Jarvis home hub, the Tri-County FRC robotics team site, forex backtesting research, and more.">
+  <meta name="author" content="Lucas Bianco">
+  <!-- The one "official" address for this page -->
+  <link rel="canonical" href="https://lucas-bianco.github.io/projects.html">
+  <!-- Preview card when the link is shared (iMessage, Discord, LinkedIn, X) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Lucas Bianco">
+  <meta property="og:title" content="Projects | Lucas Bianco">
+  <meta property="og:description" content="Projects by Lucas Bianco: a Pokémon card recognition app, a Raspberry Pi Jarvis home hub, the Tri-County FRC robotics team site, forex backtesting research, and more.">
+  <meta property="og:url" content="https://lucas-bianco.github.io/projects.html">
+  <meta property="og:image" content="https://lucas-bianco.github.io/assets/me.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- Tab icon -->
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <meta name="theme-color" content="#14161c">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- thin bar that fills as you scroll (CSS only) -->
+  <div class="scroll-progress" aria-hidden="true"></div>
+
+  <!-- ===========================
+       NAVIGATION BAR
+       =========================== -->
+  <nav>
+    <!-- SIDEBAR MENU (MOBILE VIEW) -->
+    <ul class="sidebar">
+      <li onclick="hideSidebar()"><a href="#" aria-label="Close menu">
+        <svg xmlns="http://www.w3.org/2000/svg" height="26" width="26" viewBox="0 96 960 960"><path d="m249 849-42-42 231-231-231-231 42-42 231 231 231-231 42 42-231 231 231 231-42 42-231-231-231 231Z"/></svg>
+      </a></li>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="projects.html" class="active">Projects</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="https://github.com/Lucas-Bianco">GitHub</a></li>
+    </ul>
+
+    <!-- MAIN NAVBAR (DESKTOP VIEW) -->
+    <ul>
+      <li><a href="index.html" class="logo-container"><span>Lucas Bianco</span></a></li>
+      <li class="hideOnMobile"><a href="index.html">Home</a></li>
+      <li class="hideOnMobile"><a href="projects.html" class="active">Projects</a></li>
+      <li class="hideOnMobile"><a href="about.html">About</a></li>
+      <li class="hideOnMobile"><a href="https://github.com/Lucas-Bianco">GitHub</a></li>
+      <li class="menu-button" onclick="showSidebar()"><a href="#" aria-label="Open menu">
+        <svg xmlns="http://www.w3.org/2000/svg" height="26" width="26" viewBox="0 96 960 960"><path d="M120 816v-60h720v60H120Z M120 606v-60h720v60H120Z M120 396v-60h720v60H120Z"/></svg>
+      </a></li>
+    </ul>
+  </nav>
+
+  <script>
+    // Open/close the mobile sidebar by adding/removing the "open" class (styles live in style.css)
+    function showSidebar() { document.querySelector('.sidebar').classList.add('open') }
+    function hideSidebar() { document.querySelector('.sidebar').classList.remove('open') }
+  </script>
+
+  <main>
+
+    <!-- ===========================
+         PAGE HEADER
+         =========================== -->
+    <section class="section section-dark">
+      <div class="container">
+        <div class="hero-fade">
+          <span class="tag">Everything I've built</span>
+          <h1>Projects</h1>
+          <p>Software, robots, websites, and 3D prints. Here is what each one is, what I used, and what I learned building it.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ===========================
+         1. POKEMON CARD PLATFORM
+         =========================== -->
+    <section class="section" id="card-platform">
+      <div class="container">
+        <div class="title-bar">
+          <span class="tag">2026 · Python + computer vision</span>
+          <h2>Pokémon Card Recognition Platform</h2>
+        </div>
+
+        <div class="two-columns">
+          <!-- left: what it is / what I learned -->
+          <div class="column reveal-left">
+            <p>You take a photo of a Pokémon card and the app tells you which card it is and what it's worth. It matches the photo against a catalog of 20,444 cards using CLIP image embeddings, a FAISS search index, and OCR to read the card text.</p>
+            <p>The hard part was finding the card in a messy phone photo. I tested 99 real phone scans and scored each detection strategy by whether recognition got the right card. That raised detection coverage from 31% to 63% with zero regressions. It taught me to measure every change instead of guessing.</p>
+          </div>
+
+          <!-- right: quick facts card -->
+          <div class="column reveal reveal-delay">
+            <div class="card">
+              <p class="card-meta">Built with</p>
+              <ul class="skill-list">
+                <li>Python</li>
+                <li>FastAPI</li>
+                <li>React PWA</li>
+                <li>CLIP</li>
+                <li>FAISS</li>
+                <li>OCR</li>
+              </ul>
+              <p class="stat-line">99 real phone scans · 100% precision when it commits</p>
+              <a class="card-link" href="https://lucas-bianco.github.io/pokemon-card-platform/">Live site</a>
+              <a class="card-link" href="https://github.com/Lucas-Bianco/pokemon-card-platform">Code on GitHub</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ===========================
+         2. JARVIS HOME HUB
+         =========================== -->
+    <section class="section section-grey" id="jarvis">
+      <div class="container">
+        <div class="title-bar">
+          <span class="tag">2026 · Raspberry Pi 5</span>
+          <h2>Jarvis Home Hub</h2>
+        </div>
+
+        <div class="two-columns">
+          <div class="column reveal-left">
+            <p>Jarvis is my own home hub: a wall kiosk, a touchscreen, and a phone app that show my goals, daily plan, calendar, and a radar of my projects. It runs on Raspberry Pi 5 boards and talks to my phone over Tailscale.</p>
+            <p>I made it local-first, so the AI runs on local Ollama models and it costs nothing to run. The first stages (Stage 0 and 1A) are deployed and I use them every day. Building it in small stages kept it working the whole time.</p>
+          </div>
+
+          <div class="column reveal reveal-delay">
+            <div class="card">
+              <p class="card-meta">Built with</p>
+              <ul class="skill-list">
+                <li>Raspberry Pi 5</li>
+                <li>Python</li>
+                <li>FastAPI</li>
+                <li>Svelte</li>
+                <li>Ollama</li>
+                <li>Tailscale</li>
+              </ul>
+              <p class="stat-line">Stage 0 + 1A deployed · in daily use</p>
+              <span class="todo">Link or photo of Jarvis</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ===========================
+         3. TRI-COUNTY FRC
+         =========================== -->
+    <section class="section" id="frc">
+      <div class="container">
+        <div class="title-bar">
+          <span class="tag">2026 · HTML/CSS</span>
+          <h2>Tri-County FRC Team &amp; Website</h2>
+        </div>
+
+        <div class="two-columns">
+          <div class="column reveal-left">
+            <p>I'm helping revive a FIRST Robotics Competition team at Tri-County RVTHS for the 2027 rookie season. Part of that is the team website, which I built by hand in plain HTML and CSS.</p>
+            <p>Starting a team from scratch means a lot more than the robot: recruiting, finding mentors and sponsors, and explaining who we are. Writing the site by hand taught me how to keep one stylesheet organized across many pages.</p>
+          </div>
+
+          <div class="column reveal reveal-delay">
+            <div class="card">
+              <p class="card-meta">Built with</p>
+              <ul class="skill-list">
+                <li>HTML</li>
+                <li>CSS</li>
+                <li>Git</li>
+              </ul>
+              <span class="todo">Team website link</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ===========================
+         4. FOREXAI RESEARCH
+         =========================== -->
+    <section class="section section-grey" id="forexai">
+      <div class="container">
+        <div class="title-bar">
+          <span class="tag">2026 · Electron + Node</span>
+          <h2>ForexAI Research</h2>
+        </div>
+
+        <div class="two-columns">
+          <div class="column reveal-left">
+            <p>I built a desktop app that scanned currency charts for short-term trading signals. Then I backtested it honestly on data it had never seen.</p>
+            <p>The result: it had no real edge. It called short-term direction right about 46% of the time, and it needed 55.6% just to break even. So I turned it into a research and journal tool instead. The lesson I took away: measure before you believe.</p>
+          </div>
+
+          <div class="column reveal reveal-delay">
+            <div class="card">
+              <p class="card-meta">Built with</p>
+              <ul class="skill-list">
+                <li>Electron</li>
+                <li>Node.js</li>
+                <li>JavaScript</li>
+              </ul>
+              <p class="stat-line">Out-of-sample: ~46% correct vs 55.6% needed</p>
+              <span class="todo">Link to ForexAI write-up or repo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ===========================
+         5. HEXAFLOW - NASA HUNCH
+         =========================== -->
+    <section class="section" id="hexaflow">
+      <div class="container">
+        <div class="title-bar">
+          <span class="tag">2026 · Astro + Three.js</span>
+          <h2>HexaFlow: NASA HUNCH</h2>
+        </div>
+
+        <div class="two-columns">
+          <div class="column reveal-left">
+            <p>HexaFlow is the project website for my school's NASA HUNCH nanolab team. It explains the project and includes an interactive 3D model you can spin around in the browser.</p>
+            <p>The hard part was making a 3D model feel like part of the page instead of something bolted on. <span class="todo">Add what you learned building it</span></p>
+          </div>
+
+          <div class="column reveal reveal-delay">
+            <div class="card">
+              <p class="card-meta">Built with</p>
+              <ul class="skill-list">
+                <li>Astro</li>
+                <li>Tailwind</li>
+                <li>Three.js</li>
+              </ul>
+              <span class="todo">HexaFlow site link</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ===========================
+         6. 3D PRINTING / MAKERWORLD (in progress)
+         =========================== -->
+    <section class="section section-grey" id="makerworld">
+      <div class="container">
+        <div class="title-bar">
+          <span class="tag">In progress · SolidWorks</span>
+          <h2>3D Printing &amp; MakerWorld</h2>
+        </div>
+
+        <div class="two-columns">
+          <div class="column reveal-left">
+            <p>I design 3D models in SolidWorks and print them on a Bambu X2D and an A1 with an AMS. I'm working on model sets to publish on MakerWorld.</p>
+            <p>Right now I'm fit-testing parts for SKÅDIS pegboards and Gridfinity bins, where a fraction of a millimeter decides whether a part clicks in or doesn't.</p>
+          </div>
+
+          <div class="column reveal reveal-delay">
+            <div class="card">
+              <p class="card-meta">Built with</p>
+              <ul class="skill-list">
+                <li>SolidWorks</li>
+                <li>Bambu X2D</li>
+                <li>Bambu A1 + AMS</li>
+                <li>3D printing</li>
+              </ul>
+              <span class="todo">MakerWorld profile link</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ===========================
+         7. PAELYX SYSTEMS (in progress)
+         =========================== -->
+    <section class="section" id="paelyx">
+      <div class="container">
+        <div class="title-bar">
+          <span class="tag">In progress · Web</span>
+          <h2>Paelyx Systems</h2>
+        </div>
+
+        <div class="two-columns">
+          <div class="column reveal-left">
+            <p>Paelyx Systems is a defense-tech website I'm building. It's early stage.</p>
+            <p><span class="todo">One line on what you've learned or what's next</span></p>
+          </div>
+
+          <div class="column reveal reveal-delay">
+            <div class="card">
+              <p class="card-meta">Built with</p>
+              <ul class="skill-list">
+                <li><span class="todo">Tech used</span></li>
+              </ul>
+              <span class="todo">Paelyx Systems link when it's live</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer (KEEP SAME ON EACH PAGE) -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="footer-logo"><span>Lucas Bianco</span></a>
+        <p class="footer-about">Student builder from Franklin, MA: robots, AI, 3D printing, and websites.</p>
+        <ul class="social-links">
+          <li><a href="https://github.com/Lucas-Bianco" aria-label="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"/></svg></a></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="footer-heading">Explore</h2>
+        <ul class="footer-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="projects.html">Projects</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="footer-heading">Elsewhere</h2>
+        <ul class="footer-links">
+          <li><a href="https://github.com/Lucas-Bianco">GitHub</a></li>
+          <li><a href="https://lucas-bianco.github.io/pokemon-card-platform/">Card Platform</a></li>
+          <li><span class="todo">MakerWorld profile link</span></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="footer-heading">Contact</h2>
+        <address>Franklin, MA<br><span class="todo">your contact email</span></address>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container"><p>&copy; 2026 Lucas Bianco</p></div>
+    </div>
+  </footer>
+</body>
+</html>

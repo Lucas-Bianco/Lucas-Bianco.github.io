@@ -1,0 +1,575 @@
+/*
+  Credit: Lucas Bianco
+  Source: https://github.com/Lucas-Bianco
+  License: MIT
+  The ONE stylesheet for the portfolio. Layout copied from the Tri-County FRC site.
+*/
+
+/* google fonts */
+@import url("https://fonts.googleapis.com/css2?family=League+Gothic&family=Source+Sans+3:wght@400;700&display=swap");
+
+/* =-=-=-=-=-=-=-=-=--
+   COLOR AND FONTS. Changes here will affect the whole site.
+=-=-=-=-=-=-=-=-=-- */
+:root {
+  --ink: #14161c;         /* dark bands + nav */
+  --ink-dark: #0d0f13;    /* footer */
+  --accent: #4fd1c5;      /* teal: tags, nav underline, buttons */
+  --text: #3d4352;        /* normal paragraph text */
+  --grey-bg: #f3f4f7;     /* light grey band behind sections */
+  --line: #d9dce6;        /* thin borders */
+  --white: #ffffff;
+
+  --heading-font: "League Gothic", "Arial Narrow", sans-serif;
+  --body-font: "Source Sans 3", Arial, sans-serif;
+}
+
+/* =-=-=-=-=-=-=-=-=--
+   GLOBAL RESETS
+=-=-=-=-=-=-=-=-=-- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+img {
+  max-width: 100%;          /* images never overflow on phones */
+  display: block;
+}
+
+/* =-=-=-=-=-=-=-=-=--
+   BODY AND TEXT
+=-=-=-=-=-=-=-=-=-- */
+html {
+  scroll-padding-top: 80px;  /* links like projects.html#jarvis stop below the sticky nav */
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--white);
+  color: var(--text);
+  font-family: var(--body-font);
+  font-size: 18px;
+  line-height: 1.6;
+  overflow-x: clip;         /* no sideways scrolling (clip keeps the sticky nav working) */
+}
+
+main { flex: 1; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--heading-font);
+  font-weight: 400;          /* League Gothic is already bold-looking */
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+
+h1 { font-size: 88px; }
+h2 { font-size: 48px; }
+h3 { font-size: 30px; }
+h4 { font-size: 24px; }
+
+p { margin-bottom: 16px; max-width: 65ch; }
+
+a { color: var(--ink); }
+
+/* =-=-=-=-=-=-=-=-=--
+   NAVIGATION BAR
+=-=-=-=-=-=-=-=-=-- */
+nav {
+  background-color: var(--ink);
+  border-bottom: 3px solid var(--accent);
+  position: sticky;          /* nav stays at the top while you scroll */
+  top: 0;
+  z-index: 10;
+}
+
+nav ul {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;            /* lines the nav up with the page content */
+  list-style: none;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+nav li { height: 64px; }
+
+nav a {
+  height: 100%;
+  padding: 0 22px;
+  display: flex;
+  align-items: center;
+  color: var(--white);
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+nav a:hover { color: var(--accent); }
+
+/* the link for the page you are on */
+nav a.active { color: var(--accent); }
+
+/* pushes the logo to the left, links to the right */
+nav li:first-child { margin-right: auto; }
+
+.logo-container span {
+  font-family: var(--heading-font);
+  font-size: 30px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  color: var(--white);
+}
+
+nav svg { fill: var(--white); }
+
+/* =-=-=-=-=-=-=-=-=--
+   SIDEBAR (MOBILE NAV)
+=-=-=-=-=-=-=-=-=-- */
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 260px;
+  z-index: 20;
+  background-color: var(--ink);
+  border-left: 3px solid var(--accent);
+  box-shadow: -10px 0 20px rgba(0, 0, 0, 0.3);
+  display: none;             /* hidden until the menu button adds "open" */
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  overflow-y: auto;          /* lets the menu scroll on short phones */
+}
+
+.sidebar.open { display: flex; }
+
+.sidebar li,
+.sidebar a { width: 100%; }
+
+/* =-=-=-=-=-=-=-=-=--
+   MENU BUTTON (HAMBURGER ICON)
+=-=-=-=-=-=-=-=-=-- */
+.menu-button { display: none; }  /* only shown on small screens, below */
+
+/* =-=-=-=-=-=-=-=-=--
+   PAGE LAYOUT
+=-=-=-=-=-=-=-=-=-- */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+.section { padding: 80px 0; }
+
+.section-dark { background-color: var(--ink); color: #cfd3dc; }
+
+.section-dark h1,
+.section-dark h2,
+.section-dark h3,
+.section-dark h4,
+.section-dark a { color: var(--white); }
+
+.section-grey { background-color: var(--grey-bg); }
+
+.title-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  background-color: var(--ink);
+  padding: 14px 24px;
+  margin-bottom: 40px;
+}
+
+.title-bar h2 { color: var(--white); font-size: 38px; margin-bottom: 0; }
+
+.two-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+/* Three cards in a row. Stacks on phones. */
+.three-columns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+/* one box inside two-columns / three-columns */
+.column { min-width: 0; }  /* long words can't stretch the grid wider than the screen */
+
+/* =-=-=-=-=-=-=-=-=--
+   PAGE HERO (big intro at the top of a page)
+=-=-=-=-=-=-=-=-=-- */
+.hero { padding: 100px 0; }
+
+.hero-text { font-size: 21px; margin-bottom: 32px; }
+
+/* photo of me on the home page hero */
+.hero img {
+  width: 100%;
+  max-width: 420px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  justify-self: end;
+  border-radius: 8px;
+  border: 3px solid var(--accent);
+}
+
+/* =-=-=-=-=-=-=-=-=--
+   SMALL PIECES
+=-=-=-=-=-=-=-=-=-- */
+.tag {
+  display: inline-block;
+  background-color: var(--accent);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 5px 10px;
+  margin-bottom: 16px;
+}
+
+.title-bar .tag { margin-bottom: 0; }
+
+.button {
+  display: inline-block;
+  padding: 14px 24px;
+  border: 2px solid var(--ink);
+  color: var(--ink);
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.button:hover { background-color: var(--ink); color: var(--white); }
+
+.button-accent {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+.button-accent:hover {
+  background-color: var(--white);
+  border-color: var(--white);
+  color: var(--ink);
+}
+
+.section-dark .button { border-color: var(--white); color: var(--white); }
+
+.section-dark .button:hover { background-color: var(--white); color: var(--ink); }
+
+.section-dark .button-accent { border-color: var(--accent); color: var(--ink); }
+
+.button-row { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* Fill-in text Lucas still has to replace (yellow so it stands out) */
+.todo { background-color: #fff3c4; color: #5c4700; outline: 1px dashed #b08900; }
+
+/* a one-line plain measured fact, e.g. "99 real phone scans · 100% precision" */
+.stat-line {
+  font-weight: 700;
+  color: var(--ink);
+  border-left: 3px solid var(--accent);
+  padding-left: 12px;
+}
+
+.section-dark .stat-line { color: var(--white); }
+
+/* a list of skills shown as small pill tags */
+.skill-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.skill-list li {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background-color: var(--white);
+  padding: 4px 14px;
+  font-size: 14px;
+}
+
+/* =-=-=-=-=-=-=-=-=--
+   CARDS
+=-=-=-=-=-=-=-=-=-- */
+.card {
+  background-color: var(--white);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--accent);
+  padding: 28px;
+}
+
+.card h3 { margin-bottom: 8px; }
+
+.card p:last-child { margin-bottom: 0; }
+
+.section-dark .card h3 { color: var(--ink); }  /* cards stay white, so keep headings dark */
+
+/* small uppercase line under a card heading, e.g. "2026 · Python · Computer vision" */
+.card-meta {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #6b7285;
+  margin-bottom: 14px;
+}
+
+/* "View project ->" style link at the bottom of a card */
+.card-link {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 2px solid var(--accent);
+}
+
+.section-dark .card .card-link { color: var(--ink); }
+
+.card-link:hover { color: #2a9d93; }
+
+/* =-=-=-=-=-=-=-=-=--
+   TIMELINE (ol of dated steps)
+=-=-=-=-=-=-=-=-=-- */
+.timeline { list-style: none; border-left: 3px solid var(--line); margin-left: 6px; }
+
+.timeline-item { position: relative; padding: 0 0 28px 28px; }
+
+/* the small teal dot on the line */
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: -9px;
+  top: 6px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: var(--accent);
+}
+
+.timeline-date {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #6b7285;
+  margin-bottom: 4px;
+}
+
+/* =-=-=-=-=-=-=-=-=--
+   FOOTER
+=-=-=-=-=-=-=-=-=-- */
+footer {
+  background-color: var(--ink-dark);
+  border-top: 3px solid var(--accent);
+  color: #a9aebb;
+  font-size: 15px;
+}
+
+footer ul { list-style: none; }
+
+footer a { color: #d5d8e0; text-decoration: none; }
+
+footer a:hover { color: var(--accent); }
+
+/* Four columns */
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.3fr;
+  gap: 48px;
+  padding-top: 64px;
+  padding-bottom: 48px;
+}
+
+.footer-logo { display: inline-block; margin-bottom: 16px; }
+
+.footer-logo span {
+  font-family: var(--heading-font);
+  font-size: 34px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--white);
+}
+
+.footer-about { max-width: 34ch; margin-bottom: 24px; }
+
+/* Small teal column titles */
+.footer-heading {
+  font-family: var(--body-font);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--accent);
+  margin-bottom: 18px;
+}
+
+.footer-links li { margin-bottom: 10px; }
+
+footer address { font-style: normal; line-height: 1.7; }
+
+/* Round social media buttons */
+.social-links { display: flex; gap: 10px; }
+
+.social-links a {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  color: var(--white);
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.social-links a:hover {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+.social-links svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 20px 0;
+  font-size: 13px;
+  color: #858b99;
+}
+
+.footer-bottom p { margin-bottom: 0; max-width: none; }
+
+/* =-=-=-=-=-=-=-=-=--
+   SCROLL-DRIVEN EFFECTS (CSS only, kept subtle)
+   Only runs in browsers that support scroll timelines AND when the
+   visitor has not asked for reduced motion. Otherwise everything
+   is simply visible and the progress bar is hidden.
+=-=-=-=-=-=-=-=-=-- */
+.scroll-progress { display: none; }  /* hidden unless the block below turns it on */
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+
+    /* thin teal bar at the very top that fills as you scroll the page */
+    .scroll-progress {
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      z-index: 30;
+      background-color: var(--accent);
+      transform-origin: left;
+      animation: grow-bar linear both;
+      animation-timeline: scroll(root);
+    }
+
+    /* fade in + rise 24px as it scrolls into view */
+    .reveal {
+      animation: rise-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+
+    /* fade in + slide 24px from the left */
+    .reveal-left {
+      animation: slide-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+
+    /* same as above, just a little later (put it next to .reveal or .reveal-left) */
+    .reveal-delay { animation-range: entry 15% entry 75%; }
+
+    /* hero content fades and moves up a little as you scroll past it */
+    .hero-fade {
+      animation: fade-up-out linear both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 100%;
+    }
+
+    @keyframes grow-bar {
+      from { transform: scaleX(0); }
+      to   { transform: scaleX(1); }
+    }
+
+    @keyframes rise-in {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slide-in {
+      from { opacity: 0; transform: translateX(-24px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fade-up-out {
+      from { opacity: 1; transform: translateY(0); }
+      to   { opacity: 0; transform: translateY(-24px); }
+    }
+  }
+}
+
+/* =-=-=-=-=-=-=-=-=--
+   RESPONSIVE DESIGN
+=-=-=-=-=-=-=-=-=-- */
+
+/* Tablets and phones (below 800px wide) */
+@media (max-width: 800px) {
+  .hideOnMobile { display: none; }  /* hide normal nav links */
+  .menu-button { display: block; }  /* show hamburger icon */
+
+  h1 { font-size: 56px; }
+  h2 { font-size: 40px; }
+
+  .container { padding: 0 16px; }   /* 16px side gutter */
+  .section { padding: 56px 0; }
+  .hero { padding: 64px 0; }
+
+  .two-columns,
+  .three-columns {
+    grid-template-columns: 1fr;   /* stack everything */
+    gap: 24px;
+  }
+
+  .title-bar { padding: 12px 16px; }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;   /* 2 x 2 footer columns */
+    gap: 40px 32px;
+  }
+
+  .footer-brand { grid-column: 1 / -1; }  /* brand column spans the full width */
+}
+
+/* Very small phones (below 500px wide) */
+@media (max-width: 500px) {
+  .sidebar { width: 100%; }  /* sidebar fills the screen */
+  .logo-container span { font-size: 24px; }
+  .footer-grid { grid-template-columns: 1fr; }  /* one column on small phones */
+}
