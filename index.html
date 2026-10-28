@@ -1,132 +1,185 @@
+<!DOCTYPE html>
 <!--
   Credit: Lucas Bianco
   Source: https://github.com/Lucas-Bianco/Lucas-Bianco.github.io
   License: MIT
 -->
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lucas Bianco · Engineering Technology Student</title>
-
-  <!-- Search engines + link previews -->
-  <meta name="description" content="Lucas Bianco, Engineering Technology student at Tri-County RVTHS (class of 2027) and co-op on Dell's Process Development team. Robotics, CAD, certifications and projects.">
+  <title>Lucas Bianco | Engineering Technology Student, Massachusetts</title>
+  <meta name="description" content="Lucas Bianco: Engineering Technology student at Tri-County RVTHS (class of 2027), Dell co-op, and robotics captain. Projects, experience, and certifications.">
   <meta name="author" content="Lucas Bianco">
   <link rel="canonical" href="https://lucas-bianco.github.io/">
+  <meta name="theme-color" content="#eef1f0" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#141918" media="(prefers-color-scheme: dark)">
+
+  <!-- Link previews (LinkedIn, iMessage, Discord, X) -->
   <meta property="og:type" content="profile">
   <meta property="og:site_name" content="Lucas Bianco">
-  <meta property="og:title" content="Lucas Bianco · Engineering Technology Student">
-  <meta property="og:description" content="Engineering Technology student, Dell co-op, robotics team captain. Projects, experience and certifications.">
+  <meta property="og:title" content="Lucas Bianco, Engineering Technology Student">
+  <meta property="og:description" content="Dell co-op, robotics captain, NASA HUNCH finalist. Projects, experience, and certifications.">
   <meta property="og:url" content="https://lucas-bianco.github.io/">
-  <meta name="twitter:card" content="summary">
+  <meta property="og:image" content="https://lucas-bianco.github.io/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Lucas Bianco, Engineering Technology student">
+  <meta property="profile:first_name" content="Lucas">
+  <meta property="profile:last_name" content="Bianco">
+  <meta name="twitter:card" content="summary_large_image">
+
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 
-  <!-- Tells Google who this page is about -->
+  <!-- Font: Archivo (one family, the name uses its wide setting) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap">
+
+  <link rel="stylesheet" href="style.css">
+  <script src="main.js" defer></script>
+
+  <!-- Structured data: tells Google this is Lucas's profile page -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Lucas Bianco",
+    "@type": "ProfilePage",
     "url": "https://lucas-bianco.github.io/",
-    "jobTitle": "Engineering Technology Student",
-    "homeLocation": { "@type": "Place", "name": "Massachusetts" },
-    "alumniOf": { "@type": "EducationalOrganization", "name": "Tri-County Regional Vocational Technical High School" },
-    "knowsAbout": ["SolidWorks", "AutoCAD", "Revit", "Mechatronics", "Precision measurement", "Robotics", "Python", "3D printing"],
-    "sameAs": ["https://linkedin.com/in/lucas-j-bianco/", "https://github.com/Lucas-Bianco"]
+    "dateModified": "2026-10-28",
+    "mainEntity": {
+      "@type": "Person",
+      "@id": "https://lucas-bianco.github.io/#lucas",
+      "name": "Lucas Bianco",
+      "alternateName": "Lucas James Bianco",
+      "url": "https://lucas-bianco.github.io/",
+      "jobTitle": "Engineering Technology Student",
+      "description": "Engineering Technology student at Tri-County RVTHS, Dell Process Development co-op, and VEX Robotics captain.",
+      "address": { "@type": "PostalAddress", "addressRegion": "MA", "addressCountry": "US" },
+      "alumniOf": { "@type": "HighSchool", "name": "Tri-County Regional Vocational Technical High School", "address": "Franklin, MA" },
+      "affiliation": [
+        { "@type": "Organization", "name": "Dell Technologies" },
+        { "@type": "Organization", "name": "NASA HUNCH" },
+        { "@type": "Organization", "name": "SkillsUSA" }
+      ],
+      "knowsAbout": ["SolidWorks", "AutoCAD", "Revit", "Mechatronics", "Precision measurement", "CNC machining", "Robotics", "Python", "C++", "Computer vision", "3D printing"],
+      "hasCredential": [
+        { "@type": "EducationalOccupationalCredential", "name": "Autodesk Certified User: AutoCAD", "credentialCategory": "certification", "recognizedBy": { "@type": "Organization", "name": "Autodesk" }, "dateCreated": "2024-02-29", "url": "https://lucas-bianco.github.io/assets/certs/autocad-certified-user.pdf" },
+        { "@type": "EducationalOccupationalCredential", "name": "NC3 Introduction to Mechatronics", "credentialCategory": "certification", "recognizedBy": { "@type": "Organization", "name": "National Coalition of Certification Centers" }, "dateCreated": "2025-04-11", "url": "https://lucas-bianco.github.io/assets/certs/nc3-mechatronics.pdf" },
+        { "@type": "EducationalOccupationalCredential", "name": "NC3 Precision Measurement Instruments 1: Tape and Rule", "credentialCategory": "certification", "recognizedBy": { "@type": "Organization", "name": "National Coalition of Certification Centers" }, "dateCreated": "2025-10-08", "url": "https://lucas-bianco.github.io/assets/certs/nc3-pmi-1-tape-and-rule.pdf" },
+        { "@type": "EducationalOccupationalCredential", "name": "NC3 Precision Measurement Instruments 2: Slide Caliper", "credentialCategory": "certification", "recognizedBy": { "@type": "Organization", "name": "National Coalition of Certification Centers" }, "dateCreated": "2026-03-04", "url": "https://lucas-bianco.github.io/assets/certs/nc3-pmi-2-slide-caliper.pdf" }
+      ],
+      "sameAs": ["https://linkedin.com/in/lucas-j-bianco/", "https://github.com/Lucas-Bianco"]
+    }
   }
   </script>
-
-  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <main class="page">
+  <a class="skip-link" href="#main">Skip to content</a>
 
-    <!-- ===== Intro ===== -->
-    <header class="intro fade-in">
-      <h1>Lucas Bianco</h1>
-      <p class="subtitle">Engineering Technology student · Tri-County RVTHS, class of 2027</p>
-      <p>
-        I'm in the engineering program at a vocational high school, and I'm on a co-op with
-        Dell's Process Development team at their Franklin factory. I've been running robotics teams
-        for six years. Outside of school I build things that are slightly too hard for me
-        when I start them, like an app that recognizes Pokémon cards from a photo.
+  <!-- Small top bar: name + jump links -->
+  <nav class="topbar" aria-label="Sections">
+    <a href="#top" class="topbar-name">Lucas Bianco</a>
+    <ul>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#certifications">Certifications</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main id="main" class="page">
+
+    <!-- ===== Hero =====
+         The line under the name is drawn like a dimension on an engineering drawing. -->
+    <header class="hero" id="top">
+      <div class="name-block">
+        <h1>Lucas Bianco</h1>
+        <div class="dimension" aria-hidden="true"><span>class of 2027</span></div>
+      </div>
+
+      <p class="lede">
+        Engineering Technology student at Tri-County RVTHS in Massachusetts, co-op on
+        Dell's Process Development team, and captain of my school's VEX Robotics team.
+        I like building things that are slightly too hard for me when I start them.
       </p>
-      <ul class="inline-links">
-        <li><a href="#contact">Contact</a></li>
-        <li><a href="https://linkedin.com/in/lucas-j-bianco/">LinkedIn</a></li>
-        <li><a href="https://github.com/Lucas-Bianco">GitHub</a></li>
-        <li><a href="#certifications">Certifications</a></li>
-      </ul>
+
+      <dl class="facts">
+        <div><dt>Program</dt><dd>Engineering Technology, Tri-County RVTHS</dd></div>
+        <div><dt>Co-op</dt><dd>Dell, Process Development</dd></div>
+        <div><dt>GPA</dt><dd>3.95 unweighted</dd></div>
+        <div><dt>Looking for</dt><dd>Engineering internships and co-ops</dd></div>
+      </dl>
+
+      <p class="hero-actions">
+        <a class="button" href="#contact">Get in touch</a>
+        <a href="https://linkedin.com/in/lucas-j-bianco/">LinkedIn</a>
+        <a href="https://github.com/Lucas-Bianco">GitHub</a>
+      </p>
     </header>
 
 
     <!-- ===== Now ===== -->
-    <section class="fade-in delay-1">
-      <h2>Now</h2>
+    <section class="now">
+      <h2>Right now</h2>
       <ul class="plain-list">
-        <li>Co-op at Dell on the Process Development team, alternating weeks with school.</li>
+        <li>Alternating weeks between school and the Dell factory in Franklin.</li>
         <li>Restarting my school's FIRST Robotics team for the 2027 season.</li>
-        <li>Getting ready to present HexaFlow, our NASA HUNCH project, at the ASGSR conference in December.</li>
+        <li>Getting HexaFlow, our NASA HUNCH project, ready for the ASGSR conference in December.</li>
       </ul>
       <p class="note">Updated October 2026</p>
     </section>
 
 
     <!-- ===== Experience ===== -->
-    <section class="fade-in delay-2">
+    <section id="experience">
       <h2>Experience</h2>
       <ol class="timeline">
-        <li class="reveal">
-          <span class="when">Oct 2026 –</span>
+        <li>
+          <p class="when">Oct 2026 to now</p>
           <div>
-            <h3>Co-op, Process Development · Dell</h3>
+            <h3>Co-op, Process Development <span class="org">at Dell</span></h3>
             <p class="where">Franklin, MA</p>
-            <p>Working with the team that sets up and improves manufacturing processes at Dell's Franklin factory. Alternating weeks between the factory and school.</p>
+            <p>Working with the team that sets up and improves manufacturing processes at Dell's Franklin factory, on an alternating weekly schedule with school.</p>
           </div>
         </li>
-        <li class="reveal">
-          <span class="when">Jul 2025 –</span>
+        <li>
+          <p class="when">Jul 2025 to now</p>
           <div>
-            <h3>Cashier / Customer Service · Shaw's</h3>
+            <h3>Cashier and customer service <span class="org">at Shaw's</span></h3>
             <p class="where">Medway, MA</p>
-            <p>Run the register and keep the cash drawer balanced, help customers with questions and problems. Got trained for more responsibilities soon after I was hired.</p>
+            <p>Run the register and keep the drawer balanced, and sort out customer questions and problems. Was trained for more responsibilities soon after I started.</p>
           </div>
         </li>
       </ol>
-    </section>
 
-
-    <!-- ===== Leadership / teams ===== -->
-    <section class="fade-in delay-2">
-      <h2>Leadership &amp; teams</h2>
+      <h2 class="subhead">Leadership and teams</h2>
       <ol class="timeline">
-        <li class="reveal">
-          <span class="when">2026 –</span>
+        <li>
+          <p class="when">2026 to now</p>
           <div>
-            <h3>Co-founder · Tri-County FRC</h3>
-            <p>Relaunching the school's FIRST Robotics Competition team from nothing with two other student leaders: no robot and no budget to start. I cold-emailed local companies for sponsorship and built the team website. Our warm-up build was a basketball-shooting robot on a tank chassis.</p>
+            <h3>Co-founder <span class="org">Tri-County FRC</span></h3>
+            <p>Relaunching the school's FIRST Robotics Competition team with two other student leaders, starting with no robot and no budget. I cold-emailed local companies for sponsorship and built the team website. Our warm-up build was a basketball-shooting robot on a tank chassis.</p>
           </div>
         </li>
-        <li class="reveal">
-          <span class="when">2021 –</span>
+        <li>
+          <p class="when">2021 to now</p>
           <div>
-            <h3>Captain · VEX Robotics</h3>
-            <p>Captain of the high school team (8 members, team 3236A). I lead design, programming (C++ with EZ-Template), and match strategy. Before that I led my middle school team to the VEX World Championship twice.</p>
+            <h3>Captain <span class="org">VEX Robotics, team 3236A</span></h3>
+            <p>Lead a team of eight through design, programming (C++ with EZ-Template) and match strategy. Before high school I led my middle school team to the VEX World Championship twice.</p>
           </div>
         </li>
-        <li class="reveal">
-          <span class="when">2026</span>
+        <li>
+          <p class="when">2026</p>
           <div>
-            <h3>Web lead · HexaFlow, NASA HUNCH finalist</h3>
-            <p>Our team designed a hexagonal grooved dome that uses capillary action to water plants in microgravity. We drop tested it with NASA in August, and we're presenting at the ASGSR conference in December. I built the project site and its 3D assembly viewer.</p>
+            <h3>Web lead <span class="org">HexaFlow, NASA HUNCH finalist</span></h3>
+            <p>Our team designed a grooved hexagonal dome that waters plants in microgravity using capillary action. NASA drop tested it with us in August. I built the project site and its 3D assembly viewer.</p>
           </div>
         </li>
-        <li class="reveal">
-          <span class="when">2024 –</span>
+        <li>
+          <p class="when">2024 to now</p>
           <div>
-            <h3>Volunteer · FreeKicks Special Olympics</h3>
+            <h3>Volunteer <span class="org">FreeKicks Special Olympics</span></h3>
             <p>Teaching and playing soccer with kids of all abilities in Franklin, MA.</p>
           </div>
         </li>
@@ -135,12 +188,12 @@
 
 
     <!-- ===== Projects =====
-         Each project is a <details> so the page stays short.
-         Click the title to open the full write-up. -->
-    <section class="fade-in delay-3">
+         Each project is a <details>: click the title to open the write-up. -->
+    <section id="projects">
       <h2>Projects</h2>
+      <p class="section-intro">Things I built on my own time. Click one to read how it went.</p>
 
-      <details class="project reveal" id="card-platform">
+      <details class="project" id="card-platform">
         <summary>
           <span class="project-name">Pokémon card scanner</span>
           <span class="project-year">2026</span>
@@ -150,25 +203,26 @@
           <p>
             You point your phone at a card and it tells you which of about 20,000 cards it is,
             plus what it's worth. It compares the photo against every card image
-            (CLIP embeddings + a FAISS index), then reads the little collector number
-            in the corner with OCR to double check.
+            (CLIP embeddings and a FAISS index), then reads the collector number in the corner
+            with OCR to double check.
           </p>
           <p>
             The hard part wasn't recognizing the card, it was finding it in the photo.
             On 99 real scans it was never wrong when it gave an answer, but it only found the
-            card about 30% of the time. Light borders on light tables broke the edge detection.
-            I ended up trying several detection methods per photo and keeping whichever crop
-            matched a card best, which got it to 63% with nothing that worked before breaking.
+            card about 30% of the time, because light borders on light tables broke the edge
+            detection. I ended up running several detection methods on each photo and keeping
+            whichever crop matched a card best. That got it to 63% without breaking anything
+            that already worked.
           </p>
           <p class="stack">Python, FastAPI, OpenCV, CLIP, FAISS, React</p>
           <p class="links">
             <a href="https://lucas-bianco.github.io/pokemon-card-platform/">Project page</a>
-            <a href="https://github.com/Lucas-Bianco/pokemon-card-platform">Code</a>
+            <a href="https://github.com/Lucas-Bianco/pokemon-card-platform">Code on GitHub</a>
           </p>
         </div>
       </details>
 
-      <details class="project reveal" id="hexaflow">
+      <details class="project" id="hexaflow">
         <summary>
           <span class="project-name">HexaFlow</span>
           <span class="project-year">2026</span>
@@ -180,16 +234,13 @@
             Our design is a hexagonal dome with grooves that move water to a plant using capillary
             action, so it works without gravity. NASA drop tested it with us on August 6, 2026.
           </p>
-          <p>
-            I led the website, including a 3D viewer where you can pull the assembly apart and
-            see each part.
-          </p>
+          <p>I led the website, including a 3D viewer where you can pull the assembly apart and see each part.</p>
           <p class="stack">Astro, Tailwind, Three.js</p>
-          <p class="links"><a href="https://github.com/Lucas-Bianco/hexaflow">Code</a></p>
+          <p class="links"><a href="https://github.com/Lucas-Bianco/hexaflow">Code on GitHub</a></p>
         </div>
       </details>
 
-      <details class="project reveal" id="jarvis">
+      <details class="project" id="jarvis">
         <summary>
           <span class="project-name">Jarvis</span>
           <span class="project-year">2026</span>
@@ -204,14 +255,14 @@
           <p>
             I wanted it to cost nothing to run, so the AI parts use local models (Ollama) on my
             desktop instead of paid APIs, and the always-on parts run on Raspberry Pi 5s.
-            The phone connects over Tailscale so nothing is open to the internet.
-            I use it every day now.
+            The phone connects over Tailscale, so nothing is open to the internet.
+            I use it every day.
           </p>
           <p class="stack">Python, FastAPI, Svelte, Raspberry Pi, Ollama, Tailscale</p>
         </div>
       </details>
 
-      <details class="project reveal" id="forexai">
+      <details class="project" id="forexai">
         <summary>
           <span class="project-name">Forex signal research</span>
           <span class="project-year">2026</span>
@@ -224,7 +275,7 @@
             46% of the time, and it needed 55.6% just to break even.
           </p>
           <p>
-            I even trained real ML models to see if the problem was my scoring. They got about
+            I trained real ML models to check whether the problem was my scoring. They got about
             51%, so the signal just isn't there. I turned the app into a research and journal
             tool instead. Probably the most useful thing I learned all year: test it before you
             believe it.
@@ -233,7 +284,7 @@
         </div>
       </details>
 
-      <details class="project reveal" id="makerworld">
+      <details class="project" id="makerworld">
         <summary>
           <span class="project-name">3D printing</span>
           <span class="project-year">ongoing</span>
@@ -242,7 +293,7 @@
         <div class="project-body">
           <p>
             I print on a Bambu X2D and an A1, both with the AMS for multicolor, and test fit
-            things on a SKÅDIS pegboard and a Gridfinity grid. Working on a set of models
+            parts on a SKÅDIS pegboard and a Gridfinity grid. Working on a set of models
             to publish on MakerWorld.
           </p>
           <p class="stack">SolidWorks, Bambu Studio</p>
@@ -251,64 +302,48 @@
     </section>
 
 
-    <!-- ===== Certifications =====
-         Linked ones open the actual certificate PDF. -->
-    <section class="fade-in delay-3" id="certifications">
+    <!-- ===== Certifications ===== -->
+    <section id="certifications">
       <h2>Certifications</h2>
       <ul class="certs">
-        <li class="reveal">
+        <li>
           <span class="cert-name">Autodesk Certified User: AutoCAD</span>
           <span class="when">Feb 2024</span>
           <span class="cert-links">
-            <a href="assets/certs/autocad-certified-user.pdf">Certificate</a>
-            <a href="https://verify.certiport.com">Verify</a> <span class="note">code BSAU-s27Y</span>
+            <a href="assets/certs/autocad-certified-user.pdf">View certificate</a>
+            <a href="https://verify.certiport.com">Verify on Certiport</a>
+            <span class="note">code BSAU-s27Y</span>
           </span>
         </li>
-        <li class="reveal">
-          <span class="cert-name">NC3 / Festo: Introduction to Mechatronics</span>
+        <li>
+          <span class="cert-name">NC3 and Festo: Introduction to Mechatronics</span>
           <span class="when">Apr 2025</span>
-          <span class="cert-links"><a href="assets/certs/nc3-mechatronics.pdf">Certificate</a></span>
+          <span class="cert-links"><a href="assets/certs/nc3-mechatronics.pdf">View certificate</a></span>
         </li>
-        <li class="reveal">
-          <span class="cert-name">NC3 / Starrett: Precision Measurement 1, Tape and Rule</span>
+        <li>
+          <span class="cert-name">NC3 and Starrett: Precision Measurement 1, Tape and Rule</span>
           <span class="when">Oct 2025</span>
-          <span class="cert-links"><a href="assets/certs/nc3-pmi-1-tape-and-rule.pdf">Certificate</a></span>
+          <span class="cert-links"><a href="assets/certs/nc3-pmi-1-tape-and-rule.pdf">View certificate</a></span>
         </li>
-        <li class="reveal">
-          <span class="cert-name">NC3 / Starrett: Precision Measurement 2, Slide Caliper</span>
+        <li>
+          <span class="cert-name">NC3 and Starrett: Precision Measurement 2, Slide Caliper</span>
           <span class="when">Mar 2026</span>
-          <span class="cert-links"><a href="assets/certs/nc3-pmi-2-slide-caliper.pdf">Certificate</a></span>
+          <span class="cert-links"><a href="assets/certs/nc3-pmi-2-slide-caliper.pdf">View certificate</a></span>
         </li>
-        <li class="reveal">
-          <span class="cert-name">OSHA 10</span>
-          <span class="when"></span>
-          <span class="cert-links"></span>
-        </li>
-        <li class="reveal">
-          <span class="cert-name">SolidWorks CSWA and CSWP</span>
-          <span class="when"></span>
-          <span class="cert-links"></span>
-        </li>
-        <li class="reveal">
-          <span class="cert-name">Autodesk Revit</span>
-          <span class="when"></span>
-          <span class="cert-links"></span>
-        </li>
-        <li class="reveal">
-          <span class="cert-name">Six Sigma White Belt</span>
-          <span class="when"></span>
-          <span class="cert-links"></span>
-        </li>
+        <li><span class="cert-name">OSHA 10</span></li>
+        <li><span class="cert-name">SolidWorks CSWA and CSWP</span></li>
+        <li><span class="cert-name">Autodesk Revit</span></li>
+        <li><span class="cert-name">Six Sigma White Belt</span></li>
       </ul>
     </section>
 
 
-    <!-- ===== Education ===== -->
-    <section class="fade-in delay-4">
+    <!-- ===== Education + skills ===== -->
+    <section id="education">
       <h2>Education</h2>
       <ol class="timeline">
         <li>
-          <span class="when">2023 – 2027</span>
+          <p class="when">2023 to 2027</p>
           <div>
             <h3>Tri-County Regional Vocational Technical High School</h3>
             <p class="where">Franklin, MA</p>
@@ -318,9 +353,7 @@
       </ol>
     </section>
 
-
-    <!-- ===== Skills ===== -->
-    <section class="fade-in delay-4">
+    <section id="skills">
       <h2>Skills</h2>
       <dl class="skills">
         <dt>CAD</dt>
@@ -328,41 +361,40 @@
         <dt>Shop</dt>
         <dd>CNC, laser cutting, 3D printing, precision measurement, reading technical drawings, OSHA 10 safety</dd>
         <dt>Code</dt>
-        <dd>Python, C++, JavaScript, HTML/CSS, FastAPI, React, Git</dd>
+        <dd>Python, C++, JavaScript, HTML and CSS, FastAPI, React, Git</dd>
         <dt>Hardware</dt>
         <dd>Raspberry Pi, Linux, PC building, electronics</dd>
-        <dt>Other</dt>
+        <dt>Office</dt>
         <dd>Microsoft Office, Google Workspace</dd>
       </dl>
-    </section>
-
-
-    <!-- ===== Outside of work ===== -->
-    <section class="fade-in delay-4">
-      <h2>Outside of work</h2>
-      <p>Four years of high school soccer, three of indoor and outdoor track, weightlifting, building PCs, photography and 3D printing.</p>
+      <p class="aside">
+        Outside of all that: four years of high school soccer, three of indoor and outdoor track,
+        weightlifting, building PCs, and photography.
+      </p>
     </section>
 
 
     <!-- ===== Contact =====
-         No backend: the button opens an email with the subject filled in. -->
-    <section class="contact fade-in delay-4" id="contact">
-      <h2>Contact</h2>
+         No backend. "Request my resume" opens an email with the subject filled in;
+         "Copy email" uses main.js. -->
+    <section class="contact" id="contact">
+      <h2>Let's talk</h2>
       <p>
-        Hiring for a co-op or internship, or want a copy of my resume or references?
-        Send me an email and I'll get back to you.
+        Hiring for an internship or co-op, or want my resume or references?
+        Email me and I'll get back to you within a day or two.
       </p>
       <p class="contact-actions">
         <a class="button" href="mailto:LucasBian8282@gmail.com?subject=Resume%20request">Request my resume</a>
-        <a href="mailto:LucasBian8282@gmail.com">LucasBian8282@gmail.com</a>
+        <button class="button button-quiet" type="button" data-copy="LucasBian8282@gmail.com">Copy email</button>
         <a href="https://linkedin.com/in/lucas-j-bianco/">LinkedIn</a>
       </p>
+      <p class="note email-line">LucasBian8282@gmail.com</p>
     </section>
 
 
-    <!-- ===== Footer ===== -->
     <footer class="footer">
-      <p class="note">&copy; 2026 Lucas Bianco</p>
+      <p>&copy; 2026 Lucas Bianco</p>
+      <p><a href="#top">Back to top</a></p>
     </footer>
 
   </main>
