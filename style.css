@@ -144,7 +144,46 @@ section { margin-top: 56px; }
 }
 .timeline li + li { margin-top: 20px; }
 .timeline p { color: var(--muted); }
+.timeline h3 + p { margin-top: 0; }
 .when { font-family: var(--mono); font-size: 13px; color: var(--muted); padding-top: 2px; }
+
+
+.where { font-size: 14px; margin-bottom: 4px; }
+.timeline p.where + p { margin-top: 0; }
+
+
+/* =-=-=-=-=-=-=-=-=--
+   CERTIFICATIONS
+=-=-=-=-=-=-=-=-=-- */
+.certs { list-style: none; }
+.certs li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0 16px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+.certs li:last-child { border-bottom: 1px solid var(--line); }
+.cert-links { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px; }
+.cert-links:empty { display: none; }
+.cert-links .note { margin-top: 0; }
+
+
+/* =-=-=-=-=-=-=-=-=--
+   CONTACT
+=-=-=-=-=-=-=-=-=-- */
+.contact-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 16px; }
+
+.button {
+  display: inline-block;
+  padding: 8px 16px;
+  border: 1px solid var(--text);
+  border-radius: 6px;
+  color: var(--text);
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+}
+.button:hover { background: var(--text); color: var(--bg); }
 
 
 /* =-=-=-=-=-=-=-=-=--
@@ -204,6 +243,7 @@ section { margin-top: 56px; }
 @media (max-width: 520px) {
   .page { padding-top: 56px; }
   .timeline li, .skills { grid-template-columns: 1fr; gap: 2px; }
+  .certs li { grid-template-columns: 1fr; }
   .skills dd { margin-bottom: 8px; }
 }
 
