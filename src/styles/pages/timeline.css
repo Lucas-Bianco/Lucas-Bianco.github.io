@@ -1,0 +1,71 @@
+/* timeline page styles. Owned by the timeline page only. */
+
+.timeline-section { padding-top: 0; }
+
+/* ---- filter buttons (shown by JS) ---- */
+.timeline-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 48px; }
+.timeline-filters[hidden] { display: none; }
+.timeline-filters .filter-button {
+  font: inherit; font-size: 16px; font-weight: 550;
+  padding: 7px 14px; border-radius: 99px; cursor: pointer;
+  background: transparent; color: var(--ink); border: 1px solid var(--rule);
+  transition: border-color 0.15s, background 0.15s;
+}
+.timeline-filters .filter-button:hover { border-color: var(--pencil); }
+.timeline-filters .filter-button[aria-pressed='true'] { background: var(--blue); border-color: var(--blue); color: var(--paper); }
+
+/* ---- the line: year in a left column, events hang off a vertical rule ---- */
+.timeline { max-width: 56rem; }
+.timeline-year {
+  display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 0 32px;
+}
+.timeline-year.is-hidden { display: none; }
+.timeline-year-label {
+  position: sticky; top: 88px; align-self: start;
+  padding-top: 2px; color: var(--ink);
+  font-size: clamp(30px, 4vw, 44px); font-weight: 800; font-stretch: 125%;
+}
+.timeline-events { list-style: none; border-left: 1.5px solid var(--ink); padding-bottom: 40px; }
+.timeline-year:last-child .timeline-events { border-left-style: dashed; padding-bottom: 0; }
+
+.timeline-event { position: relative; padding: 0 0 36px 28px; }
+.timeline-event.is-hidden { display: none; }
+/* tick mark where the event meets the line, like a dimension tick */
+.timeline-event::before {
+  content: ''; position: absolute; left: -1px; top: 12px;
+  width: 18px; height: 1.5px; background: var(--ink);
+}
+.timeline-event::after {
+  content: ''; position: absolute; left: -6px; top: 8px;
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--paper); border: 1.5px solid var(--ink);
+}
+.timeline-event.cat-robotics::after,
+.timeline-event.cat-project::after { background: var(--blue); border-color: var(--blue); }
+
+.timeline-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; font-size: 15px; color: var(--pencil); }
+.timeline-meta time { font-weight: 650; color: var(--ink); }
+.timeline-cat { color: var(--pencil); }
+.timeline-title { margin-top: 4px; font-size: clamp(20px, 2.2vw, 24px); }
+.timeline-title a { color: var(--ink); text-decoration-color: var(--rule); }
+.timeline-title a:hover { color: var(--blue); text-decoration-color: var(--blue); }
+.timeline-detail { margin-top: 6px; color: var(--pencil); max-width: 38em; }
+
+/* ---- upcoming: hollow marker, dashed, blue label ---- */
+.timeline-event.is-upcoming::before { background: none; border-top: 1.5px dashed var(--blue); height: 0; }
+.timeline-event.is-upcoming::after { background: var(--paper); border: 1.5px dashed var(--blue); }
+.timeline-event.is-upcoming .timeline-title,
+.timeline-event.is-upcoming .timeline-title a { color: var(--pencil); }
+.timeline-upcoming {
+  font-size: 13px; font-weight: 650; color: var(--blue);
+  border: 1px dashed var(--blue); border-radius: 99px; padding: 0 8px;
+}
+
+@media (max-width: 640px) {
+  .timeline-year { grid-template-columns: 1fr; }
+  .timeline-year-label { position: static; margin-bottom: 16px; }
+  .timeline-events { margin-left: 6px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .timeline-filters .filter-button { transition: none; }
+}

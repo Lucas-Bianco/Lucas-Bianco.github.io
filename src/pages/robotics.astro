@@ -1,0 +1,396 @@
+---
+// Robotics tab: six years of VEX, then relaunching Tri-County's FRC team.
+import Base from '../layouts/Base.astro'
+import PageHeader from '../components/PageHeader.astro'
+import Figure from '../components/Figure.astro'
+import TitleBlock from '../components/TitleBlock.astro'
+import { site } from '../data/site'
+import '../styles/pages/robotics.css'
+
+import vexField from '../assets/photos/robotics/vex-robot-field.jpg'
+import vexWorlds from '../assets/photos/robotics/vex-worlds.jpg'
+import cad3236a from '../assets/photos/robotics/3236a-cad.jpg'
+import build3236a from '../assets/photos/robotics/3236a-build.jpg'
+import lebronBot from '../assets/photos/robotics/lebron-bot.jpg'
+import frcShop from '../assets/photos/robotics/frc-shop.jpg'
+import frcBoard from '../assets/photos/robotics/frc-whiteboard.jpg'
+
+const facts = [
+  { label: 'Running teams', value: 'Six years, 2021 to now' },
+  { label: 'VEX World Championship', value: 'Twice, in middle school' },
+  { label: 'High school VEX', value: 'Captain, team 3236A' },
+  { label: 'Team size', value: '8 students' },
+  { label: 'Code', value: 'C++ on EZ-Template' },
+  { label: 'FRC', value: 'Co-founder, 2027 rookie team' },
+  { label: 'FRC game', value: 'BIOCORE (2027)' },
+  { label: 'School', value: site.schoolShort },
+]
+
+// VEX game names by season are public; Lucas's results per season are still todo.
+const seasons = [
+  { years: '2021 to 2022', game: 'Tipping Point', level: 'Middle school', note: 'First season. Team led to VEX Worlds.', todo: 'confirm this was a Worlds year, add team number and result' },
+  { years: '2022 to 2023', game: 'Spin Up', level: 'Middle school', note: 'Back to VEX Worlds.', todo: 'confirm Worlds year, add team number and result' },
+  { years: '2023 to 2024', game: 'Over Under', level: 'High school', note: '', todo: 'team, role, and how the season went' },
+  { years: '2024 to 2025', game: 'High Stakes', level: 'High school', note: '', todo: 'team, role, and how the season went' },
+  { years: '2025 to 2026', game: 'Push Back', level: 'High school', note: 'Captain of 3236A, a team of 8. Led design, code, and competition strategy.', todo: 'best finish, awards, any qualifier results' },
+  { years: '2026 to 2027', game: 'FRC: BIOCORE', level: 'High school', note: 'Relaunching the school’s FRC team as a rookie.', todo: 'still doing VEX this year too? if so, add the game and team' },
+]
+
+const jsonLd = {
+  '@type': 'Person',
+  '@id': `${site.url}/#lucas`,
+  memberOf: [
+    {
+      '@type': 'OrganizationRole',
+      roleName: 'Team captain',
+      memberOf: { '@type': 'SportsTeam', name: 'VEX Robotics team 3236A', sport: 'VEX Robotics Competition' },
+    },
+    {
+      '@type': 'OrganizationRole',
+      roleName: 'Co-founder and student leader',
+      startDate: '2026',
+      memberOf: { '@type': 'SportsTeam', name: 'Tri-County FRC', sport: 'FIRST Robotics Competition' },
+    },
+  ],
+}
+---
+<Base
+  title="Robotics"
+  description="Six years running robotics teams: VEX Worlds twice in middle school, captain of VEX team 3236A, and relaunching Tri-County's FRC team from nothing for 2027."
+  jsonLd={jsonLd}
+>
+  <PageHeader
+    title="Robotics"
+    measure="2021 to now"
+    lede="I've been running robotics teams for six years. It started with VEX in middle school, where my team made it to Worlds twice. Now I captain a high school VEX team and I'm helping restart my school's FRC team from zero. This page is how all of that actually works."
+  />
+
+  <section class="band-dark robo-hero" aria-label="VEX robot on the field">
+    <div class="frame">
+      <Figure
+        src={vexField}
+        alt="Team 3236A's VEX robot on the competition field during a Push Back match"
+        caption="3236A on the field during the Push Back season."
+        fig={1}
+        bleed
+        eager
+        sizes="100vw"
+      />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="frame stack-md">
+      <h2 class="visually-hidden">Robotics facts</h2>
+      <TitleBlock items={facts} />
+    </div>
+  </section>
+
+  <!-- VEX: middle school -->
+  <section class="section" aria-labelledby="vex-start">
+    <div class="frame split">
+      <div class="prose">
+        <h2 id="vex-start">VEX, where it started</h2>
+        <p>
+          I joined VEX in 2021, in middle school, and ended up leading the team: the robot, the code,
+          and who did what at competitions. <span class="todo">when you took over and how big the team was</span>
+        </p>
+        <p>
+          We made it to the VEX World Championship twice. <span class="todo">years, team number, division, and how you placed at each Worlds</span>
+        </p>
+        <p>
+          Worlds was the first time I saw how big this gets. Hundreds of teams, every one of them with
+          a robot that solved the same game differently. <span class="todo">one specific memory from Worlds: a match, a robot you studied, something that went wrong</span>
+        </p>
+        <p>
+          Middle school taught me the basics I still use. Get a robot driving early. Practice driving
+          more than you think you need to. And the team that knows its own robot best usually beats
+          the team with the fanciest one.
+        </p>
+      </div>
+      <Figure
+        src={vexWorlds}
+        alt="Lucas's middle school VEX team with their robot at the VEX World Championship"
+        caption="At VEX Worlds with my middle school team."
+        fig={2}
+      />
+    </div>
+  </section>
+
+  <!-- VEX: high school captain -->
+  <section class="section band-dark robo-band" aria-labelledby="vex-captain">
+    <div class="frame stack-lg">
+      <div class="column prose">
+        <h2 id="vex-captain">Captain of 3236A</h2>
+        <p>
+          In high school I captain VEX team 3236A. There are 8 of us. For the Push Back season I led
+          the design process, the code, and our competition strategy, and I ran the team at events.
+        </p>
+        <p>
+          Eight people is a strange size. It's too many for everyone to work on the robot at once, and
+          too few to split into real subteams. Most of my job as captain is making sure nobody is
+          standing around and nobody is stuck doing the same thing all season.
+          <span class="todo">how you actually split the 8 (builders, coders, driver, notebook?)</span>
+        </p>
+      </div>
+
+      <div class="robo-pair">
+        <Figure
+          src={cad3236a}
+          alt="CAD model of team 3236A's Push Back robot"
+          caption="The 3236A robot in CAD before we cut anything."
+          fig={3}
+        />
+        <Figure
+          src={build3236a}
+          alt="Team 3236A's robot partly built on a workbench"
+          caption="Mid-build on the bench."
+          fig={4}
+        />
+      </div>
+
+      <div class="robo-how">
+        <div class="robo-how-item">
+          <h3>Design process</h3>
+          <p>
+            Every season starts with the game manual. Before anyone builds, we figure out how matches
+            are scored and what a winning robot has to do. Then we sketch options, pick one, and get a
+            drivetrain moving as fast as possible so the drivers can start practicing.
+          </p>
+          <p class="small muted"><span class="todo">how 3236A's Push Back robot scores, and one design you threw out and why</span></p>
+        </div>
+        <div class="robo-how-item">
+          <h3>Code</h3>
+          <p>
+            I write our code in C++ on EZ-Template, a library for VEX V5 that handles the drive PID and
+            the autonomous selector. That frees me to spend my time on routes and mechanisms instead of
+            rewriting the same drive math every season.
+          </p>
+          <p class="small muted"><span class="todo">sensors you use, how many autons you keep, how you tune them</span></p>
+        </div>
+        <div class="robo-how-item">
+          <h3>Competition strategy</h3>
+          <p>
+            At events I handle strategy: which auton to run against which alliance, what to tell our
+            partner before a match, and what to change between matches when something breaks.
+          </p>
+          <p class="small muted"><span class="todo">do you drive? who scouts, and how (paper, spreadsheet, app)?</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Season list -->
+  <section class="section" aria-labelledby="seasons">
+    <div class="frame stack-md">
+      <h2 id="seasons">Season by season</h2>
+      <ul class="ruled-list season-list">
+        {seasons.map((s) => (
+          <li>
+            <p class="season-years">{s.years}</p>
+            <div>
+              <h3>{s.game}</h3>
+              <p class="small muted">{s.level}</p>
+            </div>
+            <p>
+              {s.note && <span>{s.note} </span>}
+              <span class="todo">{s.todo}</span>
+            </p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- A season, in order -->
+  <section class="section band-tint" aria-labelledby="season-shape">
+    <div class="frame stack-md">
+      <div class="column prose">
+        <h2 id="season-shape">What a season looks like</h2>
+        <p>Every VEX season runs on roughly the same loop. The game changes, the order doesn't.</p>
+      </div>
+      <ol class="season-steps">
+        <li>
+          <h3>Game reveal</h3>
+          <p>Read the manual as a team. Work out how points are scored and what wins matches.</p>
+        </li>
+        <li>
+          <h3>Ideas on the board</h3>
+          <p>Everyone sketches. We compare designs against the scoring, not against who drew them.</p>
+        </li>
+        <li>
+          <h3>CAD and first build</h3>
+          <p>Model the robot, then build a driving base early so practice can start.</p>
+        </li>
+        <li>
+          <h3>Code and autons</h3>
+          <p>Drive code first, then autonomous routes on EZ-Template, tuned on a practice field.</p>
+        </li>
+        <li>
+          <h3>Compete and rebuild</h3>
+          <p>Every event shows what's weak. Fix it before the next one. Most robots get rebuilt mid-season.</p>
+        </li>
+        <li>
+          <h3>Qualify or regroup</h3>
+          <p>Push for States and Worlds. If we don't make it, write down why before next season.</p>
+        </li>
+      </ol>
+      <p class="small muted column"><span class="todo">check this matches how your seasons really go; add rough months for each step</span></p>
+    </div>
+  </section>
+
+  <!-- Lessons -->
+  <section class="section" aria-labelledby="lessons">
+    <div class="frame column prose">
+      <h2 id="lessons">What leading my friends taught me</h2>
+      <p>
+        The hardest part of captaining isn't the robot. It's that everyone on the team is my age, and
+        a lot of them are my friends. I can't order anyone around, and I wouldn't want to.
+      </p>
+      <p>
+        What works is making decisions out loud with reasons. If I say "we're switching intakes," I
+        need to show why the old one loses us points. When people see the reasoning, they argue with
+        the reasoning instead of with me, and that's a much better argument to have.
+      </p>
+      <p>
+        I've also learned to hand off things I'd rather do myself. If I write all the code and drive
+        every match, the team falls apart the year I leave. Teaching someone else is slower this
+        season and faster every season after.
+      </p>
+      <p><span class="todo">one real moment: a disagreement on the team and how it got settled</span></p>
+    </div>
+  </section>
+
+  <!-- FRC -->
+  <section class="band-dark robo-hero" aria-label="The LeBron bot">
+    <div class="frame">
+      <Figure
+        src={lebronBot}
+        alt="The LeBron bot, a basketball-shooting robot built on a tank-drive chassis"
+        caption="The LeBron bot: a basketball shooter on a tank chassis, our warm-up build before the real season."
+        fig={5}
+        bleed
+        sizes="100vw"
+      />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="frc">
+    <div class="frame stack-lg">
+      <div class="column prose">
+        <h2 id="frc">Restarting FRC at Tri-County</h2>
+        <p>
+          In 2026, two other student leaders and I started rebuilding our school's FRC team for the
+          2027 season. The game is BIOCORE. We started with no robot and no budget.
+        </p>
+        <p>
+          Tri-County had an FRC team years ago that went dormant in 2019. We aren't picking up where it
+          left off. We're registering as a brand-new rookie team, so its history isn't ours to claim.
+          Everything on this page is what we've built since starting over.
+        </p>
+
+        <h3>Starting from nothing</h3>
+        <p>
+          FRC is a lot bigger than VEX. The robots are full size, the parts are real metal, and just
+          registering costs real money. With no budget, the first job wasn't the robot at all. It was
+          finding people willing to fund one.
+        </p>
+        <p>
+          So I cold-emailed local companies, explained who we are, and asked them to sponsor a rookie
+          team. Writing an email a stranger actually reads is its own skill. <span class="todo">roughly how many companies you emailed and how many replied</span>
+        </p>
+
+        <h3>The LeBron bot</h3>
+        <p>
+          Before the real season we needed something to build, mostly to learn how to work together
+          and what FRC parts feel like. We built the LeBron bot: a basketball shooter on a tank chassis.
+          It's a goofy name for a serious test of our drivetrain, our wiring, and our programming.
+        </p>
+        <p><span class="todo">how it shoots (flywheel? catapult?), how far, and what broke first</span></p>
+      </div>
+
+      <div class="split robo-rules">
+        <div class="prose">
+          <h3>Two team rules</h3>
+          <p>We set two rules early, and they've done more for the team than any single design.</p>
+          <ul class="ruled-list rules-list">
+            <li>
+              <strong>Ideas go on the board with no names.</strong> Nobody's idea wins because it's
+              theirs, and nobody's gets ignored because they're new. We judge the sketch, not the person.
+            </li>
+            <li>
+              <strong>If it can be tested in under 10 minutes, we test it.</strong> We don't spend half an
+              hour debating something we could just try. Build the quick version, run it, and the result
+              settles it.
+            </li>
+          </ul>
+        </div>
+        <Figure
+          src={frcBoard}
+          alt="A whiteboard covered in unlabeled robot sketches from an FRC design meeting"
+          caption="Ideas on the board, no names attached."
+          fig={6}
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="section band-dark robo-band" aria-labelledby="frc-votech">
+    <div class="frame stack-lg">
+      <Figure
+        src={frcShop}
+        alt="Tri-County FRC students working together in the school shop"
+        caption="The team working in the shop."
+        fig={7}
+        bleed
+        sizes="100vw"
+      />
+      <p class="small muted"><span class="todo">Fig. 7 caption: add teammates' first names, left to right</span></p>
+      <div class="split">
+        <div class="prose">
+          <h2 id="frc-votech">Why FRC fits a vocational school</h2>
+          <p>
+            At a lot of schools, FRC is the only place students touch a mill or crimp a wire. At
+            Tri-County, students already learn those things in their shop programs. FRC gives
+            them a reason to use all of it on one machine.
+          </p>
+          <p>
+            That's the pitch. Students run the whole thing: design, machining, wiring, and programming.
+            The robot gets made by the people who are training to do this for a living.
+          </p>
+          <p><span class="todo">which shops your teammates come from, and the machines you can use</span></p>
+        </div>
+        <div class="prose">
+          <h2>The team website</h2>
+          <p>
+            I built the team's website by hand in plain HTML and CSS, no framework. It exists mainly so
+            sponsors who get my emails can see who we are and what their money would do.
+          </p>
+          <p>
+            <a href="/projects/frc-website/">How I built the FRC team website</a>
+          </p>
+          <p class="small muted"><span class="todo">add the live site link once it's public</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="next">
+    <div class="frame column prose">
+      <h2 id="next">What's next</h2>
+      <p>
+        Kickoff for BIOCORE is in January 2027. Between now and then the job is the same as it's been
+        since we started: get sponsors to commit, get new students comfortable in the shop, and make
+        sure the team can run without any one of the three of us.
+      </p>
+      <p>
+        If you're a local company that might sponsor a rookie FRC team, or you just want to talk
+        robotics, email me at <a href={`mailto:${site.email}`}>{site.email}</a>.
+      </p>
+      <div class="actions">
+        <a class="button" href="/projects/">See my projects</a>
+        <a class="button button-quiet" href="/experience/">Work experience</a>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,25 @@
+/* uses page styles. Owned by the uses page only. */
+
+.uses-updated { margin-top: 16px; }
+.uses-hero .figure img { aspect-ratio: 16 / 10; object-fit: cover; }
+
+/* In-page links to each group */
+.uses-toc ul { display: flex; flex-wrap: wrap; gap: 8px 20px; list-style: none; padding-bottom: 24px; border-bottom: 1.5px solid var(--ink); }
+.uses-toc a { font-weight: 600; font-size: 16px; }
+
+/* Each group: heading on the left, ruled list on the right */
+.uses-groups > * + * { margin-top: clamp(48px, 6vw, 80px); }
+.uses-groups { margin-top: clamp(40px, 5vw, 64px); }
+.uses-group {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: 20px clamp(32px, 5vw, 72px); align-items: start;
+}
+.uses-group-head { position: sticky; top: 88px; }
+.uses-group-head p { margin-top: 10px; font-size: 16px; }
+.uses-list h3 { font-size: 19px; }
+.uses-list p { margin-top: 4px; color: var(--pencil); }
+.uses-list p:empty { display: none; }
+@media (max-width: 860px) {
+  .uses-group { grid-template-columns: 1fr; }
+  .uses-group-head { position: static; }
+}

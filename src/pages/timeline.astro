@@ -1,0 +1,101 @@
+---
+// Timeline: everything in order, grouped by year, filterable by category.
+import Base from '../layouts/Base.astro'
+import PageHeader from '../components/PageHeader.astro'
+import { timeline, timelineCategories } from '../data/timeline'
+import '../styles/pages/timeline.css'
+
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const when = (date: string, label?: string) => {
+  if (label) return label
+  const [y, m] = date.split('-')
+  return m ? `${months[Number(m) - 1]} ${y}` : y
+}
+const catLabel = Object.fromEntries(timelineCategories.map((c) => [c.id, c.label]))
+
+// group by year, keeping data order inside a year
+const years: { year: string; events: typeof timeline }[] = []
+for (const e of timeline) {
+  const y = e.date.slice(0, 4)
+  let g = years.find((x) => x.year === y)
+  if (!g) years.push((g = { year: y, events: [] }))
+  g.events.push(e)
+}
+const first = years[0].year
+const last = years[years.length - 1].year
+---
+<Base
+  title="Timeline"
+  description="Lucas Bianco from 2021 to 2027: VEX Worlds, Tri-County Engineering Technology, certifications, HexaFlow at NASA, the FRC relaunch, and a Dell co-op."
+>
+  <PageHeader
+    title="Timeline"
+    measure={`${first} to ${last}`}
+    lede="Robotics, school, work and side projects in the order they happened. The last few are still ahead of me."
+  />
+
+  <section class="section timeline-section">
+    <div class="frame">
+      <div class="timeline-filters" role="group" aria-label="Filter timeline by category" hidden>
+        <button type="button" class="filter-button" data-filter="all" aria-pressed="true">Everything</button>
+        {timelineCategories.map((c) => (
+          <button type="button" class="filter-button" data-filter={c.id} aria-pressed="false">{c.label}</button>
+        ))}
+      </div>
+      <p class="visually-hidden" aria-live="polite" data-timeline-status></p>
+
+      <div class="timeline">
+        {years.map((g) => (
+          <section class="timeline-year" aria-labelledby={`year-${g.year}`}>
+            <h2 class="timeline-year-label" id={`year-${g.year}`}>{g.year}</h2>
+            <ol class="timeline-events">
+              {g.events.map((e) => (
+                <li class:list={['timeline-event', `cat-${e.category}`, e.upcoming && 'is-upcoming']} data-category={e.category}>
+                  <p class="timeline-meta">
+                    <time datetime={e.date}>{when(e.date, e.label)}</time>
+                    <span class="timeline-cat">{catLabel[e.category]}</span>
+                    {e.upcoming && <span class="timeline-upcoming">Upcoming</span>}
+                  </p>
+                  <h3 class="timeline-title">
+                    {e.href ? <a href={e.href}>{e.title}</a> : e.title}
+                  </h3>
+                  <p class="timeline-detail">
+                    {e.detail}
+                    {e.todo && <> <span class="todo">{e.todo}</span></>}
+                  </p>
+                </li>
+              ))}
+            </ol>
+          </section>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const filters = document.querySelector<HTMLElement>('.timeline-filters')
+  if (filters) {
+    filters.hidden = false
+    const buttons = Array.from(filters.querySelectorAll<HTMLButtonElement>('.filter-button'))
+    const events = Array.from(document.querySelectorAll<HTMLElement>('.timeline-event'))
+    const years = Array.from(document.querySelectorAll<HTMLElement>('.timeline-year'))
+    const status = document.querySelector<HTMLElement>('[data-timeline-status]')
+
+    filters.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.filter-button')
+      if (!btn) return
+      const f = btn.dataset.filter
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)))
+      let shown = 0
+      events.forEach((ev) => {
+        const show = f === 'all' || ev.dataset.category === f
+        ev.classList.toggle('is-hidden', !show)
+        if (show) shown++
+      })
+      // hide a year marker when nothing under it is showing
+      years.forEach((y) => y.classList.toggle('is-hidden', !y.querySelector('.timeline-event:not(.is-hidden)')))
+      if (status) status.textContent = `Showing ${shown} events`
+    })
+  }
+</script>

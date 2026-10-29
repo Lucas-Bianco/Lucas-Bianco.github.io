@@ -1,0 +1,37 @@
+---
+// Notes: short write-ups about what I learned building things. Newest first.
+import { getCollection } from 'astro:content'
+import Base from '../../layouts/Base.astro'
+import PageHeader from '../../components/PageHeader.astro'
+import '../../styles/pages/notes.css'
+
+const notes = (await getCollection('notes')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })
+---
+<Base
+  title="Notes"
+  description="Notes by Lucas Bianco on what building things actually taught him: real test results, mistakes he caught, and what he would do differently next time."
+>
+  <PageHeader
+    title="Notes"
+    measure={`${notes.length} ${notes.length === 1 ? 'note' : 'notes'}`}
+    lede="Write-ups on what actually happened when I tested my own projects. Mostly the parts that didn't go to plan."
+  />
+
+  <section class="section notes-section">
+    <div class="frame">
+      <ol class="ruled-list notes-list">
+        {notes.map((n) => (
+          <li class="note-item">
+            <time class="note-date" datetime={n.data.date.toISOString().slice(0, 10)}>{fmt(n.data.date)}</time>
+            <div class="note-body">
+              <h2 class="note-title"><a href={`/notes/${n.id}/`}>{n.data.title}</a></h2>
+              <p class="note-summary">{n.data.summary}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+      <p class="small muted notes-rss">Want new ones? There's an <a href="/notes/rss.xml">RSS feed</a>.</p>
+    </div>
+  </section>
+</Base>

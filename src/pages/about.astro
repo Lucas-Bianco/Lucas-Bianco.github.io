@@ -1,0 +1,298 @@
+---
+import Base from '../layouts/Base.astro'
+import PageHeader from '../components/PageHeader.astro'
+import Figure from '../components/Figure.astro'
+import TitleBlock from '../components/TitleBlock.astro'
+import { site } from '../data/site'
+import '../styles/pages/about.css'
+
+import portrait from '../assets/photos/about/portrait.jpg'
+import soccerTrack from '../assets/photos/about/soccer-track.jpg'
+import volunteering from '../assets/photos/about/volunteering.jpg'
+import photoSample from '../assets/photos/about/photography-sample.jpg'
+import workbench from '../assets/photos/about/workbench.jpg'
+
+const facts = [
+  { label: 'Name', value: site.fullName },
+  { label: 'School', value: site.schoolShort },
+  { label: 'Program', value: site.program },
+  { label: 'Class of', value: String(site.classOf) },
+  { label: 'GPA', value: site.gpa },
+  { label: 'Robotics', value: 'Six years, VEX and FRC' },
+  { label: 'Co-op', value: 'Dell, Process Development' },
+  { label: 'Sports', value: 'Soccer, track, lifting' },
+  { label: 'Volunteers', value: 'FreeKicks Special Olympics' },
+  { label: 'Based in', value: site.region },
+]
+
+const description =
+  'About Lucas Bianco: a vocational engineering student and robotics captain, how he got into engineering, how he works, and what he does outside the shop.'
+---
+<Base title="About" description={description} type="profile">
+  <PageHeader title="About" measure={`class of ${site.classOf}`} />
+
+  <section class="about-intro">
+    <div class="frame about-intro-grid">
+      <Figure
+        src={portrait}
+        alt="Portrait of Lucas Bianco"
+        eager
+        sizes="(max-width: 860px) 100vw, 40vw"
+      />
+      <div class="about-intro-text stack-md">
+        <h2>Who I am</h2>
+        <p class="lede">
+          I'm Lucas. I'm a senior engineering student at {site.school} in Franklin, MA,
+          in the {site.program} program, class of {site.classOf}.
+        </p>
+        <div class="prose">
+          <p>
+            I like building things that are slightly too hard for me when I start. If I already
+            know how to do every part of a project, I get bored halfway through. If there's one
+            piece I have no idea how to solve yet, I'll keep coming back to it until it works.
+          </p>
+          <p>
+            Right now that means captaining a VEX team, relaunching my school's FRC team from
+            nothing, running the website for a NASA HUNCH project, a co-op at Dell, and a few
+            software projects at home that got bigger than I planned.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="frame">
+      <div class="column prose">
+        <h2>How I got into engineering</h2>
+        <p>
+          It started with robotics in middle school. I joined a VEX team, and by the end of it I
+          was leading that team, which went to the VEX World Championship twice. That's six years of
+          robotics now, running from middle school VEX to captaining my high school VEX team
+          and starting an FRC team.
+        </p>
+        <p>
+          <span class="todo">The real origin story: what first got you building, and the moment you knew you wanted engineering</span>
+        </p>
+        <p>
+          Picking a vocational school with an engineering program was the next step. It meant
+          CAD, shop time, and certifications in things like precision measurement and mechatronics
+          alongside regular classes, which is a lot closer to how I like to learn.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section band-dark about-how">
+    <div class="frame">
+      <div class="split">
+        <div class="stack-md">
+          <h2>How I work</h2>
+          <p class="lede">
+            Most of my habits come from being wrong about something I was sure of.
+          </p>
+          <Figure
+            src={workbench}
+            alt="Lucas's desk and workbench with 3D printers and tools"
+            caption="Where most of it happens. Desk, printers, and the pegboard wall."
+            fig={1}
+            sizes="(max-width: 860px) 100vw, 45vw"
+          />
+        </div>
+        <ul class="ruled-list about-rules">
+          <li>
+            <h3>Measure before you believe</h3>
+            <p>
+              I built a forex scanner that was supposed to call short-term moves. It looked smart.
+              Then I backtested it: a 46% out-of-sample win rate when it needed 55.6% just to break
+              even. Real ML models only got to about 51%. I never placed a trade, and I'm glad I
+              checked before I trusted it. Now I try to test the thing before I get attached to it.
+            </p>
+          </li>
+          <li>
+            <h3>If it takes ten minutes to test, test it</h3>
+            <p>
+              On our FRC team, anything we can test in under ten minutes gets tested instead of
+              argued about. A quick test settles things faster than a long debate, and nobody has to win the argument.
+            </p>
+          </li>
+          <li>
+            <h3>Ideas go on the board with no names</h3>
+            <p>
+              Another FRC rule. Once an idea is on the board, it's the team's. That way nobody
+              defends a design because it's theirs, and the quiet people actually pitch things.
+            </p>
+          </li>
+          <li>
+            <h3>Write the spec, then prove it</h3>
+            <p>
+              For Jarvis, my home system on six Raspberry Pis, every stage starts with a written
+              spec and every feature needs proof: a screenshot or a test that shows it working. It
+              slows me down a little at the start and saves me a lot of "wait, did that ever work?"
+              later.
+            </p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="frame stack-lg">
+      <div class="column prose">
+        <h2>Outside of engineering</h2>
+        <p>
+          I've played four years of high school soccer and three years of indoor and outdoor
+          track, and I lift.
+          <span class="todo">One line on what sports taught you that shows up in your engineering</span>
+        </p>
+        <p>
+          The rest of my free time goes to photography and making videos, music, building PCs,
+          Pokémon cards, and hunting for good deals. That last one is a real hobby. I will spend an
+          embarrassing amount of time making sure I'm not overpaying for a part.
+        </p>
+      </div>
+      <div class="about-photo-pair">
+        <Figure
+          src={soccerTrack}
+          alt="Lucas playing soccer for his high school team"
+          caption="Four seasons of high school soccer, three of track."
+          fig={2}
+          sizes="(max-width: 860px) 100vw, 50vw"
+        />
+        <Figure
+          src={photoSample}
+          alt="A photograph taken by Lucas"
+          caption="One of my own photos."
+          fig={3}
+          sizes="(max-width: 860px) 100vw, 50vw"
+        />
+      </div>
+      <p class="small muted column">
+        <span class="todo">Fig. 3 caption: say what the photo is, where you took it, and what camera</span>
+      </p>
+    </div>
+  </section>
+
+  <section class="section band-tint">
+    <div class="frame">
+      <div class="split">
+        <div class="prose">
+          <h2>Volunteering with FreeKicks</h2>
+          <p>
+            Since 2024 I've volunteered with FreeKicks, a Special Olympics soccer program in
+            Franklin, MA. We teach and play soccer with kids of all abilities.
+          </p>
+          <p>
+            It taught me to communicate differently. The way I'd explain a drill to my own team
+            doesn't work for every kid, so I had to learn to show instead of tell, break things into
+            smaller steps, and read what someone needs from me before I start talking.
+          </p>
+          <p>
+            It also taught me patience. Progress doesn't always look the same for everyone, and
+            that carries over to leading a robotics team too.
+          </p>
+          <p>
+            <span class="todo">One specific moment from FreeKicks that stuck with you</span>
+          </p>
+        </div>
+        <Figure
+          src={volunteering}
+          alt="Volunteers and players on the field at a FreeKicks soccer session, shown from behind"
+          caption="A FreeKicks session in Franklin. Shot from behind on purpose: no kids' faces on this site."
+          fig={4}
+          sizes="(max-width: 860px) 100vw, 45vw"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="frame">
+      <div class="column prose">
+        <h2>What I'm looking for</h2>
+        <p>
+          Engineering internships and co-ops. I'm already doing a co-op on Dell's Process
+          Development team, alternating weeks with school, and I want more of that: real problems,
+          real hardware, and people who know more than I do.
+        </p>
+        <p>
+          <span class="todo">Where you want to go next: the field, college plans in general terms, the kind of role after high school</span>
+        </p>
+        <p>
+          If you have something that fits, email me at <a href={`mailto:${site.email}`}>{site.email}</a>
+          or find me on <a href={site.linkedin}>LinkedIn</a>. Resume and references on request.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="frame stack-md">
+      <h2>Fast facts</h2>
+      <TitleBlock items={facts} />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="frame">
+      <div class="column">
+        <h2>Questions people ask me</h2>
+        <div class="about-faq">
+          <details>
+            <summary>Why a vocational school?</summary>
+            <div class="prose">
+              <p>
+                I wanted to spend real time in a shop and on CAD, not just read about it. At
+                Tri-County I get both, plus certifications that mean something outside school.
+              </p>
+              <p><span class="todo">Your actual reason in one or two sentences</span></p>
+            </div>
+          </details>
+          <details>
+            <summary>How do you have time for all of this?</summary>
+            <div class="prose">
+              <p>
+                Honestly, not always well. Some weeks something slips. What helps is that I built
+                a system for it: Jarvis puts my day, deadlines and projects on a screen on my wall, so I'm
+                not deciding what to work on every time I sit down.
+              </p>
+            </div>
+          </details>
+          <details>
+            <summary>VEX or FRC?</summary>
+            <div class="prose">
+              <p>
+                VEX is where I learned to design, code, and lead. FRC is bigger in every way:
+                bigger robot, bigger team, and you have to raise the money yourself. Starting an FRC
+                team with no robot and no budget has taught me more about running a team than
+                anything else.
+              </p>
+            </div>
+          </details>
+          <details>
+            <summary>Are you more hardware or software?</summary>
+            <div class="prose">
+              <p>
+                Hardware first. Robotics, CAD, and shop work are what I want to do for a living.
+                The software projects happen because I keep needing tools that don't exist yet.
+              </p>
+            </div>
+          </details>
+          <details>
+            <summary>What's the project you're proudest of?</summary>
+            <div class="prose">
+              <p><span class="todo">Pick one and say why in two sentences</span></p>
+            </div>
+          </details>
+          <details>
+            <summary>What do you want to study after high school?</summary>
+            <div class="prose">
+              <p><span class="todo">Field of study, said in general terms (no college list)</span></p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

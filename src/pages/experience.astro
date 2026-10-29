@@ -1,0 +1,277 @@
+---
+// Experience: the detailed resume. Data lives in src/data/experience.ts and src/data/certs.ts.
+import Base from '../layouts/Base.astro'
+import PageHeader from '../components/PageHeader.astro'
+import TitleBlock from '../components/TitleBlock.astro'
+import { site } from '../data/site'
+import { jobs, leadership, education, skillGroups, strengths, sports } from '../data/experience'
+import { certs, filedCerts, unfiledCerts } from '../data/certs'
+import '../styles/pages/experience.css'
+
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+// "2025-07-26" -> "Jul 2025", "2021" -> "2021". Parsed by hand so time zones can't shift the month.
+function fmt(d: string | null): string {
+  if (!d) return 'Now'
+  const [y, m] = d.split('-')
+  return m ? `${months[Number(m) - 1]} ${y}` : y
+}
+function fmtDay(d: string): string {
+  const [y, m, day] = d.split('-')
+  return `${months[Number(m) - 1]} ${Number(day)}, ${y}`
+}
+function range(start: string, end: string | null) {
+  return `${fmt(start)} to ${end ? fmt(end) : 'now'}`
+}
+
+const resumeHref = `mailto:${site.email}?subject=${encodeURIComponent('Resume request')}`
+
+const quickFacts = [
+  { label: 'Now', value: 'Co-op, Dell Process Development' },
+  { label: 'School', value: `${site.schoolShort}, class of ${site.classOf}` },
+  { label: 'Program', value: site.program },
+  { label: 'GPA', value: site.gpa },
+  { label: 'Certifications', value: `${filedCerts.length} on file, ${unfiledCerts.length} more listed` },
+  { label: 'Robotics', value: '6 years, VEX captain, FRC co-founder' },
+]
+
+const jump = [
+  { href: '#work', label: 'Work' },
+  { href: '#leadership', label: 'Leadership' },
+  { href: '#certifications', label: 'Certifications' },
+  { href: '#education', label: 'Education' },
+  { href: '#skills', label: 'Skills' },
+]
+
+// Structured data: merges into the Person node Base already outputs (same @id).
+const abs = (path: string) => new URL(path, site.url).href
+const jsonLd = {
+  '@type': 'Person',
+  '@id': `${site.url}/#lucas`,
+  hasCredential: certs.map((c) => ({
+    '@type': 'EducationalOccupationalCredential',
+    name: c.name,
+    credentialCategory: 'certification',
+    recognizedBy: { '@type': 'Organization', name: c.issuer },
+    ...(c.date ? { dateCreated: c.date } : {}),
+    ...(c.file ? { url: abs(c.file) } : {}),
+    ...(c.verify ? { identifier: c.verify.code } : {}),
+    competencyRequired: c.covers,
+  })),
+  alumniOf: {
+    '@type': 'EducationalOrganization',
+    name: education.school,
+    address: { '@type': 'PostalAddress', addressLocality: 'Franklin', addressRegion: 'MA', addressCountry: 'US' },
+  },
+  affiliation: [
+    { '@type': 'Organization', name: 'VEX Robotics team 3236A' },
+    { '@type': 'Organization', name: 'Tri-County FRC' },
+    { '@type': 'Organization', name: 'NASA HUNCH (HexaFlow team)' },
+    { '@type': 'Organization', name: 'SkillsUSA' },
+    { '@type': 'Organization', name: 'FreeKicks Special Olympics, Franklin MA' },
+  ],
+}
+---
+<Base
+  title="Experience"
+  description="Lucas Bianco's resume in full: Dell Process Development co-op, robotics captain, NC3 and Autodesk certifications, Engineering Technology GPA 3.95."
+  type="profile"
+  jsonLd={jsonLd}
+>
+  <PageHeader
+    title="Experience"
+    measure="since 2021"
+    lede="I'm an Engineering Technology student who builds things. Right now that means a co-op at Dell's Franklin factory every other week, captaining a VEX team, restarting my school's FRC team, and a cashier job on the side. Here's all of it, with the details."
+  >
+    <div class="xp-intro stack-md">
+      <TitleBlock items={quickFacts} />
+      <div class="actions">
+        <a class="button" href={resumeHref}>Request my resume</a>
+        <a class="button button-quiet" href={site.linkedin}>LinkedIn</a>
+      </div>
+    </div>
+  </PageHeader>
+
+  <nav class="xp-jump" aria-label="Jump to a section">
+    <div class="frame">
+      <span class="xp-jump-label">Jump to</span>
+      <ul>
+        {jump.map((j) => <li><a href={j.href}>{j.label}</a></li>)}
+      </ul>
+    </div>
+  </nav>
+
+  <!-- WORK -->
+  <section class="section" id="work" aria-labelledby="work-h">
+    <div class="frame">
+      <h2 id="work-h">Work</h2>
+      <ol class="xp-list">
+        {jobs.map((j) => (
+          <li class="xp-entry">
+            <div class="xp-meta">
+              <p class="xp-dates">{range(j.start, j.end)}</p>
+              <p class="muted small">{j.location}</p>
+              {j.via && <p class="muted small">{j.via}</p>}
+            </div>
+            <div class="xp-body stack-sm">
+              <h3>{j.role}<span class="xp-org">{j.org}</span></h3>
+              {j.schedule && <p class="xp-tag small">{j.schedule}</p>}
+              <p>{j.summary}</p>
+              {(j.bullets.length > 0 || j.todos) && (
+                <ul class="xp-bullets">
+                  {j.bullets.map((b) => <li>{b}</li>)}
+                  {j.todos?.map((t) => <li><span class="todo">{t}</span></li>)}
+                </ul>
+              )}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- LEADERSHIP -->
+  <section class="section band-tint" id="leadership" aria-labelledby="lead-h">
+    <div class="frame">
+      <h2 id="lead-h">Leadership and teams</h2>
+      <p class="muted xp-sub">Robotics is where I learned to lead: six years of building, coding and running teams, plus a payload that NASA dropped.</p>
+      <ol class="xp-list">
+        {leadership.map((r) => (
+          <li class="xp-entry">
+            <div class="xp-meta">
+              <p class="xp-dates">{range(r.start, r.end)}</p>
+            </div>
+            <div class="xp-body stack-sm">
+              <h3>{r.role}<span class="xp-org">{r.org}</span></h3>
+              <p>{r.summary}</p>
+              {(r.bullets.length > 0 || r.todos) && (
+                <ul class="xp-bullets">
+                  {r.bullets.map((b) => <li>{b}</li>)}
+                  {r.todos?.map((t) => <li><span class="todo">{t}</span></li>)}
+                </ul>
+              )}
+              {r.link && <p><a href={r.link.href}>{r.link.label}</a></p>}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- CERTIFICATIONS -->
+  <section class="section band-dark xp-certs" id="certifications" aria-labelledby="cert-h">
+    <div class="frame">
+      <h2 id="cert-h">Certifications</h2>
+      <p class="xp-sub muted">Industry certifications in CAD, mechatronics and precision measurement. The PDFs are the real certificates, and the AutoCAD one can be checked directly with Certiport.</p>
+
+      <ul class="xp-cert-grid">
+        {filedCerts.map((c) => (
+          <li class="xp-cert">
+            <p class="xp-cert-date">{c.date ? fmtDay(c.date) : <span class="todo">date</span>}</p>
+            <h3>{c.name}</h3>
+            <p class="xp-cert-issuer">{c.issuer}{c.issuerDetail && <span>, {c.issuerDetail.charAt(0).toLowerCase() + c.issuerDetail.slice(1)}</span>}</p>
+            <ul class="xp-cert-covers">
+              {c.covers.map((b) => <li>{b}</li>)}
+            </ul>
+            <div class="xp-cert-links">
+              <a class="button" href={c.file!} target="_blank" rel="noopener">View certificate<span class="visually-hidden"> (PDF, opens in a new tab)</span></a>
+              {c.verify && (
+                <a class="button button-quiet" href={c.verify.url} target="_blank" rel="noopener">{c.verify.label}<span class="visually-hidden"> (opens in a new tab)</span></a>
+              )}
+            </div>
+            {c.verify && <p class="xp-cert-code small">Verification code <strong>{c.verify.code}</strong></p>}
+          </li>
+        ))}
+      </ul>
+
+      <h3 class="xp-unfiled-h">Also earned</h3>
+      <p class="muted small">These are listed on my resume. Their certificates aren't on the site yet.</p>
+      <ul class="xp-unfiled">
+        {unfiledCerts.map((c) => (
+          <li>
+            <div class="xp-unfiled-head">
+              <h4>{c.name}</h4>
+              <p class="muted small">{c.issuer}{c.date && `, ${fmtDay(c.date)}`}</p>
+            </div>
+            <p class="small">{c.covers.join('. ')}.</p>
+            {c.todos && <p class="small"><span class="todo">Lucas: send {c.todos.join(' and ')}</span></p>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section class="section" id="education" aria-labelledby="edu-h">
+    <div class="frame">
+      <h2 id="edu-h">Education</h2>
+      <div class="split xp-edu">
+        <div class="stack-md">
+          <h3>{education.school}<span class="xp-org">{education.location}</span></h3>
+          <p>
+            I'm in the {education.program} program, a hands-on vocational track: CAD, technical
+            drawings, CNC, precision measurement and electronics, alongside regular academics.
+          </p>
+          <p><span class="todo">One or two favorite ET projects or classes, with what you made</span></p>
+        </div>
+        <div class="stack-md">
+          <TitleBlock items={[
+            { label: 'Program', value: education.program },
+            { label: 'Years', value: `${education.start} to ${education.end}` },
+            { label: 'GPA', value: education.gpa },
+            { label: 'Class of', value: String(education.end) },
+          ]} />
+          <ul class="chips" aria-label="Activities">
+            {education.activities.map((a) => <li>{a}</li>)}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="section" id="skills" aria-labelledby="skills-h">
+    <div class="frame">
+      <h2 id="skills-h">Skills</h2>
+      <p class="xp-sub muted">Grouped by what kind of work they're for. Next to each group is where I've actually used it, so you can check.</p>
+      <ul class="ruled-list xp-skills">
+        {skillGroups.map((g) => (
+          <li>
+            <h3>{g.name}</h3>
+            <ul class="chips">
+              {g.skills.map((s) => <li>{s}</li>)}
+            </ul>
+            <p class="small muted">{g.usedOn}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- STRENGTHS -->
+  <section class="section" aria-labelledby="str-h">
+    <div class="frame split">
+      <div class="stack-md">
+        <h2 id="str-h">Strengths</h2>
+        <p class="muted">Anyone can list these. So here's the evidence for each one.</p>
+        <p class="small muted">Outside of all this: {sports.join('; ').toLowerCase()}.</p>
+      </div>
+      <dl class="xp-strengths">
+        {strengths.map((s) => (
+          <div><dt>{s.name}</dt><dd>{s.proof}</dd></div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <!-- RESUME REQUEST -->
+  <section class="section band-tint xp-cta" aria-labelledby="cta-h">
+    <div class="frame"><div class="column stack-md">
+      <h2 id="cta-h">Want the one-page version?</h2>
+      <p>I send my resume by email so it's always the current one. References are available on request.</p>
+      <div class="actions">
+        <a class="button" href={resumeHref}>Request my resume</a>
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+      </div>
+    </div></div>
+  </section>
+</Base>

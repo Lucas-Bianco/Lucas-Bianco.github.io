@@ -1,0 +1,216 @@
+---
+// Home: the "who is Lucas" front door. Hero, facts, right now, featured work, the other tabs, contact.
+import { Image } from 'astro:assets'
+import { getCollection } from 'astro:content'
+import Base from '../layouts/Base.astro'
+import Figure from '../components/Figure.astro'
+import TitleBlock from '../components/TitleBlock.astro'
+import { site } from '../data/site'
+import portrait from '../assets/photos/home/lucas-portrait.jpg'
+import domeTop from '../assets/photos/hexaflow/project-15.jpg'
+import '../styles/pages/home.css'
+
+const description =
+  'Lucas Bianco, Engineering Technology student in Massachusetts, class of 2027. Dell co-op, VEX robotics captain, NASA HUNCH finalist. Open to engineering co-ops.'
+
+const jsonLd = {
+  '@type': 'ProfilePage',
+  url: 'https://lucasbianco.com/',
+  name: 'Lucas Bianco',
+  dateModified: '2026-10-28',
+  mainEntity: { '@id': 'https://lucasbianco.com/#lucas' },
+}
+
+const facts = [
+  { label: 'Program', value: site.program },
+  { label: 'School', value: site.schoolShort },
+  { label: 'Class of', value: String(site.classOf) },
+  { label: 'GPA', value: site.gpa },
+  { label: 'Co-op', value: 'Dell, Process Development' },
+  { label: 'Robotics', value: 'VEX captain, team 3236A' },
+  { label: 'NASA HUNCH', value: 'Finalist, HexaFlow' },
+  { label: 'Looking for', value: 'Engineering internships and co-ops' },
+]
+
+const now = [
+  {
+    title: 'Dell co-op',
+    text: 'Process Development at the Franklin factory. I alternate weeks: one at Dell, one at school.',
+  },
+  {
+    title: 'Relaunching FRC',
+    text: 'Two other student leaders and I are rebuilding Tri-County’s FIRST Robotics team from nothing for the 2027 season.',
+  },
+  {
+    title: 'HexaFlow at ASGSR',
+    text: 'Our NASA HUNCH team is presenting HexaFlow at the ASGSR conference in December.',
+  },
+]
+
+const all = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order)
+const featuredOnly = all.filter((p) => p.data.featured)
+const featured = featuredOnly.length > 0 ? featuredOnly : all.slice(0, 4)
+
+const tabs = [
+  { href: '/robotics/', label: 'Robotics', line: 'Six years of VEX, two trips to Worlds, and a new FRC team.' },
+  { href: '/experience/', label: 'Experience', line: 'Dell co-op, Shaw’s, and the certifications behind them.' },
+  { href: '/about/', label: 'About', line: 'Soccer, track, volunteering, and what I like to build.' },
+  { href: '/timeline/', label: 'Timeline', line: 'Everything in order, from 2021 to now.' },
+  { href: '/gallery/', label: 'Gallery', line: 'Photos from the shop, competitions, and builds.' },
+  { href: '/notes/', label: 'Notes', line: 'Short write-ups on problems I got stuck on.' },
+  { href: '/uses/', label: 'Uses', line: 'The printers, software, and tools I work with.' },
+]
+
+const mailto = `mailto:${site.email}?subject=${encodeURIComponent('Resume request')}`
+---
+<Base
+  title="Lucas Bianco | Engineering Technology Student, Massachusetts"
+  description={description}
+  type="profile"
+  jsonLd={jsonLd}
+>
+  <section class="page-header band-dark home-hero" aria-labelledby="hero-title">
+    <div class="frame home-hero-grid">
+      <div class="home-hero-text">
+        <div class="title-measure">
+          <h1 id="hero-title" class="home-name">Lucas Bianco</h1>
+          <div class="dimension" aria-hidden="true"><span>class of 2027</span></div>
+        </div>
+        <p class="lede home-intro">
+          I’m an Engineering Technology student at Tri-County in Franklin, Massachusetts. I’ve run
+          robotics teams for six years, and right now I split my weeks between school and a co-op on
+          Dell’s Process Development team. I like building things that are a little too hard for me
+          when I start.
+        </p>
+        <div class="actions">
+          <a class="button" href="/#contact">Get in touch</a>
+          <a class="button-quiet home-link" href="/projects/">See my projects</a>
+          <a class="button-quiet home-link" href={site.linkedin} rel="me">LinkedIn</a>
+        </div>
+      </div>
+      <div class="home-portrait">
+        <Image
+          src={portrait}
+          alt="Portrait of Lucas Bianco"
+          loading="eager"
+          fetchpriority="high"
+          widths={[480, 720, 960, 1200]}
+          sizes="(max-width: 860px) 100vw, 40vw"
+        />
+      </div>
+    </div>
+    <div class="frame home-hero-figure">
+      <Figure
+        src={domeTop}
+        alt="Top view of the HexaFlow dome: a gray printed bowl covered in hexagonal grooves, with brass inserts in the four corners"
+        caption="HexaFlow, our NASA HUNCH payload. The hexagonal grooves use capillary action to move water across the dome to the plant, no gravity needed."
+        fig={1}
+        bleed
+        sizes="100vw"
+      />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="facts-title">
+    <div class="frame">
+      <h2 id="facts-title" class="home-h2">Quick facts</h2>
+      <TitleBlock items={facts} />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="now-title">
+    <div class="frame home-now">
+      <div>
+        <h2 id="now-title" class="home-h2">Right now</h2>
+        <p class="muted small">Updated October 2026</p>
+      </div>
+      <ul class="ruled-list home-now-list">
+        {now.map((n) => (
+          <li>
+            <h3>{n.title}</h3>
+            <p class="muted">{n.text}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section band-tint home-work" aria-labelledby="work-title">
+    <div class="frame">
+      <div class="home-section-head">
+        <h2 id="work-title">Featured work</h2>
+        <a href="/projects/">All projects</a>
+      </div>
+      {featured.length > 0 ? (
+        <div class="card-grid">
+          {featured.map((p) => (
+            <a class="card" href={`/projects/${p.id}/`}>
+              <div class="card-photo">
+                <Image src={p.data.cover} alt={p.data.coverAlt} widths={[400, 640, 800]} sizes="(max-width: 760px) 100vw, 33vw" />
+              </div>
+              <h3>{p.data.title}</h3>
+              <p>{p.data.summary}</p>
+              <p class="meta">{p.data.role}, {p.data.started.slice(0, 4)}</p>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <p class="muted">Project write-ups are on their way. For now, the <a href="/projects/">projects page</a> has the list.</p>
+      )}
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="more-title">
+    <div class="frame">
+      <h2 id="more-title" class="home-h2">The rest of the site</h2>
+      <ul class="home-index">
+        {tabs.map((t) => (
+          <li>
+            <a href={t.href}>
+              <span class="home-index-label">{t.label}</span>
+              <span class="home-index-line">{t.line}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section id="contact" class="section band-dark home-contact" aria-labelledby="contact-title">
+    <div class="frame home-contact-grid">
+      <div>
+        <h2 id="contact-title" class="home-contact-title">Let’s talk</h2>
+      </div>
+      <div class="stack-md">
+        <p class="lede">
+          I’m looking for engineering internships and co-ops. If you have something in mind, email me.
+          My resume and references are available on request.
+        </p>
+        <div class="actions">
+          <a class="button" href={mailto}>Email me for my resume</a>
+          <button type="button" class="button button-quiet" data-copy={site.email}>Copy email</button>
+        </div>
+        <p class="home-contact-links">
+          <a href={site.linkedin} rel="me">LinkedIn</a>
+          <a href={site.github} rel="me">GitHub</a>
+          <span class="muted">{site.email}</span>
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) => {
+    const label = btn.textContent
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(btn.dataset.copy ?? '')
+        btn.textContent = 'Copied'
+      } catch {
+        btn.textContent = 'Copy failed'
+      }
+      setTimeout(() => { btn.textContent = label }, 2000)
+    })
+  })
+</script>

@@ -1,0 +1,20 @@
+---
+// Top of every tab: big title, dimension line measuring it, and a lede.
+interface Props {
+  title: string
+  measure: string        // label on the dimension line, e.g. "6 projects" or "2021 to now"
+  lede?: string
+  dark?: boolean
+}
+const { title, measure, lede, dark = false } = Astro.props
+---
+<header class:list={['page-header', dark && 'band-dark']}>
+  <div class="frame">
+    <div class="title-measure">
+      <h1>{title}</h1>
+      <div class="dimension" aria-hidden="true"><span>{measure}</span></div>
+    </div>
+    {lede && <p class="lede">{lede}</p>}
+    <slot />
+  </div>
+</header>

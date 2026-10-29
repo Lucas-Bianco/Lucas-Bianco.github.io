@@ -1,0 +1,19 @@
+{
+  "name": "lucasbianco-com",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev --port 4330",
+    "build": "astro build",
+    "preview": "astro preview --port 4330",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^8.1.2",
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource-variable/archivo": "^5.3.0",
+    "astro": "^7.4.4",
+    "sharp": "^0.35.5"
+  }
+}

@@ -1,0 +1,276 @@
+---
+title: HexaFlow
+summary: "A NASA HUNCH finalist nanolab built by five students: a 3D-printed hex dome that moves water to plant roots by capillary action, no gravity needed."
+category: engineering
+order: 1
+featured: true
+status: ongoing
+started: "2025-09"
+role: Web development lead
+team: "Team of 5: Aidan, Nate, Sabrina, Maddie, Lucas"
+tools: ["SolidWorks", "SLA + FDM printing", "Raspberry Pi Zero 2W", "Astro", "Three.js"]
+cover: ../../../assets/photos/hexaflow/project-15.jpg
+coverAlt: "Top view of the HexaFlow capillary dome: a grey 3D-printed bowl covered in a lattice of tiny hexagonal channels, with brass inserts at the corners"
+links:
+  - label: HexaFlow code on GitHub
+    href: https://github.com/Lucas-Bianco/hexaflow
+results:
+  - "NASA HUNCH finalist"
+  - "9 free-fall drops, 14.7 mm mean capillary movement"
+  - "NASA drop test Aug 6, 2026: 2.21 s free fall"
+  - "Presenting at ASGSR, Dec 2026"
+---
+import Figure from '../../../components/Figure.astro'
+
+import teamShop from '../../../assets/photos/hexaflow/home-team.jpg'
+import teamShowcase from '../../../assets/photos/hexaflow/home-1.jpg'
+import substrateTrays from '../../../assets/photos/hexaflow/substrate-7.jpg'
+import lizardSkin from '../../../assets/photos/hexaflow/geometry-1.jpg'
+import domeCad from '../../../assets/photos/hexaflow/geometry-2.jpg'
+import domeDrawing from '../../../assets/photos/hexaflow/cad-4.jpg'
+import bottomDrawing from '../../../assets/photos/hexaflow/cad-6.jpg'
+import domePrinted from '../../../assets/photos/hexaflow/project-3.jpg'
+import domeOnFrame from '../../../assets/photos/hexaflow/project-4.jpg'
+import assemblyDrawing from '../../../assets/photos/hexaflow/cad-1.jpg'
+import enclosureRender from '../../../assets/photos/hexaflow/enclosure-1.jpg'
+import enclosureDrawing from '../../../assets/photos/hexaflow/cad-2.jpg'
+import shellPrint from '../../../assets/photos/hexaflow/cad-3.jpg'
+import shellSide from '../../../assets/photos/hexaflow/project-13.jpg'
+import builtNanolab from '../../../assets/photos/hexaflow/project-1.jpg'
+import piBoard from '../../../assets/photos/hexaflow/project-6.jpg'
+import pcb from '../../../assets/photos/hexaflow/project-7.jpg'
+import cameraMount from '../../../assets/photos/hexaflow/cad-9.jpg'
+import injectorDrawing from '../../../assets/photos/hexaflow/cad-12.jpg'
+import matrix from '../../../assets/photos/hexaflow/substrate-2.jpg'
+import rockwoolCover from '../../../assets/photos/hexaflow/cover-3.jpg'
+import pebbleGrate from '../../../assets/photos/hexaflow/cover-6.jpg'
+import seedling from '../../../assets/photos/hexaflow/substrate-4.jpg'
+import drop1 from '../../../assets/photos/hexaflow/drop-test-1.jpg'
+import drop2 from '../../../assets/photos/hexaflow/drop-test-2.jpg'
+import drop3 from '../../../assets/photos/hexaflow/drop-test-3.jpg'
+import nasaDrop from './nasa-drop-test.jpg'
+import viewerShot from './site-assembly-viewer.jpg'
+
+HexaFlow is a nanolab: a box about the size of two stacked juice cartons that studies how water moves when there's no gravity to pull it down. Inside is a 3D-printed dome covered in hexagonal channels less than half a millimeter wide. Water spreads through those channels by capillary action and reaches the roots of a plant sitting on top. No wicks, no soil, no gravity needed.
+
+Five of us from Tri-County built it for NASA HUNCH, and it made it to the finals. I was the web development lead. That meant I built the team's website, including a 3D viewer where you can take the whole nanolab apart part by part. But on a team of five you end up in everything, so this page covers the whole project, not just my piece.
+
+<div class="wide">
+  <Figure src={teamShop} alt="The five HexaFlow team members standing in the Tri-County engineering shop in front of a whiteboard covered in sticky notes" caption="The team in the engineering shop, in front of our planning board." fig={1} sizes="(max-width: 1200px) 100vw, 1200px" />
+</div>
+
+## What HUNCH is
+
+HUNCH stands for High school students United with NASA to Create Hardware. NASA gives high school teams real problems and real constraints, and the teams design, build and test hardware the way an engineering group would. There are design reviews with NASA reviewers, written documentation at every stage, and finalists present their work.
+
+Our track was a nanolab: a small sealed experiment that has to fit a fixed envelope, run on a fixed power budget and work without anyone touching it.
+
+## The problem
+
+The real question wasn't "can we grow a plant in space." It was how water and plant substrates behave in microgravity, because that's what you need to understand to feed people on long missions. The plant was the test subject. The water was the experiment.
+
+On Earth, gravity does most of the work of watering a plant. Water falls down through the soil and the roots pick it up. In orbit, water just clings to whatever it touches and floats around in blobs. Pumps help, but they draw power, they fail, and a pump can't tell where the water actually went.
+
+NASA's constraints for the box were tight:
+
+<ul class="figures-row">
+  <li><b>20 × 10 × 10 cm</b><span>2U nanolab envelope</span></li>
+  <li><b>5 V, 500 mA</b><span>power over USB-A</span></li>
+  <li><b>$100</b><span>total budget</span></li>
+  <li><b>50 mL</b><span>maximum water on board</span></li>
+</ul>
+
+On top of that, condensation couldn't reach the electronics, the parts had to be modular, and it needed a web interface. The experiment starts on a 24 V signal, so it has to run on its own from that moment.
+
+## From soil to a lizard
+
+We started in September 2025 by reading everything that came before us: NASA's Veggie and the Advanced Plant Habitat, a 3D-printed substrate from the University of Michigan, older student payloads, and a few patents. The same gaps kept showing up. Too big, not modular, water systems that needed power, hard to use.
+
+Our first idea was to grow in a substrate. We tested eight of them in October. Almost all of them grew mold. Only pine bark produced any growth at all.
+
+<Figure src={substrateTrays} alt="Two seedling trays side by side labeled October 20th and October 31st, with cells of different substrates such as control soil, bonsai substrate, Spanish moss, sponge and ramen noodles, and sticky notes reading Kale" caption="The substrate test, October 20 vs. October 31. Most of the cells molded. The circled pine bark cells were the only ones that grew." fig={2} />
+
+Hydroponics looked promising for a while, until we realized it would basically skip the question we were supposed to be studying. Then on October 22, Sabrina found the thorny devil lizard on asknature.org. It lives in the Australian desert and drinks by touching damp sand. Its skin is covered in tiny grooves between its scales, and water moves through those grooves by capillary action, uphill, all the way to its mouth. No pump, no muscles.
+
+That was the whole idea. Nate modeled a first version in SolidWorks in two sizes, and it worked better than any of us expected. We named the core part the TDC, for Thorny-Devil Capillary.
+
+<Figure src={lizardSkin} alt="Electron microscope images of thorny devil lizard scales at 200 and 500 micrometer scale, next to a hexagon diagram labeling spacing s, pitch p and channel width w" caption="Microscope images of thorny devil skin from a published skin morphology study, and the hexagon geometry we took from it. The grooves between scales are the channels." fig={3} />
+
+## How the dome works
+
+Capillary action is what happens when water sticks to a surface more strongly than it sticks to itself. Put water in a narrow enough gap and the walls pull it along. That pull comes from adhesion and surface tension, not gravity, so it should keep working in orbit. On Earth, gravity fights it. In microgravity, it's the only force left that matters.
+
+The TDC is a shallow dome covered in raised hexagons. The gaps between the hexagons are the channels. Water injected at the center spreads outward through the lattice and reaches the roots, which sit in the channels directly.
+
+<div class="wide photo-grid grid-2">
+  <Figure src={domeCad} alt="SolidWorks render of the TDC from above: a circular dome filled with a tight lattice of hexagons inside a square plate with four corner holes" caption="The dome in SolidWorks, top view." fig={4} />
+  <Figure src={domePrinted} alt="The printed grey hex dome sitting on top of the dark grey nanolab frame, with two slots cut into the dome for plant clips" caption="A printed TDC on the enclosure. The two slots hold plant clips." fig={5} />
+</div>
+
+The geometry is small on purpose. Wider channels hold more water, but the walls can't pull it as hard. Narrower ones pull hard but clog easily. Here's where we landed:
+
+| Feature | Size |
+| --- | --- |
+| Hexagon, side to side | 0.167 in (4.24 mm) |
+| Hexagon side length | 0.100 in (2.54 mm) |
+| Channel depth | 0.050 in (1.27 mm) |
+| Gap between hexagons | 0.020 in |
+| Channel width (measured) | 0.48 mm |
+| Water the channels hold when full | 10.12 mL |
+
+Material mattered as much as size. The dome is printed in resin on an SLA printer, because cured resin is polar, so water grips it more than it grips itself. That's what drives the flow. It's also why the dome can hold water when you flip it upside down. Only the dome is resin. The body underneath is regular FDM printing, which is cheaper and lighter.
+
+<Figure src={domeDrawing} alt="SolidWorks drawing sheet titled TDC V2 Top, drawing number G0002, showing the hex dome in top, section and isometric views with dimensions, material resin" caption="Drawing G0002, the TDC V2 top. This is the resin part." fig={6} />
+
+## The design review that changed the plan
+
+At our Preliminary Design Review in November 2025, NASA's reviewer called the hexagon shape and the thorny devil idea "terrific." Then came the useful part: the feedback.
+
+- Point the camera at the water, not the plant. A drop test lasts seconds, so nothing is going to grow during it. The data is in how the fluid moves.
+- Dye the water so the camera can actually see it.
+- Add one or two containment layers so nothing escapes.
+- Test at least two substrates.
+
+Other teams in the room were blunter. They warned us that wicking might not behave in microgravity the way it does on a lab bench. That objection shaped every test we ran after.
+
+## Design iterations
+
+The enclosure went through seven versions between December and February. Most of the changes were small and boring and that's the point: each print showed us one more thing that didn't fit.
+
+- Wire holes went from 5 mm to 8 mm because the cables wouldn't pass through.
+- Walls went from 4 mm to 2 mm to save weight and space.
+- The half-slotted modules kept falling off their rails until we added supports.
+- The reservoir became removable, a heat-sealed pouch in a friction-fit pocket, so water could never sit next to the electronics.
+
+<div class="spread">
+  <div class="spread-inner">
+    <div class="spread-text">
+      <h3>The full assembly</h3>
+      <p>Version 2 has fifteen line items in the parts list, from the shell and doors down to the heat-set inserts. Every printed part has its own drawing.</p>
+    </div>
+    <div class="photo-grid grid-2 drawings">
+      <Figure src={assemblyDrawing} alt="Assembly drawing titled HexaFlow V2 Assembled, drawing G0000, with an exploded isometric view of the nanolab and a fifteen-row parts list including the shell, heat set inserts, doors, moisture sensor, camera module, PCB, TDC V2, water injection nozzle and plant clips" caption="Drawing G0000, HexaFlow V2 assembled, with the parts list." fig={7} />
+      <Figure src={enclosureRender} alt="Exploded render of the black nanolab enclosure with callouts: USB Type B port, pre-routed power and sensor connections, tabbed front door, shelf design for switching electronics, and embedded cable channels" caption="Exploded render of the enclosure. Shelves slide in and out so sensors, lights and cameras can be swapped." fig={8} />
+      <Figure src={enclosureDrawing} alt="Drawing sheet titled Exterior Enclosure, drawing G0001, with front, side, top and isometric views of the rectangular shell" caption="Drawing G0001, the exterior enclosure." fig={9} />
+      <Figure src={bottomDrawing} alt="Drawing sheet titled TDC V2 Bottom Half, drawing G0003, showing the open shelf frame in section and isometric views, material PLA" caption="Drawing G0003, the TDC V2 bottom half. This part is FDM printed in PLA." fig={10} />
+    </div>
+    <div class="photo-grid grid-3 tall">
+      <Figure src={shellPrint} alt="The black 3D-printed nanolab shell standing upright, open on one side, with a row of wire holes and a square cutout" caption="A printed shell. The row of holes is for wiring." fig={11} />
+      <Figure src={domeOnFrame} alt="The grey hex dome mounted on the open dark grey shelf frame with three shelf slots visible" caption="The dome on the shelf frame, before the shell goes on." fig={12} />
+      <Figure src={builtNanolab} alt="The assembled nanolab in a translucent white shell, lit from inside, with electronics visible on the shelves and a cable coming out the top" caption="A built nanolab with the electronics on the shelves." fig={13} />
+    </div>
+  </div>
+</div>
+
+### The electronics
+
+The brain is a Raspberry Pi Zero 2W. We picked it because we already had one and it supports the Pi camera directly. It runs a vision model that looks at the roots, decides if they're dry, and runs the pump only when they need water.
+
+There are two pumps for two jobs. A 100 mL/min pump floods the channels fast during a drop test, and a 1 mL/min pump handles slow, careful watering for long-term growing. The small pump also saves 320 mA, which matters a lot when your whole budget is 500.
+
+For sensors we used a BME680 for temperature, humidity and air quality, and an Adafruit 4026 capacitive moisture sensor, picked over resistive probes because those corrode. We're designing a custom carrier board to pull all the connections onto one board so there's less loose wiring to fail.
+
+<div class="photo-grid grid-3 tall">
+  <Figure src={piBoard} alt="A hand holding a Raspberry Pi mounted on a green carrier board with headers and USB ports" caption="The Pi on its carrier board." fig={14} />
+  <Figure src={pcb} alt="A green custom circuit board with a hexagon pattern printed on the silkscreen, ringed by clear LEDs, sitting on a desk in front of a lit keyboard" caption="The HexaFlow PCB, with the hex pattern on the silkscreen and the LED ring." fig={15} />
+  <Figure src={cameraMount} alt="A small black camera board clipped into a white 3D-printed tray" caption="The camera module in its printed mount." fig={16} />
+</div>
+
+Not everything fit the first time. The pH probe we picked turned out to be 153 mm long, and we had 47 mm of room. We didn't catch it until assembly, which is the expensive place to catch things.
+
+<Figure src={injectorDrawing} alt="Drawing sheet titled Water Injector, drawing G0006, showing a small elbow nozzle in several views with dimensions down to half a millimeter" caption="Drawing G0006, the water injector that feeds the center of the dome." fig={17} />
+
+### Choosing substrates on purpose
+
+NASA asked for two substrates, so in December we scored four of them on how well they fit our system, how likely they were to work in microgravity, and how modular they were. Rockwool won with 13 points. It screws into existing holes, its binder doesn't shed into the channels, and water moves through it well. Clay pebbles came second with 12, mostly because an 11.5 mm pebble physically can't fall into a 0.48 mm channel. Pine bark was out because fragments would clog the channels. Illite clay was out because the fine powder would escape.
+
+<Figure src={matrix} alt="Spreadsheet decision matrix scoring pine bark, illite, rockwool and clay pebbles on system compatibility, feasibility in microgravity and modularity, with rockwool totaling 13" caption="The decision matrix. Rockwool 13, clay pebbles 12." fig={18} />
+
+<div class="photo-grid grid-3 tall">
+  <Figure src={rockwoolCover} alt="Clear acrylic cover with a circular window holding a disc of rockwool over the hex dome, held down by four screws" caption="The rockwool cover on the dome." fig={19} />
+  <Figure src={pebbleGrate} alt="Clear slotted grate holding brown clay pebbles over the hex dome" caption="The clay pebble grate." fig={20} />
+  <Figure src={seedling} alt="Top view of the clay pebble grate with a small pale seedling growing up between the pebbles" caption="A seedling coming up through the clay pebbles." fig={21} />
+</div>
+
+### The failure I still think about
+
+Our kale kept dying and for a while we didn't know why. It turned out to be our own brand new resin printer, running in the same unventilated room as the plants. The fumes shriveled them overnight. We moved the plants, tented them, and added ventilation. It's a silly-sounding problem, but it's the kind of thing that only shows up when you build the real thing in a real room.
+
+## The drop test
+
+You can't make microgravity in a school shop. So we didn't pretend to. Instead we built a ladder of tests, where each step could prove one of our assumptions wrong, even though none of them could prove the design was ready to fly.
+
+1. **Flip it.** We turned the module upside down and shook it with the substrate, covers and a planted stem in place. Nothing fell out. That shows the channels hold water against gravity. It says nothing about how water moves in free fall.
+2. **Run water in.** At 1 g, water climbed about halfway up the dome before gravity won and it stopped. That isn't a failure. It's the baseline we expected to beat once gravity was gone.
+3. **Drop it.** We dropped the sealed module from 14 feet, which gives about 0.9 seconds of real free fall. Before each drop we added about 5 mL of dyed water to the center, then measured how far it spread with calipers. Compressed air cleared the channels between runs.
+
+<div class="spread">
+  <div class="spread-inner">
+    <div class="spread-text">
+      <p>We ran two sets. The first six drops averaged about 9.9 mm of capillary movement. After we revised the module, the next nine averaged 14.7 mm. That's about a 48% improvement. The spread across those nine was big, from 4.28 mm to 31.79 mm, which is what you get from short, noisy, real free fall.</p>
+    </div>
+    <ul class="figures-row">
+      <li><b>14 ft</b><span>drop height, about 0.9 s of free fall</span></li>
+      <li><b>9</b><span>drops in the second suite</span></li>
+      <li><b>14.7 mm</b><span>mean capillary movement</span></li>
+      <li><b>+48%</b><span>over the first six drops</span></li>
+    </ul>
+    <div class="photo-grid grid-3">
+      <Figure src={drop1} alt="Close-up of the hex dome at an angle with a spot of purple-dyed water spread across a few channels" caption="Dyed water spreading through the channels after a drop." fig={22} />
+      <Figure src={drop2} alt="The hex dome from above on a wooden deck, with a thin line of purple dye running along one channel from the center" caption="Dye following a channel outward from the center." fig={23} />
+      <Figure src={drop3} alt="Digital calipers held over the hex dome measuring a small patch of blue-dyed water near the center" caption="Measuring the spread with calipers after a drop." fig={24} />
+    </div>
+  </div>
+</div>
+
+Then came the real one. On August 6, 2026, the nanolab went through NASA's drop test: 2.21 seconds of free fall, more than twice what our 14-foot drops could give us. <span class="todo">Add where the test was and what the data showed</span>
+
+<Figure src={nasaDrop} alt="Photo placeholder for the NASA drop test on August 6, 2026" caption="NASA drop test, August 6, 2026." fig={25} />
+
+Until that test, every microgravity claim we made was an extrapolation from 0.9-second windows, and we said so on our site. Saying that plainly felt better than rounding up.
+
+## My part: the website
+
+My official job was web development lead. The site is where reviewers, judges and anyone curious go to understand the project, so it had to explain a pretty technical design to people who've never heard of capillary action.
+
+I built it with Astro, Tailwind and Three.js. It has 16 pages covering the geometry, the enclosure, the electronics, the substrates, the drop tests, the bill of materials and every CAD drawing.
+
+The centerpiece is a 3D assembly viewer. You can spin the whole nanolab, click any part to isolate it, explode the assembly, switch to wireframe, toggle labels and hide the fasteners. There's a list of 19 parts next to the model, and as you scroll the list, the matching part lights up in 3D. Each part also links to its drawing and its CAD files, 37 native files in all (SolidWorks, KiCad and PDF), so anyone can download the real models.
+
+<Figure src={viewerShot} alt="Placeholder for a screenshot of the HexaFlow website's 3D assembly viewer" caption="The 3D assembly viewer on the HexaFlow site." fig={26} />
+
+The parts list is one data file, and it's the only source of truth. The 3D viewer links each mesh to its part by matching the node names exported from SolidWorks. That means a teammate can fix a part description without touching any 3D code, but it also means nobody can rename a part ID without breaking the link. So that rule is written down in the project docs, in bold.
+
+Two bugs taught me the most:
+
+- **The page kept jumping.** Clicking a part in 3D scrolled the parts list to that part, which yanked the whole page around while you were trying to look at the model. The fix was simple once I saw it: clicking the model never scrolls the page. Only scrolling the list moves the selection.
+- **Everything broke when we deployed.** The site lives in a subfolder on GitHub Pages, not at the root of a domain. Astro fixes links it can see when it builds, but any URL built while the page runs (nav links, image paths, the 3D model file) pointed at the wrong place and 404'd. I wrote a small helper that every runtime URL goes through, plus a check that lists any URL that slipped past it.
+
+All the motion on the site respects reduced-motion settings, and before we called it done, every number on the site was checked against the team's own design documents. If a document didn't say it, the site doesn't either.
+
+<span class="todo">Add a sentence on what judges or NASA said about the site</span>
+
+## The team
+
+Aidan was project manager and hardware lead. Nate handled outside communication and water movement. Sabrina was note taker and substrate lead, and she's the one who found the lizard. Maddie ran the schedule and led modularity. I did the website. Everybody kept their own design notebook, and we all ended up in each other's work.
+
+We also cold-emailed people who had done pieces of this before: researchers at the University of Arizona's Mars-Lunar Greenhouse, a NASA capillary fluidics engineer, someone at Sierra Space, and MIT's Space Exploration Initiative. Not everyone wrote back. The ones who did changed the design.
+
+<div class="wide">
+  <Figure src={teamShowcase} alt="The five HexaFlow team members in matching black quarter-zips with a hexagon logo and name tags, standing in front of their HexaFlow poster at a busy science showcase" caption="The team at our poster, February 2026." fig={27} sizes="(max-width: 1200px) 100vw, 1200px" />
+</div>
+
+<span class="todo">Name the February 2026 event in the photo above</span>
+
+## What I learned
+
+- **Test the real thing.** We tried to get a microgravity simulation running in software and couldn't. A cheap drop from 14 feet told us more than the sim ever did.
+- **Say what you don't know.** Being upfront that our drops were 0.9-second stand-ins made our real results more believable, not less.
+- **Physical things fail in physical ways.** A probe that's three times too long, a printer that poisons the plants. None of it shows up on a screen.
+- **Documentation is a deliverable.** For a NASA review, if it isn't written down with a drawing number, it didn't happen. That's also why the website mattered.
+
+## What's next
+
+We're presenting HexaFlow at the ASGSR conference (the American Society for Gravitational and Space Research) in December 2026. The open items are the same ones we listed at our last review: finishing the custom PCB so it replaces the loose wiring, better waterproofing, and a long run with a live plant.
+
+<span class="todo">Add the drop test findings and anything that changed after ASGSR</span>

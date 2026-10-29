@@ -1,0 +1,172 @@
+---
+// Gallery: every photo on one page, filterable, with a keyboard-friendly lightbox.
+// Without JS the thumbnails are plain links to the large image.
+import { Image, getImage } from 'astro:assets'
+import Base from '../layouts/Base.astro'
+import PageHeader from '../components/PageHeader.astro'
+import { gallery, galleryCategories } from '../data/gallery'
+import '../styles/pages/gallery.css'
+
+const photos = await Promise.all(
+  gallery.map(async (p) => {
+    const large = await getImage({ src: p.src, width: Math.min(p.src.width, 1800), format: 'webp' })
+    return { ...p, large: large.src }
+  }),
+)
+const counts = Object.fromEntries(
+  galleryCategories.map((c) => [c.id, gallery.filter((p) => p.category === c.id).length]),
+)
+const realCount = gallery.filter((p) => !p.placeholder).length
+---
+<Base
+  title="Gallery"
+  description="Photos from Lucas Bianco's builds: the HexaFlow NASA HUNCH payload, CAD drawings, VEX and FRC robots, 3D prints, and life outside the shop and school."
+>
+  <PageHeader
+    title="Gallery"
+    measure={`${gallery.length} photos`}
+    lede="Build photos, drawings and the occasional picture of me outside the shop. Click any photo to see it big."
+  />
+
+  <section class="band-dark gallery-band">
+    <div class="frame">
+      <div class="gallery-filters" role="group" aria-label="Filter photos by category" hidden>
+        <button type="button" class="filter-button" data-filter="all" aria-pressed="true">All <span class="filter-count">{gallery.length}</span></button>
+        {galleryCategories.map((c) => (
+          <button type="button" class="filter-button" data-filter={c.id} aria-pressed="false">
+            {c.label} <span class="filter-count">{counts[c.id]}</span>
+          </button>
+        ))}
+      </div>
+      <p class="visually-hidden" aria-live="polite" data-gallery-status></p>
+
+      <ul class="gallery-grid">
+        {photos.map((p, i) => (
+          <li class="gallery-item" data-category={p.category}>
+            <figure class="figure">
+              <a
+                class="gallery-link"
+                href={p.large}
+                data-index={i}
+                data-full={p.large}
+                data-caption={p.caption}
+                data-alt={p.alt}
+                aria-label={`Open larger: ${p.alt}`}
+              >
+                <Image
+                  src={p.src}
+                  alt={p.alt}
+                  widths={[360, 560, 800]}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1080px) 50vw, 33vw"
+                  loading={i < 3 ? 'eager' : 'lazy'}
+                />
+              </a>
+              <figcaption>
+                <span class="fig-no">Fig. {i + 1}</span>{p.caption}
+                {p.placeholder && <> <span class="todo">placeholder: Lucas to add this photo</span></>}
+              </figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+      <p class="small muted gallery-note">{realCount} real photos so far. The rest are labeled placeholders until I swap them in.</p>
+    </div>
+  </section>
+
+  <dialog class="lightbox" aria-label="Photo viewer">
+    <div class="lightbox-inner">
+      <figure class="lightbox-figure">
+        <img class="lightbox-img" alt="" />
+        <figcaption class="lightbox-caption">
+          <span class="fig-no" data-lightbox-no></span><span data-lightbox-caption></span>
+        </figcaption>
+      </figure>
+      <div class="lightbox-controls">
+        <button type="button" class="lightbox-button" data-lightbox-prev aria-label="Previous photo">Previous</button>
+        <button type="button" class="lightbox-button" data-lightbox-next aria-label="Next photo">Next</button>
+        <button type="button" class="lightbox-button lightbox-close" data-lightbox-close aria-label="Close photo viewer">Close</button>
+      </div>
+    </div>
+  </dialog>
+</Base>
+
+<script>
+  const filters = document.querySelector<HTMLElement>('.gallery-filters')
+  const items = Array.from(document.querySelectorAll<HTMLElement>('.gallery-item'))
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.gallery-link'))
+  const status = document.querySelector<HTMLElement>('[data-gallery-status]')
+  const dialog = document.querySelector<HTMLDialogElement>('.lightbox')
+
+  // ---- filters ----
+  if (filters) {
+    filters.hidden = false
+    const buttons = Array.from(filters.querySelectorAll<HTMLButtonElement>('.filter-button'))
+    filters.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.filter-button')
+      if (!btn) return
+      const f = btn.dataset.filter
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)))
+      let shown = 0
+      items.forEach((it) => {
+        const show = f === 'all' || it.dataset.category === f
+        it.classList.toggle('is-hidden', !show)
+        if (show) shown++
+      })
+      if (status) status.textContent = `Showing ${shown} photos`
+    })
+  }
+
+  // ---- lightbox ----
+  if (dialog && typeof dialog.showModal === 'function') {
+    const img = dialog.querySelector<HTMLImageElement>('.lightbox-img')!
+    const cap = dialog.querySelector<HTMLElement>('[data-lightbox-caption]')!
+    const no = dialog.querySelector<HTMLElement>('[data-lightbox-no]')!
+    let current = 0
+    let opener: HTMLElement | null = null
+
+    const visible = () => links.filter((l) => !l.closest('.gallery-item')?.classList.contains('is-hidden'))
+
+    const show = (link: HTMLAnchorElement) => {
+      current = Number(link.dataset.index)
+      img.src = link.dataset.full || link.href
+      img.alt = link.dataset.alt || ''
+      cap.textContent = link.dataset.caption || ''
+      no.textContent = `Fig. ${current + 1}`
+    }
+
+    const step = (dir: number) => {
+      const list = visible()
+      if (!list.length) return
+      const pos = list.findIndex((l) => Number(l.dataset.index) === current)
+      const next = list[(pos + dir + list.length) % list.length]
+      show(next)
+    }
+
+    links.forEach((link) =>
+      link.addEventListener('click', (e) => {
+        e.preventDefault()
+        opener = link
+        show(link)
+        dialog.showModal()
+      }),
+    )
+
+    dialog.querySelector('[data-lightbox-prev]')?.addEventListener('click', () => step(-1))
+    dialog.querySelector('[data-lightbox-next]')?.addEventListener('click', () => step(1))
+    dialog.querySelector('[data-lightbox-close]')?.addEventListener('click', () => dialog.close())
+
+    dialog.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); step(1) }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1) }
+    })
+    // click on the dark backdrop (outside the inner box) closes
+    dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close() })
+    // Esc is native to <dialog>; on any close, send focus back to the photo that opened it
+    // (the photo last viewed, so arrowing through the set doesn't lose your place)
+    dialog.addEventListener('close', () => {
+      img.removeAttribute('src')
+      const last = links[current]
+      ;(last && !last.closest('.gallery-item')?.classList.contains('is-hidden') ? last : opener)?.focus()
+    })
+  }
+</script>

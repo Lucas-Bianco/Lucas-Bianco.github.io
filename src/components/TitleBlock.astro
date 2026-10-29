@@ -1,0 +1,12 @@
+---
+// Facts in a ruled grid, like the title block in the corner of an engineering drawing.
+interface Props {
+  items: { label: string; value: string }[]
+}
+const { items } = Astro.props
+---
+<dl class="title-block">
+  {items.map((i) => (
+    <div><dt>{i.label}</dt><dd>{i.value}</dd></div>
+  ))}
+</dl>

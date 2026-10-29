@@ -1,0 +1,61 @@
+---
+title: What 99 phone scans taught me
+summary: My Pokémon card scanner looked great on test images. Then I scanned 99 real cards with my phone and found out the real problem was finding the card at all.
+date: 2026-07-31
+project: pokemon-card-scanner
+---
+
+For a couple of days my card scanner looked done. You give it a photo of a Pokémon card, and it tells you which card it is and what it's worth. The catalog has 20,444 cards across 174 sets. Recognition uses CLIP embeddings, a FAISS search over every card, and a targeted OCR read of the collector number, all fused into one confidence score.
+
+On my test set it hit 99.8% top-1 on clean reference images. With blur, glare, dimming and JPEG damage all stacked on top of each other, it still got 85.4%. I was pretty happy with that.
+
+The problem is that every one of those numbers came from the official card images, roughed up by code. Nobody photographs a card like that. So I built the phone app, sat down with a pile of real cards, and scanned 99 of them.
+
+## Two numbers, not one
+
+The first thing the real scans broke was my scoreboard. My accuracy stat said 74.4%. That sounded bad, but when I looked closer it was counting the wrong thing.
+
+The scanner can name the card, show its top few guesses and let you pick, or say it found nothing. My stat counted every "pick one" result as wrong, even though the scanner never guessed. That mixes up two opposite things: refusing to guess, and guessing wrong.
+
+So I split it into two numbers:
+
+- **Precision**: when it commits to an answer, how often is it right?
+- **Coverage**: how often does it commit at all?
+
+On the reviewed scans, precision was 100%. Every time it said "this is the card", it was. Coverage was 30%. And 57% of scans never found a card in the frame at all.
+
+That changed the whole project. Recognition wasn't the problem. Detection was.
+
+I set the confidence threshold strict on purpose, because a confidently wrong card is worse than a "which of these three?" prompt. That held up. But a scanner that only commits 30% of the time isn't much of a scanner either.
+
+## Why it couldn't find the card
+
+I went through 20 of the failed scans. In all 20, the detector never found a four-sided shape at all. It wasn't finding a wrong shape and rejecting it. There was nothing there to reject.
+
+Brightness wasn't it either. The failed and working scans were almost the same brightness. What mattered was edge contrast. The detector used Canny edge detection and then looked for a closed outline. Canny needs a change in brightness to draw an edge. A light card border on a light table doesn't have much of one, so the outline never closes. That's why I'd already noticed I had to scan on a black background for it to work.
+
+The second cause was sneakier. After finding an outline, the code used OpenCV's `approxPolyDP` to simplify it and then demanded exactly four corners. Real cards have rounded corners, and phone photos have noise. So the simplified outline would come back with five, six, or seven points, and the code threw away a card that was sitting right there in the photo.
+
+## The fix: let recognition pick
+
+The obvious move is "find a better detector." I tried that. One alternative (Otsu thresholding plus a rectangle fit) recovered 33 of the failures. It also broke 6 scans that used to work. Better on average, but not better.
+
+So instead of picking one detector, I run a chain of them. Each one proposes where it thinks the card is. Every proposal gets cropped and embedded, which only takes about 2.2 milliseconds each, and whichever crop matches a real card best wins. OCR is slower (around a second), so it only runs once, on the winner. I also swapped the "exactly four corners" check for fitting a rotated rectangle to the largest blob. A card is a rectangle, so just fit one.
+
+Replaying every saved scan, coverage went from 31% to 61%, with zero regressions. Not one scan that used to come out right came out different. Later I sharpened the image before the collector number OCR (unsharp mask, scaled up 4×). Correct number reads went from 21 to 24 and wrong reads dropped from 6 to 3, which pushed coverage to 63%, still with no regressions. On the 40 scans I'd labelled by hand, the true card ranked first 88% of the time and was in the top three 98% of the time.
+
+## The mistake I almost shipped
+
+When I first compared detectors, adaptive thresholding looked amazing. It "found" the card in 56 out of 56 failed scans. I was ready to call it the winner.
+
+Then I actually looked at what it returned. It was handing back the border of the whole photo every single time. A portrait phone photo has roughly a card's shape, so it passed my shape check. I was counting "found a card-shaped box" as "found the card."
+
+I added a guard that rejects any box covering more than 98% of the frame, and that detector dropped to zero useful proposals. I deleted it. Real cards take up somewhere between 15% and 44% of the frame.
+
+The lesson I keep coming back to: don't score a step by whether it produced output. Score it by whether the next step works on that output. Now every detection change gets graded by running recognition on its crops, and the test fails if a single scan gets worse.
+
+## What's next
+
+There are still scans that get detected but land as ambiguous. That's a recognition problem now, not a detection one, and the honest next step is training the model on the corrections I've collected. A handful of failures had no readable collector number at all, so better parsing can't save them. For those, the fix is the photo itself: coaching the user to move closer or tilt away from glare before they hit the button.
+
+<span class="todo">Lucas: add a link or screenshot of the scan app here if you want one</span>

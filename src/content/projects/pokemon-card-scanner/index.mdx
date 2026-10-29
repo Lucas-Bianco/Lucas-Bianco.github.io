@@ -1,0 +1,179 @@
+---
+title: Pokémon card scanner
+summary: 'Point a phone at a Pokémon card and get the exact card out of 20,444 and its price, with a recognizer that says "not sure" instead of guessing wrong.'
+category: software
+order: 6
+featured: true
+status: ongoing
+started: "2026-07"
+role: Solo, everything from the data layer to the phone app
+team: Solo
+tools:
+  - Python
+  - FastAPI
+  - React
+  - TypeScript
+  - OpenCV
+  - CLIP
+  - FAISS
+  - RapidOCR
+  - SQLite
+  - pytest
+cover: ./cover.jpg
+coverAlt: Five real phone scans from the project side by side, Pokémon cards lying on a dark desk mat.
+links:
+  - label: Project site
+    href: https://lucasbianco.com/pokemon-card-platform/
+  - label: Code on GitHub
+    href: https://github.com/Lucas-Bianco/pokemon-card-platform
+results:
+  - 20,444 cards in the catalog, 174 sets
+  - 99.8% top-1 on clean reference images
+  - 100% precision on real phone scans when it commits
+  - Coverage 31% to 63% with zero regressions
+  - 207 backend + 22 frontend tests at the detection milestone
+---
+import Figure from '../../../components/Figure.astro'
+import scanLightDesk from './scan-light-desk.jpg'
+import scanConfident from './scan-confident.jpg'
+
+I collect Pokémon cards, and I wanted something that isn't another price lookup app. You take a photo, it tells you exactly which card it is (which set, which printing) and what it's worth. Under that simple idea is a computer vision problem I'd never touched before, and that was the point. I wanted a project that was a little too hard for me when I started.
+
+It came right after my forex project, where I spent weeks proving there was no edge to find. Collectibles are the opposite kind of market. Prices are messy, listings get mispriced, and the same card can be worth very different amounts depending on the printing. So the tools I'd built for scanning markets finally had something real to point at.
+
+## How it's built
+
+It's one platform built in phases, not a pile of separate apps. Everything shares a card catalog, a pricing layer and a collection store. The backend is Python and FastAPI. The front end is a React and TypeScript web app that installs on a phone like a normal app. All the recognition runs locally on my own desktop GPU, so the only thing that touches the internet is syncing the catalog and prices.
+
+Every phase got its own written spec and plan before I wrote code. That sounds slow, but it meant each phase ended with something I could actually use and a number I could check.
+
+## Phase 0: the data foundation
+
+Before recognizing anything I needed to know every card that exists. The public card API was badly degraded when I tested it (2 of 12 requests worked), so I bulk-loaded the catalog from the open JSON dump instead: **174 sets, 20,444 cards**. The sync commits one set at a time, so a dropped connection costs one set instead of the whole load.
+
+Prices are stored per variant, because a holofoil and a reverse holofoil of the same card are priced separately. Price snapshots are never edited, only added, so history builds up from day one. Every price carries its source and when that source last updated it.
+
+That last rule came from a real example. On the same day, one source said a Base Set card was worth $1,531 and another said $800. Averaging those into one "market price" would have been a lie, so the app never blends sources. It shows you which source said what, and how old it is.
+
+## Phase 1a: the recognition engine
+
+The pipeline, in order:
+
+1. **Find the card in the photo** and get its four corners.
+2. **Rectify it.** Warp the card flat to a fixed size so the rest of the pipeline sees a clean, straight-on card.
+3. **Embed it with CLIP**, an image model that turns a picture into a list of numbers where similar pictures land close together.
+4. **Search a FAISS index** of 20,391 reference card images for the nearest matches.
+5. **Read the collector number with OCR**, only in the small strip of the card where that number is printed.
+6. **Fuse both signals** into one calibrated confidence. If it's sure, it commits. If not, it shows the top three and lets me pick.
+
+The reason for two engines is that they fail on different things. Visual search alone mixes up reprints: a live scan of Base Set Charizard scored 0.991 for the right card but also 0.901 and 0.873 for two other Charizards with the same art. The collector number settles exactly those cases. OCR isn't decoration, it's what makes the answer exact.
+
+I tested it on 3,000 queries (500 cards, each with 6 kinds of damage) against the full index:
+
+| Condition | Top-1 | Top-3 |
+|---|---|---|
+| Clean | 99.8% | 99.8% |
+| JPEG at quality 35 | 98.0% | 99.6% |
+| Dim (55% brightness) | 99.0% | 99.8% |
+| Glare overlay | 99.2% | 99.8% |
+| Blur | 89.0% | 97.2% |
+| All of it stacked | 85.4% | 93.8% |
+
+The number I care about more is the gap between the best match and the runner-up. For correct matches that gap averaged 0.1201. For wrong ones it was 0.0088, about 13.7 times smaller. That separation is what makes a real confidence score possible. I set the commit threshold at a gap of 0.05: 78.8% of scans auto-confirm, with 1 wrong answer in 3,000. My calibration script actually recommended 0.02, which auto-confirms more but let 14 wrong answers through. A confidently wrong card is the worst thing this app can do, so I picked the stricter one.
+
+There's one more rule I'm proud of. Only an OCR read that proves it found the collector number field (a full "1/102" with the slash, or a promo code with its letter prefix) is allowed to override the visual match. Bare digits can only confirm the top pick, never change it. Otherwise a "1/102" misread as "102" would turn a correct answer into a confidently wrong one.
+
+But every number in that table came from damaged copies of the reference images, not photos of real cards. I knew that wasn't the honest test.
+
+## Phase 1b: the phone app, and the 99-scan reality check
+
+I built the scanning app (it has to run over HTTPS, because phones won't give a web page the camera otherwise) and took **99 real photos of physical cards**. This was the first number not made from reference images, and it changed what I thought the project's problem was.
+
+| Result | Scans | Reviewed | Correct |
+|---|---|---|---|
+| Confident | 30 | 29 | 29 |
+| Ambiguous (showed top 3) | 13 | 10 | I picked |
+| Not found | 56 | | never found a card |
+
+When it committed, it was right **29 out of 29**. Zero confidently wrong answers on real photos. The strict threshold held up.
+
+But **57% of scans never got past finding the card in the frame.** Recognition wasn't the problem. Detection was.
+
+I dug into 20 of the failures. In all 20, the detector found no four-cornered shape at all. It wasn't rejecting a bad shape, there was nothing to reject. Brightness was about the same in the failures and the successes (89 vs 96 out of 255), so it wasn't darkness. It was edge contrast. The detector used Canny edge detection, which needs a closed outline, and a light card border on a light background never forms one. That's why I had noticed scans only worked on a black mat.
+
+<Figure src={scanLightDesk} alt="A real scan: a Grumpig card with a light silver border lying on a light wooden desk, more cards fanned out underneath it." caption="A real scan from the first batch that came back not found: a light-bordered card on a light wooden desk. The edge detector never saw a closed outline." fig={1} />
+
+I also re-ran 25 failed photos with detection skipped. They came back ambiguous instead of not found, which proved the cards were recognizable. The uncropped frame just watered the match down below the threshold.
+
+I also caught my own bad metric here. The app's built-in "accuracy" said 74.4%, because it counted every "I'm not sure, pick one" as a wrong answer. But declining to guess and guessing wrong are opposites in a system built around honest confidence. The honest pair of numbers was **100% precision at 30% coverage**, and since then I always report those two separately.
+
+## Phase 1c: fixing detection
+
+There turned out to be two causes stacked on top of each other:
+
+1. **Canny needs a gradient, not a level.** No contrast at the edge means no outline.
+2. **The shape check demanded exactly 4 corners.** The function I used (approxPolyDP) simplifies an outline into a polygon, and real cards have rounded corners and sensor noise, so it lands on 5 to 7 points and throws away a card that's clearly visible. Fitting a rotated rectangle to the biggest blob drops that requirement. A card is a rectangle, so ask for a rectangle.
+
+The design I landed on is a **chain of detection strategies scored by recognition**. Each strategy proposes a set of corners. Every proposal gets cropped and embedded, which takes about 2.2 ms each, and the crop that actually matches a card best wins. OCR runs once on the winner, because it costs about a second.
+
+The chain mattered more than any single detector. My best new detector (Otsu thresholding plus a rotated rectangle) recovered 33 failed scans on its own, but it also broke 6 scans that used to work. The chain broke none.
+
+Replaying all 101 saved real scans:
+
+| Result | Before | After |
+|---|---|---|
+| Confident | 31 | 62 |
+| Ambiguous | 13 | 36 |
+| Not found | 57 | 3 |
+
+**Coverage went from 31% to 61%, with zero regressions**: not one scan that used to be identified correctly now returns a different card. I also added a manual fallback where you drag the four corners yourself if detection still misses.
+
+<Figure src={scanConfident} alt="A real scan: a Sandshrew card lying flat on a black desk mat with a yellow stripe along the edge." caption="A scan the pipeline committed on: Sandshrew at 0.97 confidence, with OCR reading the collector number 068." fig={2} />
+
+### The mistake I almost shipped
+
+My first comparison of detectors said adaptive thresholding found the card in 56 out of 56 tricky photos. That looked amazing. It was wrong.
+
+When I checked what it was actually returning, it was the outline of the **whole photo**, on all 101 real scans. Never once the card. A portrait phone photo has an aspect ratio of about 1.29, which happened to pass my "is this card-shaped" check. I was counting "found a four-sided shape" as "found the card", which is exactly the trap the shape check was supposed to prevent.
+
+The fix was a guard that rejects any shape covering more than 98% of the frame (real cards measure 0.15 to 0.44 of the frame). After that, adaptive thresholding contributed zero useful proposals and I removed it. The lesson I keep: check a detector by running recognition on its output, not by counting shapes.
+
+### OCR sharpening
+
+The remaining ambiguous scans were mostly close visual calls that the collector number would have settled, so I tested how to prepare the number strip before OCR on 39 real cropped cards. A wrong number is worse than no number, because the fusion step might act on it, so I counted both:
+
+| Preprocessing | Correct reads | Wrong reads |
+|---|---|---|
+| 3× upscale (old) | 21 | 6 |
+| 5× upscale | 19 | 6 |
+| Contrast boost + 4× | 22 | 6 |
+| **Unsharp mask + 4× (shipped)** | **24** | **3** |
+| Taller strip + 4× | 24 | 12 |
+
+Unsharp masking at 4× gave the most correct reads and halved the wrong ones. That moved coverage from 61% to **63%, again with zero regressions**. On the 40 scans I had labelled by hand, the true card was ranked first 88% of the time and in the top three 98% of the time. So even when the app won't commit, the right answer is almost always one tap away.
+
+## Testing discipline
+
+A few rules I held the whole way:
+
+- **Any detection change gets scored by replaying every real scan**, and the run fails on a single regression. A confidently wrong card is worse than a missed one.
+- **Precision and coverage are always reported separately.** Never one blended "accuracy".
+- **Never fake missing data.** An unpriced card shows a dash and "no market price", never $0.00. A price chart with one data point shows one dot and says it needs more history, not a made-up trend line.
+- The data store (20,391 card images, a 40 MB index, the database and the real scan photos) is never deleted by any script.
+
+At the end of the detection phase it was **207 backend tests and 22 frontend tests**, and the suites kept growing with every phase after.
+
+## What came after recognition
+
+Once scanning worked I kept building on the same core. Bulk scanning a whole binder page at once. A centering check that measures the borders and tells you the best grade centering allows (always a ceiling, never a grade). Watchlists and alerts. A deal finder that compares listings to recent sold prices. A set-completion checklist with the cost to finish a set.
+
+Two features I tested and then refused to fake. A learned grade predictor needs labelled grades, and I have zero. A counterfeit detector needs confirmed fakes, and I measured that the texture signals it would rely on were just noise on phone crops. So both shipped as honest tools that use what I can actually measure plus a checklist, never a verdict.
+
+## What's next
+
+- **The portfolio tracker is built but starved for data.** It's correct today, but when I checked, none of my 37 collection items had a purchase price entered and no card had more than one distinct price date. It only gets useful as price history builds up, so I can't show trends yet, and I won't draw fake ones.
+- **Turning unlabelled scans into ground truth.** 64 of 109 saved scans have no label, so every experiment rests on about 45 samples. A quick swipe-to-review screen would roughly double my evidence.
+- **Coaching the photo, not the parser.** In 4 of 5 failing promo scans, nothing in the number strip was readable at all, so no OCR change can fix them. The next lever is telling you to move closer or tilt away from glare before the shutter.
+- **Running it on the phone with no server**, using a smaller version of the model, scored against the same zero-regression bar.
+
+<span class="todo">Add a screen recording of a live scan on your phone (photo to price in one shot)</span>

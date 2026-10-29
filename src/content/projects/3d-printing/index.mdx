@@ -1,0 +1,84 @@
+---
+title: 3D printing and CAD
+summary: "Two Bambu printers with AMS, parts designed in SolidWorks, fit-tested on SKÅDIS and Gridfinity, and a plan to publish model sets on MakerWorld."
+category: making
+order: 5
+status: ongoing
+started: "2026"
+role: Designer and printer operator
+team: Solo
+tools: ["SolidWorks", "Bambu X2D", "Bambu A1", "AMS", "SKÅDIS", "Gridfinity"]
+cover: ./cover.jpg
+coverAlt: "Lucas's Bambu X2D and A1 3D printers, each with an AMS filament unit, on his workbench"
+links: []
+results:
+  - "Two printers, both with AMS"
+  - "Model sets planned for MakerWorld"
+---
+import Figure from '../../../components/Figure.astro'
+import solidworks from './solidworks.jpg'
+import skadis from './skadis.jpg'
+import gridfinity from './gridfinity.jpg'
+import fitTest from './fit-test.jpg'
+import favorite from './favorite-print.jpg'
+
+Most of what I make starts as a problem on my desk: something that needs a holder, a mount, a bin or a replacement part. I design it in SolidWorks, print it, see what's wrong, and print it again. This page is about the setup and the process, and where I want to take it next.
+
+<span class="todo">Add when you started printing and what your first printer was</span>
+
+## The printers
+
+I run two Bambu Lab printers: an X2D and an A1. Both have an AMS, the automatic material system that feeds filament from several spools, so a print can switch colors or materials partway through without me standing there swapping spools.
+
+Having two machines changes how I work. One can run a long print while the other handles quick test pieces. When I'm dialing in a fit, that's the difference between one test an hour and several.
+
+<span class="todo">Add what each printer is best at for you, and which one you reach for first</span>
+
+## Designing in SolidWorks
+
+SolidWorks is where I do almost all of my modeling, and I hold the CSWA and CSWP certifications for it. I try to build models the way a shop would want them: fully defined sketches, dimensions that mean something, and features I can change later without the model falling apart.
+
+That last part matters more for printing than people think. A print that's 0.2 mm too tight is a quick dimension change in a well-built model, and a rebuild from scratch in a messy one.
+
+<Figure src={solidworks} alt="Placeholder for a SolidWorks screenshot of one of Lucas's printed parts, with its sketch and dimensions" caption="A part in SolidWorks, ready to export for printing." fig={1} />
+
+<span class="todo">Add one part you designed, what it was for, and how many versions it took</span>
+
+## Fit testing on SKÅDIS and Gridfinity
+
+The hard part of printing isn't getting a part to come out. It's getting it to fit something else. Every printer and filament prints a little differently, so a part that's perfect on paper can be too tight to slide in or loose enough to rattle.
+
+I use two systems as my fit references:
+
+- **SKÅDIS** is IKEA's pegboard. The holes are a fixed size and spacing, so a hook or holder either clicks in and holds or it doesn't. It's a fast, honest test.
+- **Gridfinity** is an open storage system built on a 42 mm grid. Bins and baseplates from different designers are all supposed to fit together, so if my bin drops into a baseplate cleanly, my dimensions and my printer are both behaving.
+
+Because both are standards, they take the guessing out. I'm not checking a part against another part I also printed. I'm checking it against a known size.
+
+<div class="photo-grid grid-3 tall">
+  <Figure src={skadis} alt="Placeholder for a photo of a SKÅDIS pegboard with Lucas's printed hooks and holders" caption="Printed parts on the SKÅDIS board." fig={2} />
+  <Figure src={gridfinity} alt="Placeholder for a photo of a Gridfinity baseplate with printed bins in a drawer" caption="Gridfinity bins in a drawer." fig={3} />
+  <Figure src={fitTest} alt="Placeholder for a photo of fit-test coupons, the same peg printed at several tolerances" caption="Fit test coupons at different clearances." fig={4} />
+</div>
+
+<span class="todo">Add the clearance you settled on for press fits and slip fits on your printers</span>
+
+## What I've printed
+
+<Figure src={favorite} alt="Placeholder for a close-up photo of Lucas's favorite print" caption="My favorite print so far." fig={5} />
+
+<span class="todo">Add 3 to 5 favorite prints: what each one is, what it's for, and anything that went wrong first</span>
+
+## MakerWorld plans
+
+MakerWorld is Bambu's site for sharing printable models. I'm planning to publish sets of models there instead of one-off files: groups of parts that work together, like a family of SKÅDIS holders or Gridfinity bins for specific tools.
+
+I have three reasons. Points on MakerWorld can go back into filament and parts. A public profile is a portfolio that shows real designs other people actually print. And it's a community: people print your stuff, find the problems you missed, and tell you.
+
+<span class="todo">Add your MakerWorld profile link once the first set is up</span>
+
+## What's next
+
+- Publish the first model set on MakerWorld.
+- Write down my tolerances for each printer and material so I stop re-testing the same fits.
+- Design more parts that fit standards other people use, so they're useful beyond my own desk.

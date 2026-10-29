@@ -1,0 +1,60 @@
+---
+title: Tri-County FRC website
+summary: "The website for our new FIRST Robotics team, hand-built in plain HTML and one stylesheet so any student on the team can read it, edit it, and keep it running."
+category: robotics
+order: 3
+featured: false
+status: ongoing
+started: "2026-08"
+role: Built the site by hand, planned its pages and content rules
+team: Tri-County FRC (I build the site)
+tools:
+  - HTML
+  - CSS
+  - GitHub
+  - GitHub Issues
+cover: ./cover.jpg
+coverAlt: The home page of the Tri-County FRC team website, navy and gold with a large team logo.
+links:
+  - label: Code on GitHub
+    href: https://github.com/Lucas-Bianco/Tri-County-FRC
+results:
+  - 12 pages, one stylesheet
+  - No framework, no build step
+  - Every section commented for beginners
+  - 27 commits so far
+---
+
+When two other student leaders and I started relaunching our school's FIRST Robotics Competition team for the 2027 season, we had no robot and no budget. We did need a way to look real to the companies we were cold-emailing for sponsorship. So I built the team website.
+
+## Why plain HTML and CSS
+
+I know how to build sites with frameworks. My portfolio and the HexaFlow site use Astro. I deliberately didn't do that here.
+
+A team website outlives whoever built it. I'll graduate, and the next person keeping it up might be a sophomore who has never written code. If the site needs Node, a build step and a framework, it dies the day I leave. So the rules were:
+
+- **Plain HTML pages and one stylesheet.** Every page links the same `style.css`. No framework, no build step, nothing to install. Open a file, change the text, push.
+- **No inline styles.** All styling lives in that one file, so a color or font change happens in one place.
+- **Comments everywhere.** Every section of the HTML says what it is and what it does, down to why the viewport tag is there. The colors at the top of the stylesheet are named and labelled (logo navy, logo gold, footer navy, the grey behind sections) so nobody has to guess.
+- **A mobile menu with a few lines of script**, written so a beginner can read it.
+
+## Design
+
+My favourite FRC team site is team 1538's (The Holy Cows), so I borrowed the feel: dark bands across the page, huge condensed headings, a clean body font, small tag labels, outline buttons, and a dark title strip opening each section. The colors come straight from our logo, a navy and a gold. Headings are League Gothic and body text is Source Sans 3.
+
+The site has 12 pages so far: home, about, sponsors, become a sponsor, members, seasons, news, calendar, join, resources, branding and a 404 page. The home and about pages are the most built out. The rest are set up with the shared header and footer, ready to fill. I track the work as GitHub issues with milestones, so the to-do list lives next to the code.
+
+## Content rules
+
+Some of the most important decisions on the site are things you can't see, and they look like oversights if you don't know the reason:
+
+- **Roster names are first name and last initial.** Most of the team are minors, the site is public and indexed by search engines, and FIRST's own youth protection guidance tells students not to publish last names.
+- **No dollar totals or fundraising goals.** A sponsor who reads "we're halfway there" often concludes we don't need them. If we show spending at all, it's as proportions, not dollars.
+- **No stat counters.** A rookie team showing "0 awards" is advertising what it doesn't have.
+- **We never claim the old team's record.** Our school had an FRC team, 3236, from 2010 to 2019. The site can tell the story of bringing robotics back, but it claims none of 3236's results or awards. The new team registers as a rookie, and saying we're a continuation of the old one would be both untrue and a problem for rookie eligibility.
+
+## What I learned
+
+Building for someone else to maintain changes every decision. The cleverest version of a page is usually the worst one to hand off. I'd rather have a slightly plainer site that a new student can edit on day one.
+
+<span class="todo">Add a screenshot of the live home page once GitHub Pages is on, and the site link</span>

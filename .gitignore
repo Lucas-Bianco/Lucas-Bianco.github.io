@@ -1,2 +1,4 @@
-# Internal build notes, not part of the site
+node_modules/
+dist/
+.astro/
 CONTRACT.md

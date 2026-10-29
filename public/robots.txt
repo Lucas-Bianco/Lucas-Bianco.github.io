@@ -1,0 +1,5 @@
+# Every search engine may crawl everything
+User-agent: *
+Allow: /
+
+Sitemap: https://lucasbianco.com/sitemap-index.xml

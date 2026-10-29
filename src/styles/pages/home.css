@@ -1,0 +1,118 @@
+/* home page styles. Owned by the home page only. */
+
+
+/* =-=-=-=-=-=-=-=-=--
+   HERO  (dark band, huge name, portrait, then the full-bleed HexaFlow figure)
+=-=-=-=-=-=-=-=-=-- */
+.home-hero { padding-bottom: 0; }
+.home-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: end;
+}
+.home-hero-text > * + * { margin-top: 28px; }
+.home-name { font-size: clamp(52px, 9vw, 128px); line-height: 0.95; }
+.home-intro { color: var(--on-dark); }
+.home-link { font-weight: 600; }
+.home-portrait img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: var(--radius);
+  background: var(--graphite-2);
+}
+.home-hero-figure { padding-top: clamp(48px, 7vw, 96px); padding-bottom: clamp(32px, 4vw, 48px); }
+.home-hero-figure .figure img { max-height: 78vh; object-fit: cover; background: #e9eae8; }
+
+@media (max-width: 860px) {
+  .home-hero-grid { grid-template-columns: 1fr; }
+  .home-portrait { max-width: 420px; }
+}
+
+
+/* =-=-=-=-=-=-=-=-=--
+   SECTION HEADINGS
+=-=-=-=-=-=-=-=-=-- */
+.home-h2 { margin-bottom: 28px; }
+.home-section-head {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between;
+  gap: 8px 24px; margin-bottom: 36px;
+}
+.home-section-head a { font-weight: 600; }
+
+
+/* =-=-=-=-=-=-=-=-=--
+   RIGHT NOW
+=-=-=-=-=-=-=-=-=-- */
+.home-now {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: clamp(24px, 5vw, 72px);
+  align-items: start;
+}
+.home-now .home-h2 { margin-bottom: 6px; }
+.home-now-list li { display: grid; grid-template-columns: minmax(0, 14rem) minmax(0, 1fr); gap: 8px 32px; }
+.home-now-list h3 { font-size: 19px; }
+
+@media (max-width: 760px) {
+  .home-now { grid-template-columns: 1fr; }
+  .home-now-list li { grid-template-columns: 1fr; }
+}
+
+
+/* =-=-=-=-=-=-=-=-=--
+   SITE INDEX  (like the sheet list on a drawing set: big name, one line, a blue tick on hover)
+=-=-=-=-=-=-=-=-=-- */
+.home-index {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  column-gap: clamp(24px, 4vw, 56px);
+  border-top: 1.5px solid var(--ink);
+}
+.home-index li { border-bottom: 1px solid var(--rule); }
+.home-index a {
+  position: relative;
+  display: block;
+  padding: 20px 0 20px 18px;
+  color: inherit;
+  text-decoration: none;
+}
+.home-index a::before {
+  content: '';
+  position: absolute; left: 0; top: 24px; bottom: 24px;
+  width: 3px; background: var(--rule);
+  transition: background 0.2s, top 0.2s, bottom 0.2s;
+}
+.home-index a:hover::before,
+.home-index a:focus-visible::before { background: var(--blue); top: 16px; bottom: 16px; }
+.home-index-label {
+  display: block;
+  font-size: clamp(24px, 2.6vw, 30px); font-weight: 750; font-stretch: 115%; line-height: 1.15;
+}
+.home-index a:hover .home-index-label { color: var(--blue); }
+.home-index-line { display: block; margin-top: 4px; color: var(--pencil); font-size: 16px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .home-index a::before { transition: none; }
+}
+
+
+/* =-=-=-=-=-=-=-=-=--
+   CONTACT
+=-=-=-=-=-=-=-=-=-- */
+.home-contact-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: clamp(24px, 5vw, 72px);
+  align-items: start;
+}
+.home-contact-title { font-size: clamp(44px, 6.5vw, 84px); font-weight: 800; font-stretch: 125%; line-height: 1; }
+.home-contact .lede { color: var(--on-dark); }
+.home-contact-links { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+.home-contact-links .muted { overflow-wrap: anywhere; }
+
+@media (max-width: 860px) {
+  .home-contact-grid { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,140 @@
+---
+import Base from '../layouts/Base.astro'
+import PageHeader from '../components/PageHeader.astro'
+import Figure from '../components/Figure.astro'
+import '../styles/pages/uses.css'
+
+import deskSetup from '../assets/photos/uses/desk-setup.jpg'
+
+// Each item: name, one honest line on why/how. todo = what Lucas still needs to fill in.
+type Item = { name: string; why?: string; todo?: string }
+type Group = { id: string; title: string; intro?: string; items: Item[] }
+
+const groups: Group[] = [
+  {
+    id: 'making',
+    title: 'Making',
+    intro: 'Most of what I design ends up on one of these two printers first.',
+    items: [
+      { name: 'Bambu Lab X2D with AMS', why: 'The bigger of the two. Multi-material prints run through the AMS.', todo: 'what you print on the X2D vs the A1' },
+      { name: 'Bambu Lab A1 with AMS', why: 'The second printer, also with an AMS, so two jobs can run at once.' },
+      { name: 'Bambu Studio', why: 'My slicer for both printers. Plates, supports, and filament changes all get set up here.' },
+      { name: 'IKEA SKÅDIS pegboard', why: 'Fit testing for printed hooks and holders. The hole spacing is fixed, so a bad tolerance shows up right away.' },
+      { name: 'Gridfinity', why: 'The bin system in my drawers. A standard grid is a free tolerance check: if a print drops in cleanly, my dimensions were right.' },
+    ],
+  },
+  {
+    id: 'cad',
+    title: 'CAD and design software',
+    intro: 'I learned most of these in the Engineering Technology program.',
+    items: [
+      { name: 'SolidWorks', why: 'My main CAD tool for parts and assemblies, robot parts included.' },
+      { name: 'AutoCAD', why: '2D drawings and layouts. I hold the Autodesk Certified User certification in it.' },
+      { name: 'Revit', why: 'Building and architectural models.', todo: 'what you made in Revit' },
+      { name: 'Fusion', why: 'Quick parts at home when I want CAD and CAM in one place.', todo: 'confirm how you use Fusion' },
+      { name: 'Multisim', why: 'Simulating circuits before wiring anything real.' },
+      { name: 'CorelDRAW', why: 'Vector files for the laser cutter.', todo: 'confirm' },
+      { name: 'Tinkercad', why: 'Where I started. Still the fastest way to sketch a simple idea.', todo: 'confirm' },
+    ],
+  },
+  {
+    id: 'computers',
+    title: 'Computers',
+    items: [
+      { name: 'Desktop with an RTX 5070 Ti', why: 'CAD work, and the GPU that runs my local AI models for Jarvis. It sleeps until Jarvis wakes it over the network.', todo: 'CPU, RAM, storage, case' },
+      { name: 'Six Raspberry Pi 5 (8 GB)', why: 'The hardware Jarvis runs on: the wall kiosk, the core services, and the rest of my home system.' },
+      { name: 'Raspberry Pi Touch Display 2', why: 'The touch panel on the Jarvis kiosk for quick taps without a keyboard.' },
+      { name: 'Acer 24" monitor, mounted vertically', why: 'The Jarvis wall display. Vertical fits a day plan and a project list much better than wide.' },
+    ],
+  },
+  {
+    id: 'code',
+    title: 'Code',
+    items: [
+      { name: 'Python', why: 'My default language. Backends, computer vision, backtests, scripts.' },
+      { name: 'TypeScript', why: 'Front ends, like the React app for my Pokémon card scanner.' },
+      { name: 'Astro', why: 'This site and the HexaFlow site. Static pages that load fast.' },
+      { name: 'Svelte', why: 'The Jarvis HUD. Small and quick on a Raspberry Pi.' },
+      { name: 'FastAPI', why: 'The API layer for Jarvis and the card scanner.' },
+      { name: 'Ollama', why: 'Runs local models on my desktop GPU, so the private Jarvis jobs never leave my own hardware.' },
+      { name: 'Tailscale', why: 'Lets my phone reach Jarvis from anywhere without opening anything to the internet.' },
+      { name: 'Git and GitHub', why: 'Version control for everything, so I can always get back to the version that worked.' },
+    ],
+  },
+  {
+    id: 'shop',
+    title: 'Shop tools',
+    intro: 'I hold NC3/Starrett Precision Measurement certifications for tape and rule and for slide calipers.',
+    items: [
+      { name: 'Slide calipers', why: 'Measuring parts and printed fits before I commit to a dimension in CAD.', todo: 'brand and model' },
+      { name: 'Tape measure and steel rule', why: 'Bigger stock and layout work in the shop.', todo: 'brand and model' },
+      { name: 'Other shop tools', todo: 'list the tools you actually reach for (school shop or home)' },
+    ],
+  },
+  {
+    id: 'camera',
+    title: 'Camera gear',
+    items: [
+      { name: 'Camera', todo: 'body, lenses, and what you shoot with most' },
+      { name: 'Video and editing', todo: 'editing software and any audio or stabilizer gear' },
+    ],
+  },
+]
+
+const description =
+  'The tools Lucas Bianco uses: Bambu printers, SolidWorks and other CAD software, an RTX 5070 Ti desktop, six Raspberry Pi 5s, his code stack, and shop tools.'
+---
+<Base title="Uses" description={description}>
+  <PageHeader
+    title="Uses"
+    measure="what's on my desk"
+    lede="The hardware, software, and tools I actually use, and one honest line on why."
+  >
+    <p class="small muted uses-updated">Last updated October 2026.</p>
+  </PageHeader>
+
+  <section class="uses-hero">
+    <div class="frame">
+      <Figure
+        src={deskSetup}
+        alt="Lucas's desk setup with two Bambu 3D printers, a SKÅDIS pegboard wall, and a vertical monitor"
+        caption="The desk: both printers, the pegboard wall, and the vertical Jarvis screen."
+        fig={1}
+        eager
+        sizes="(max-width: 1216px) 100vw, 1216px"
+      />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="frame">
+      <nav class="uses-toc" aria-label="Sections on this page">
+        <ul>
+          {groups.map((g) => <li><a href={`#${g.id}`}>{g.title}</a></li>)}
+        </ul>
+      </nav>
+
+      <div class="uses-groups">
+        {groups.map((g) => (
+          <section class="uses-group" id={g.id} aria-labelledby={`${g.id}-h`}>
+            <div class="uses-group-head">
+              <h2 id={`${g.id}-h`}>{g.title}</h2>
+              {g.intro && <p class="muted">{g.intro}</p>}
+            </div>
+            <ul class="ruled-list uses-list">
+              {g.items.map((i) => (
+                <li>
+                  <h3>{i.name}</h3>
+                  <p>
+                    {i.why}
+                    {i.todo && <> <span class="todo">{i.todo}</span></>}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>

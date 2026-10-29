@@ -1,0 +1,72 @@
+---
+// One note, rendered as prose with BlogPosting structured data.
+import { getCollection, render } from 'astro:content'
+import Base from '../../layouts/Base.astro'
+import { site } from '../../data/site'
+import '../../styles/pages/notes.css'
+
+export async function getStaticPaths() {
+  const notes = await getCollection('notes')
+  return notes.map((note) => ({ params: { slug: note.id }, props: { note } }))
+}
+
+const { note } = Astro.props
+const { Content } = await render(note)
+const { title, summary, date, project } = note.data
+
+const iso = date.toISOString()
+const pretty = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })
+const url = new URL(`/notes/${note.id}/`, site.url).href
+
+// link the related project only if that project page exists
+const related = project
+  ? (await getCollection('projects')).find((p) => p.id === project || p.id === `${project}/index`)
+  : undefined
+
+// newer / older neighbours
+const all = (await getCollection('notes')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+const i = all.findIndex((n) => n.id === note.id)
+const newer = i > 0 ? all[i - 1] : undefined
+const older = i < all.length - 1 ? all[i + 1] : undefined
+
+const jsonLd = {
+  '@type': 'BlogPosting',
+  image: `${site.url}/og-image.png`,
+  '@id': `${url}#post`,
+  headline: title,
+  description: summary,
+  datePublished: iso,
+  dateModified: iso,
+  url,
+  mainEntityOfPage: url,
+  author: { '@id': `${site.url}/#lucas` },
+  publisher: { '@id': `${site.url}/#lucas` },
+  isPartOf: { '@id': `${site.url}/#site` },
+  inLanguage: 'en-US',
+}
+---
+<Base title={title} description={summary} type="article" publishedTime={iso} jsonLd={jsonLd}>
+  <article class="note">
+    <header class="page-header note-header">
+      <div class="frame">
+        <p class="note-back"><a href="/notes/">All notes</a></p>
+        <h1 class="note-h1">{title}</h1>
+        <p class="note-byline muted">
+          <time datetime={iso.slice(0, 10)}>{pretty}</time>
+          {related && <> <span class="note-related">About <a href={`/projects/${project}/`}>{related.data.title}</a></span></>}
+        </p>
+      </div>
+    </header>
+
+    <div class="frame">
+      <div class="prose column note-prose">
+        <Content />
+      </div>
+
+      <nav class="note-nav" aria-label="More notes">
+        {newer && <a class="note-nav-link" href={`/notes/${newer.id}/`}><span class="small muted">Newer</span>{newer.data.title}</a>}
+        {older && <a class="note-nav-link note-nav-older" href={`/notes/${older.id}/`}><span class="small muted">Older</span>{older.data.title}</a>}
+      </nav>
+    </div>
+  </article>
+</Base>

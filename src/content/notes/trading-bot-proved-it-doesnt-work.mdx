@@ -1,0 +1,56 @@
+---
+title: I built a trading signal app, then proved it was wrong
+summary: "I built a forex signal scanner, then backtested it honestly. It won 46% of the time when it needed 55.6%. Here's how I found out, and what I kept."
+date: 2026-07-13
+project: forex-research
+---
+
+I spent a good chunk of 2026 building a desktop app that scans forex and metals charts and calls short-term direction: will this pair be higher or lower in a few minutes? It's built for binary-option style trades, where you bet on direction and get a fixed payout if you're right. It pulls real price data, runs a pile of technical indicators, scores them, and spits out a signal with a confidence number.
+
+It looked convincing. Signals showed up, some of them were right, and the confidence numbers felt meaningful. I never placed a real trade with it, and I'm glad, because when I finally tested it properly, it didn't work.
+
+## The number that matters
+
+With a binary option at an 80% payout, you win $0.80 when you're right and lose $1.00 when you're wrong. To break even you have to be right more than 55.6% of the time. Not 50%. A coin flip loses money.
+
+So the question was never "does it get some calls right?" It was "does it clear 55.6% on data it has never seen?"
+
+## Testing honestly
+
+The trap with backtesting is that you can tune anything until it looks good on the past. You tweak a threshold, the win rate goes up, you tweak another, it goes up again. What you're really doing is memorizing old charts.
+
+So I split the data. The model gets tuned on one chunk (in-sample) and then scored on a later chunk it never touched (out-of-sample, or OOS). I ran it walk-forward too, sliding that window through time, so every result is the model predicting a future it couldn't have peeked at. Only the OOS number counts.
+
+Pooled across every pair, the out-of-sample win rate was **46%**. Not just below break-even. Below a coin flip.
+
+I tried to save it. Requiring the higher timeframe to agree, only taking high-confidence signals, focusing on the trend presets. Stacking all of that got it up to roughly break-even, around 56%, but not by enough to be statistically different from break-even. And every filter I added cut the number of trades, which makes the result even less trustworthy.
+
+## Maybe it's the model?
+
+The scanner scores indicators with fixed weights, so the next obvious thought was that a real machine learning model would find what my weights missed. I trained two: logistic regression and gradient boosting, on the same features, tested the same out-of-sample way.
+
+Both landed around **51%**.
+
+That was the most useful result of the whole project. If a trained model can't get past a coin flip on these features, the problem isn't how I combined the signals. There's just no signal there to combine at that time horizon. A fancier model wouldn't fix it.
+
+## Where there was something
+
+I didn't want to just stop at "nothing works", so I tested longer-horizon strategies on daily data across 8 markets over about 10 years, including trading costs.
+
+Plain momentum on the major currency pairs came out around zero after costs. But a long-lookback trend strategy that only trades when the ADX indicator says the market is actually trending did better. Out of sample it hit a Sharpe ratio of about **1.05**. That sounds great until you look at the t-statistic: 1.74. The usual bar is 2. So it's a hint, not proof.
+
+And when I dug into where that result came from, it was mostly gold. Take gold out and the same setup falls apart on the currencies.
+
+## Why binaries kill trend following
+
+This is the part that took me longest to understand. Trend following makes money in a lopsided way. You lose small amounts a lot of the time, and then occasionally catch a big move that pays for all of it. The win rate can be under 50% and it still works, because the winners are much bigger than the losers.
+
+A binary option flattens that. A huge move and a tiny move pay exactly the same. So the one kind of edge I could find, trend following on gold, gets its best feature cut off by the format I'd built the whole app around. If that edge is real, it needs a normal position where a big move actually pays big. In binaries it's dead on arrival.
+
+## What I kept
+
+I didn't delete the app. I turned it into a research and journal tool. Instead of shouting "BUY" at me, it runs out-of-sample tests, tracks forward results, and keeps a log, so I can check an idea before I believe it.
+
+The biggest thing I took away from this: test before you believe. A signal that looks right on a chart means nothing until it beats the break-even number on data it's never seen. Building the scanner was fun. Proving it didn't work taught me more.
+
+<span class="todo">Lucas: add a screenshot of the research view if you want one</span>

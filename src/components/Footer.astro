@@ -1,0 +1,35 @@
+---
+import { site, nav } from '../data/site'
+const year = new Date().getFullYear()
+---
+<footer class="site-footer">
+  <div class="frame">
+    <div class="footer-grid">
+      <div class="stack-sm">
+        <p class="footer-name">Lucas Bianco</p>
+        <p>{site.program} student at {site.schoolShort}, class of {site.classOf}. Looking for engineering internships and co-ops.</p>
+        <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+      </div>
+      <div>
+        <h2>Pages</h2>
+        <ul>{nav.slice(0, 4).map((n) => <li><a href={n.href}>{n.label}</a></li>)}</ul>
+      </div>
+      <div>
+        <h2>More</h2>
+        <ul>{nav.slice(4).map((n) => <li><a href={n.href}>{n.label}</a></li>)}</ul>
+      </div>
+      <div>
+        <h2>Elsewhere</h2>
+        <ul>
+          <li><a href={site.linkedin}>LinkedIn</a></li>
+          <li><a href={site.github}>GitHub</a></li>
+          <li><a href="/notes/rss.xml">RSS</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; {year} Lucas Bianco</p>
+      <p>Last updated {new Date(site.updated).toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' })}</p>
+    </div>
+  </div>
+</footer>
