@@ -34,6 +34,7 @@ export const timeline: TimelineEvent[] = [
   },
   {
     date: '2022',
+    label: 'Middle school',
     title: 'VEX World Championship with my middle school team',
     detail: 'Led the team to Worlds for the first time.',
     category: 'robotics',
@@ -42,6 +43,7 @@ export const timeline: TimelineEvent[] = [
   },
   {
     date: '2023',
+    label: 'Middle school',
     title: 'VEX World Championship again',
     detail: 'Second trip to Worlds with the middle school team.',
     category: 'robotics',
@@ -140,8 +142,7 @@ export const timeline: TimelineEvent[] = [
     href: '/projects/hexaflow/',
   },
   {
-    date: '2026-08',
-    label: 'Aug to Sep 2026',
+    date: '2026',
     title: 'Relaunching the Tri-County FRC team',
     detail: 'Started from nothing with two other student leaders: no robot, no budget. Cold-emailed local companies for sponsors and built a warm-up basketball shooter.',
     category: 'robotics',
@@ -151,7 +152,7 @@ export const timeline: TimelineEvent[] = [
     date: '2026-09',
     label: 'Sep to Oct 2026',
     title: 'Jarvis stages 0 and 1A deployed',
-    detail: 'My home operating system on Raspberry Pi 5s: wall kiosk, phone app, daily plan. In daily use since October.',
+    detail: 'My home operating system, built for six Raspberry Pi 5s with the kiosk Pi live first: wall kiosk, phone app, daily plan. In daily use since October.',
     category: 'project',
     href: '/projects/jarvis/',
   },

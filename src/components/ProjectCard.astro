@@ -21,5 +21,5 @@ const statusClass = d.status === 'done' ? 'badge-done' : d.status === 'ongoing' 
   <h3 class="project-card-title"><a href={`/projects/${project.id}/`}>{d.title}</a></h3>
   <p class="project-card-summary">{d.summary}</p>
   <ul class="chips">{d.tools.slice(0, 6).map((t) => <li>{t}</li>)}</ul>
-  <a class="button button-outline button-block button-sm project-card-cta" href={`/projects/${project.id}/`}>View project</a>
+  <a class="button button-outline button-block button-sm project-card-cta" href={`/projects/${project.id}/`}>View project<span class="visually-hidden">: {d.title}</span></a>
 </article>

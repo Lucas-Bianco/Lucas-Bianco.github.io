@@ -13,7 +13,7 @@ const isCurrent = (href: string) => !href.includes('#') && href !== '/' && path.
       ))}
     </ul>
     <div class="header-tools">
-      <button class="icon-button theme-toggle" type="button" aria-label="Switch light or dark mode">
+      <button class="icon-button theme-toggle" type="button" aria-label="Dark mode" aria-pressed="false">
         <span class="icon-moon"><Icon name="moon" /></span>
         <span class="icon-sun"><Icon name="sun" /></span>
       </button>
@@ -28,10 +28,16 @@ const isCurrent = (href: string) => !href.includes('#') && href !== '/' && path.
 <script>
   // Theme toggle: remembers the choice; the head script applies it before paint.
   const root = document.documentElement
-  document.querySelector('.theme-toggle')?.addEventListener('click', () => {
-    const dark = root.dataset.theme === 'dark' || (!root.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches)
-    root.dataset.theme = dark ? 'light' : 'dark'
+  const themeBtn = document.querySelector<HTMLButtonElement>('.theme-toggle')
+  const darkQuery = matchMedia('(prefers-color-scheme: dark)')
+  const isDark = () => root.dataset.theme === 'dark' || (!root.dataset.theme && darkQuery.matches)
+  const syncTheme = () => themeBtn?.setAttribute('aria-pressed', String(isDark()))
+  syncTheme()
+  darkQuery.addEventListener('change', syncTheme)
+  themeBtn?.addEventListener('click', () => {
+    root.dataset.theme = isDark() ? 'light' : 'dark'
     try { localStorage.setItem('theme', root.dataset.theme) } catch {}
+    syncTheme()
   })
 
   // Mobile menu
@@ -42,7 +48,15 @@ const isCurrent = (href: string) => !href.includes('#') && href !== '/' && path.
     toggle.setAttribute('aria-expanded', String(open))
     toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu')
   })
+  const closeMenu = () => {
+    links?.classList.remove('open')
+    toggle?.setAttribute('aria-expanded', 'false')
+    toggle?.setAttribute('aria-label', 'Open menu')
+  }
   links?.addEventListener('click', (e) => {
-    if ((e.target as HTMLElement).closest('a')) { links.classList.remove('open'); toggle?.setAttribute('aria-expanded', 'false') }
+    if ((e.target as HTMLElement).closest('a')) closeMenu()
+  })
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && links?.classList.contains('open')) { closeMenu(); toggle?.focus() }
   })
 </script>

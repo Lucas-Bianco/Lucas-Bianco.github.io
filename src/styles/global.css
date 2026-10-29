@@ -18,10 +18,12 @@
   --surface-2: #f6f7f8;      /* tinted sections, chips */
   --text: #16181b;
   --muted: #5f6670;
-  --border: #e3e6ea;
+  --border: #c9ced4;
   --accent: #2445c7;
   --accent-soft: #eaeefc;    /* badge backgrounds */
   --on-accent: #ffffff;
+  --todo-bg: #ffe680;
+  --todo-text: #16181b;
 
   --ok: #1d7a46;       --ok-soft: #e4f4ea;      /* "Completed" */
   --warn: #8a5a00;     --warn-soft: #fbf0d9;    /* "In progress" */
@@ -42,7 +44,7 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     --bg: #0f1113; --surface: #16191c; --surface-2: #1c2024; --text: #eceef0; --muted: #9aa3ad;
-    --border: #2a2f35; --accent: #8fa3ff; --accent-soft: #1d2440; --on-accent: #0f1113;
+    --border: #3a4048; --accent: #8fa3ff; --accent-soft: #1d2440; --on-accent: #0f1113; --todo-bg: #ffe680; --todo-text: #16181b;
     --ok: #6fd39b; --ok-soft: #12291c; --warn: #f0c46b; --warn-soft: #2d2410;
     --shadow: 0 1px 2px rgb(0 0 0 / 0.4); --shadow-lift: 0 6px 20px rgb(0 0 0 / 0.45);
     color-scheme: dark;
@@ -50,7 +52,7 @@
 }
 :root[data-theme='dark'] {
   --bg: #0f1113; --surface: #16191c; --surface-2: #1c2024; --text: #eceef0; --muted: #9aa3ad;
-  --border: #2a2f35; --accent: #8fa3ff; --accent-soft: #1d2440; --on-accent: #0f1113;
+  --border: #3a4048; --accent: #8fa3ff; --accent-soft: #1d2440; --on-accent: #0f1113; --todo-bg: #ffe680; --todo-text: #16181b;
   --ok: #6fd39b; --ok-soft: #12291c; --warn: #f0c46b; --warn-soft: #2d2410;
   --shadow: 0 1px 2px rgb(0 0 0 / 0.4); --shadow-lift: 0 6px 20px rgb(0 0 0 / 0.45);
   color-scheme: dark;
@@ -283,7 +285,7 @@ a:hover { text-decoration-thickness: 2px; }
 /* =-=-=-=-=-=-=-=-=--
    SMALL PIECES
 =-=-=-=-=-=-=-=-=-- */
-.todo { background: #ffe680; color: #16181b; padding: 0 4px; border-radius: 3px; font-size: 0.92em; }
+.todo { background: var(--todo-bg); color: var(--todo-text); padding: 0 4px; border-radius: 3px; font-size: 0.92em; }
 .ruled-list { list-style: none; }
 .ruled-list > li { padding: 16px 0; border-top: 1px solid var(--border); }
 .ruled-list > li:last-child { border-bottom: 1px solid var(--border); }

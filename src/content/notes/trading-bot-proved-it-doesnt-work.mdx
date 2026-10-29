@@ -21,7 +21,7 @@ The trap with backtesting is that you can tune anything until it looks good on t
 
 So I split the data. The model gets tuned on one chunk (in-sample) and then scored on a later chunk it never touched (out-of-sample, or OOS). I ran it walk-forward too, sliding that window through time, so every result is the model predicting a future it couldn't have peeked at. Only the OOS number counts.
 
-Pooled across every pair, the out-of-sample win rate was **46%**. Not just below break-even. Below a coin flip.
+Pooled across every pair, the out-of-sample win rate was **46%**. Below break-even, and below a coin flip.
 
 I tried to save it. Requiring the higher timeframe to agree, only taking high-confidence signals, focusing on the trend presets. Stacking all of that got it up to roughly break-even, around 56%, but not by enough to be statistically different from break-even. And every filter I added cut the number of trades, which makes the result even less trustworthy.
 

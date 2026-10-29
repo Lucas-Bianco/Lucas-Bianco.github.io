@@ -43,7 +43,7 @@ const habits = [
   },
   {
     title: 'Write the spec, then prove it',
-    body: 'For Jarvis, my home system on six Raspberry Pis, every stage starts with a written spec and every feature needs proof: a screenshot or a test that shows it working.',
+    body: 'For Jarvis, my home system built for six Raspberry Pi 5s (the kiosk Pi is live first), every stage starts with a written spec and every feature needs proof: a screenshot or a test that shows it working.',
   },
 ]
 
@@ -61,7 +61,7 @@ const description =
       <div class="card about-intro-card">
         <Image
           src={portrait}
-          alt="Portrait of Lucas Bianco"
+          alt="Placeholder for a portrait of Lucas Bianco"
           class="avatar about-portrait"
           widths={[200, 400]}
           sizes="200px"
@@ -105,10 +105,10 @@ const description =
         <article class="card stack-sm">
           <h3 class="card-title"><Icon name="wrench" />A vocational school</h3>
           <p>
-            Picking a vocational school with an engineering program was the next step. It meant
-            CAD, shop time, and certifications in precision measurement and mechatronics alongside
-            regular classes, which is closer to how I like to learn.
+            Next came the {site.program} program at Tri-County: CAD, shop time, and
+            certifications in precision measurement and mechatronics alongside regular classes.
           </p>
+          <p><span class="todo">Why you picked a vocational school, in your own words</span></p>
         </article>
         <article class="card stack-sm">
           <h3 class="card-title"><Icon name="briefcase" />Now</h3>
@@ -130,12 +130,14 @@ const description =
         <p>Most of my habits come from being wrong about something I was sure of.</p>
       </div>
       <div class="split">
-        <Figure
-          src={workbench}
-          alt="Lucas's desk and workbench with 3D printers and tools"
-          caption="Where most of it happens: desk, printers, and the pegboard wall."
-          sizes="(max-width: 860px) 100vw, 34rem"
-        />
+        <div class="stack-sm">
+          <Figure
+            src={workbench}
+            alt="Placeholder for a photo of Lucas's desk and workbench with 3D printers and tools"
+            sizes="(max-width: 860px) 100vw, 34rem"
+          />
+          <p class="small"><span class="todo">Photo to add: your desk, printers and pegboard wall</span></p>
+        </div>
         <ul class="about-habits">
           {habits.map((h) => (
             <li class="card stack-sm">
@@ -158,17 +160,17 @@ const description =
       <div class="about-photo-pair">
         <article class="card">
           <div class="card-media">
-            <Image src={soccerTrack} alt="Lucas playing soccer for his high school team" widths={[400, 700, 1000]} sizes="(max-width: 760px) 100vw, 34rem" />
+            <Image src={soccerTrack} alt="Placeholder for a photo of Lucas playing high school soccer" widths={[400, 700, 1000]} sizes="(max-width: 760px) 100vw, 34rem" />
           </div>
           <h3 class="card-title">Soccer and track</h3>
           <p class="muted small">Four seasons of high school soccer, three of track. <span class="todo">One line on what sports taught you that shows up in your engineering</span></p>
         </article>
         <article class="card">
           <div class="card-media">
-            <Image src={photoSample} alt="A photograph taken by Lucas" widths={[400, 700, 1000]} sizes="(max-width: 760px) 100vw, 34rem" />
+            <Image src={photoSample} alt="Placeholder for one of Lucas's own photographs" widths={[400, 700, 1000]} sizes="(max-width: 760px) 100vw, 34rem" />
           </div>
           <h3 class="card-title">Photography</h3>
-          <p class="muted small">One of my own photos. <span class="todo">What it is, where you took it, and what camera</span></p>
+          <p class="muted small"><span class="todo">Photo to add: one of your own photos, plus what it is, where you took it, and what camera</span></p>
         </article>
       </div>
       <div class="about-hobbies">
@@ -193,21 +195,19 @@ const description =
             Franklin, MA. We teach and play soccer with kids of all abilities.
           </p>
           <p>
-            It taught me to communicate differently. The way I'd explain a drill to my own team
-            doesn't work for every kid.
-          </p>
-          <p>
-            It also taught me patience and a better understanding of other people, and that
-            carries over to leading a robotics team.
+            It taught me to communicate differently, and it taught me patience and a better
+            understanding of other people.
           </p>
           <p><span class="todo">One specific moment from FreeKicks that stuck with you</span></p>
         </div>
-        <Figure
-          src={volunteering}
-          alt="Volunteers and players on the field at a FreeKicks soccer session, shown from behind"
-          caption="A FreeKicks session in Franklin. Shot from behind on purpose: no kids' faces on this site."
-          sizes="(max-width: 860px) 100vw, 34rem"
-        />
+        <div class="stack-sm">
+          <Figure
+            src={volunteering}
+            alt="Placeholder for a photo of a FreeKicks soccer session, shot from behind"
+            sizes="(max-width: 860px) 100vw, 34rem"
+          />
+          <p class="small"><span class="todo">Photo to add: a FreeKicks session shot from behind, no kids' faces</span></p>
+        </div>
       </div>
     </div>
   </section>
@@ -252,10 +252,6 @@ const description =
         <details class="card">
           <summary>Why a vocational school?</summary>
           <div class="about-faq-body">
-            <p>
-              I wanted to spend real time in a shop and on CAD, not just read about it. At
-              Tri-County I get both, plus certifications that mean something outside school.
-            </p>
             <p><span class="todo">Your actual reason in one or two sentences</span></p>
           </div>
         </details>
@@ -275,7 +271,7 @@ const description =
             <p>
               VEX is where I learned to design, code, and lead. FRC is bigger in every way:
               bigger robot, bigger team, and you have to raise the money yourself. Starting an FRC
-              team with no robot and no budget means learning how to run a team, not just a robot.
+              team with no robot and no budget means learning to run the team as well as build the robot.
             </p>
           </div>
         </details>

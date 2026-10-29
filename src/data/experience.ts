@@ -89,11 +89,11 @@ export const leadership: Role[] = [
   {
     id: 'vex',
     org: 'VEX Robotics, team 3236A',
-    role: 'Team captain',
+    role: 'Competitor since 2021, captain of 3236A',
     start: '2021',
     end: null,
     summary:
-      'Six years of VEX, from middle school to now. In high school I captain a team of 8.',
+      'Six years of robotics, VEX since 2021. I captain high school team 3236A (2025-26), a team of 8.',
     bullets: [
       'Lead our design process, the robot code (C++ with EZ-Template), and competition strategy for the Push Back season.',
       'Led my middle school team to the VEX World Championship twice.',
@@ -190,7 +190,7 @@ export const skillGroups: SkillGroup[] = [
     id: 'hardware',
     name: 'Hardware and systems',
     skills: ['Raspberry Pi', 'Linux', 'PC building', 'Electronics', 'Electro-pneumatics and PLC basics'],
-    usedOn: 'Jarvis runs on six Raspberry Pi 5s. PLC and pneumatics through the NC3 Mechatronics certification.',
+    usedOn: 'Jarvis is built for six Raspberry Pi 5s; the kiosk Pi is live first. PLC and pneumatics through the NC3 Mechatronics certification.',
   },
   {
     id: 'office',

@@ -19,7 +19,7 @@ const count = `${projects.length} project${projects.length === 1 ? '' : 's'}`
 ---
 <Base
   title="Projects"
-  description="Lucas Bianco's projects: a NASA HUNCH nanolab, competition robots, CAD and 3D printing, and software he builds solo, each written up with problem, testing and results."
+  description="Lucas Bianco's projects: a NASA HUNCH nanolab, competition robots, CAD and 3D printing, and solo software, each written up with problem, testing and results."
 >
   <PageHeader
     title="Projects"
@@ -27,8 +27,9 @@ const count = `${projects.length} project${projects.length === 1 ? '' : 's'}`
     lede="Engineering and robotics first: a NASA HUNCH payload, competition robots, and things I designed and printed. Then the software I build on my own time."
   />
 
-  <section class="projects-index" aria-label="All projects">
+  <section class="projects-index" aria-labelledby="all-projects-h">
     <div class="frame">
+      <h2 class="visually-hidden" id="all-projects-h">All projects</h2>
       <p class="projects-intro muted">
         Every write-up follows the same order: the problem, what I built, how it works, how I tested it,
         the results, and what I learned. Team projects also say exactly what my part was.
