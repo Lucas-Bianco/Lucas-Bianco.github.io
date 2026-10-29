@@ -1,5 +1,5 @@
 # Lucas Bianco
 
-Personal portfolio site: https://lucas-bianco.github.io/
+Personal portfolio site: https://lucasbianco.com/
 
 Plain HTML + one `style.css`. No build step.
