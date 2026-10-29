@@ -21,6 +21,9 @@ const projects = defineCollection({
       cover: image(),
       coverAlt: z.string(),
       links: z.array(z.object({ label: z.string(), href: z.string() })).default([]),
+      video: z.string().optional(),          // YouTube URL or ID for the demo video
+      videoTitle: z.string().optional(),
+      highlights: z.array(z.string()).default([]), // 3-4 one-line takeaways shown at the top
       results: z.array(z.string()).default([]),  // short measured facts for the title block
     }),
 })

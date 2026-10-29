@@ -1,19 +1,20 @@
 ---
-// Top of every tab: big title, dimension line measuring it, and a lede.
+// Top of the secondary pages: optional breadcrumb, title, lede.
 interface Props {
   title: string
-  measure: string        // label on the dimension line, e.g. "6 projects" or "2021 to now"
   lede?: string
-  dark?: boolean
+  measure?: string                     // small label under the title, e.g. "2021 to now"
+  crumbs?: { href: string; label: string }[]
 }
-const { title, measure, lede, dark = false } = Astro.props
+const { title, lede, measure, crumbs } = Astro.props
 ---
-<header class:list={['page-header', dark && 'band-dark']}>
+<header class="page-header">
   <div class="frame">
-    <div class="title-measure">
-      <h1>{title}</h1>
-      <div class="dimension" aria-hidden="true"><span>{measure}</span></div>
-    </div>
+    {crumbs && (
+      <p class="breadcrumb">{crumbs.map((c, i) => <>{i > 0 && ' / '}<a href={c.href}>{c.label}</a></>)}</p>
+    )}
+    <h1>{title}</h1>
+    {measure && <p class="badge badge-accent page-measure">{measure}</p>}
     {lede && <p class="lede">{lede}</p>}
     <slot />
   </div>

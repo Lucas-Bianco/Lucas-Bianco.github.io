@@ -1,38 +1,34 @@
-/* notes page styles. Owned by the notes page only. */
+/* notes page styles. Owned by the notes pages (also gives the 404 its button spacing). */
 
-/* ---- index ---- */
-.notes-section { padding-top: 0; }
-.notes-list { max-width: 56rem; }
-.note-item { display: grid; grid-template-columns: 11rem minmax(0, 1fr); gap: 8px 32px; padding: 28px 0; }
-.note-date { color: var(--pencil); font-size: 15px; padding-top: 6px; }
-.note-title { font-size: clamp(22px, 2.6vw, 30px); font-stretch: 110%; }
-.note-title a { color: var(--ink); text-decoration-color: var(--rule); }
-.note-title a:hover { color: var(--blue); text-decoration-color: var(--blue); }
-.note-summary { margin-top: 8px; color: var(--pencil); max-width: 40em; }
-.notes-rss { margin-top: 32px; }
-@media (max-width: 640px) {
-  .note-item { grid-template-columns: 1fr; }
-  .note-date { padding-top: 0; }
-}
+.page-actions { margin-top: 28px; }
+
+/* ---- index: one card per note ---- */
+.notes-section { padding: 0 0 clamp(64px, 9vw, 112px); }
+.notes-list { list-style: none; display: grid; gap: 20px; max-width: 52rem; }
+.note-card { display: flex; flex-direction: column; gap: 10px; }
+.note-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; font-size: 14px; color: var(--muted); }
+.note-meta time { font-weight: 650; color: var(--text); }
+.note-card-title { font-size: clamp(20px, 2.4vw, 24px); }
+.note-card-title a { color: var(--text); text-decoration: none; }
+.note-card-title a:hover { color: var(--accent); text-decoration: underline; }
+.note-card-summary { color: var(--muted); font-size: 16px; }
+.note-card-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 6px; }
+.note-project { text-decoration: none; }
+.note-project:hover { text-decoration: underline; }
+.notes-rss { display: flex; align-items: center; gap: 8px; margin-top: 32px; }
+.notes-rss svg { width: 16px; height: 16px; color: var(--accent); }
 
 /* ---- single note ---- */
-.note-header { padding-bottom: clamp(28px, 4vw, 48px); }
-.note-back { font-size: 15px; margin-bottom: 20px; }
-.note-h1 { font-size: clamp(34px, 5vw, 60px); max-width: 18em; }
-.note-byline { margin-top: 16px; font-size: 16px; display: flex; flex-wrap: wrap; gap: 4px 16px; }
-.note-byline time { color: var(--ink); font-weight: 600; }
-.note-header .note-h1 { padding-bottom: 16px; border-bottom: 1.5px solid var(--blue); }
-
-.note-prose { padding-bottom: 24px; }
-.note-prose code { font-size: 0.9em; background: var(--paper-2); padding: 1px 5px; border-radius: 3px; }
-.note-prose strong { font-weight: 650; }
-
+.note-byline { margin-top: 18px; font-size: 15px; }
+.note-body { padding-bottom: clamp(64px, 9vw, 112px); }
+.note-prose { padding-top: 8px; }
+.note-related { max-width: 26rem; margin-top: 56px; }
+.note-aside-title { font-size: 18px; margin-bottom: 14px; }
 .note-nav {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;
-  max-width: var(--text-w); margin: 32px 0 clamp(64px, 9vw, 120px);
-  padding-top: 24px; border-top: 1px solid var(--rule);
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px;
+  max-width: var(--text-w); margin-top: 48px;
 }
-.note-nav-link { display: flex; flex-direction: column; gap: 2px; color: var(--ink); text-decoration: none; font-weight: 600; }
-.note-nav-link:hover { color: var(--blue); }
+.note-nav-link { display: flex; flex-direction: column; gap: 4px; padding: 18px 20px; color: var(--text); text-decoration: none; font-weight: 650; }
+.note-nav-link:hover { color: var(--accent); }
 .note-nav-older { text-align: right; }
-.note-nav-link:only-child.note-nav-older { grid-column: 1 / -1; }
+.note-all { margin-top: 24px; }

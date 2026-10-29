@@ -1,6 +1,6 @@
 ---
 title: Forex signal research
-summary: "I built a desktop app to find short-term forex signals, then backtested it honestly. It won 46% of calls when it needed 55.6%, so I proved the edge wasn't there."
+summary: "I built a desktop app to find short-term forex signals, then tested it properly. It won 46% of calls when it needed 55.6%, so I proved the edge wasn't there."
 category: software
 order: 8
 featured: false
@@ -19,6 +19,12 @@ tools:
 cover: ./cover.jpg
 coverAlt: A screenshot of the forex research app showing a price chart and backtest results.
 links: []
+videoTitle: Walking through the backtest that ended the signal app
+highlights:
+  - Signals won 46% out of sample when break-even needed 55.6%
+  - Trained ML models landed around 51%, so the problem was the signal, not the model
+  - Best idea (long-horizon gold trend) had Sharpe about 1.05 but t = 1.74, not significant
+  - Never placed a trade
 results:
   - 46% out-of-sample win rate vs 55.6% needed
   - Real ML models topped out around 51%
@@ -29,51 +35,71 @@ results:
 
 This is the project where I learned the most by being wrong.
 
-I built a desktop app (Electron, with a Node engine) that scanned forex and metals charts and gave short-term "up or down" calls, the kind of thing binary options platforms sell. It pulled real price data through a chain of providers, so if one data source failed it fell back to the next. It scored setups with a weighted set of technical indicators. Despite the "AI" in the original name, the scoring was hand-tuned rules, not machine learning.
+## The problem
 
-It never placed a trade. That was a rule from the start. Before anything touched money I wanted to know if the signals actually worked.
+Binary options platforms sell short-term "up or down" calls on currencies and metals. I wanted to know if I could build something that made those calls well enough to win.
 
-## The test
+The math is simple and brutal. With an **80% payout**, you win $0.80 when you're right and lose $1 when you're wrong. To break even you need to be right **55.6%** of the time.
 
-The engine already had a backtester, walk-forward testing (train on one stretch of history, test on the next stretch it has never seen), confidence intervals and calibration checks. I wrote more tools on top of that to answer one question honestly: do these calls win often enough to make money?
+## The solution
 
-Binary options make the math simple and brutal. With an 80% payout, you win $0.80 when you're right and lose $1 when you're wrong. To break even you need to be right **55.6%** of the time.
+I built a desktop app in **Electron** with a **Node.js** engine that scanned forex and metals charts and gave short-term calls.
+
+- It pulled real price data through a **chain of data providers**, so if one failed it fell back to the next.
+- It scored setups with a **weighted set of technical indicators**. Despite "AI" in the original name, those were hand-tuned rules, not machine learning.
+- It **never placed a trade**. That was a rule from the start: before anything touched money, I wanted to know if the signals worked.
+
+## How it works
+
+The engine already had a **backtester**, **walk-forward testing** (train on one stretch of history, test on the next stretch it has never seen), confidence intervals and calibration checks. I wrote more tools on top to answer one question: do these calls win often enough to make money?
+
+For the wider search later on, I used ten years of daily data on 8 instruments, measured everything **after trading costs**, and put a gap between training and test windows so nothing leaked. I wrote **23 validation checks** for the testing tool itself, including one that made sure my trend-strength indicator matched the engine's numbers exactly.
+
+## Testing
+
+### The short-term signals
 
 Pooled across everything, out of sample, the signals won **46%** of the time. Worse than a coin flip, and nowhere near 55.6%.
 
-## Trying to save it
+I tried the obvious fixes before giving up:
 
-I didn't want to give up after one test, so I tried the obvious fixes:
+- **Filter harder**: only trade when higher timeframes agree, only high-confidence calls, only trending setups. That got it to around break-even (about 56%), but not by enough to be statistically above it. Filtering mostly just meant fewer trades.
+- **Replace the rules with real ML**: I trained **logistic regression** and **gradient boosting** models to predict direction. Both landed around **51%** out of sample.
 
-- **Only trade when higher timeframes agree, only take high-confidence calls, stick to trending setups.** That lifted it to about break-even, around 56%, but not by enough to be statistically above break-even. Filtering harder mostly just meant fewer trades.
-- **Swap the hand-tuned rules for real machine learning.** I trained logistic regression and gradient boosting models to predict direction. Both landed around **51%** out of sample.
+That second result was the important one. If a properly trained model can't beat a coin flip either, my indicator weights aren't the problem. There's no short-horizon signal there to find. Major currency pairs are some of the most heavily traded markets in the world.
 
-That second result was the important one. If a properly trained model can't beat a coin flip either, the problem isn't my indicator weights. There's just no short-horizon signal there to find. Major currency pairs are some of the most heavily traded markets in the world, and short-term direction is about as close to random as it gets.
+### Looking for any edge at all
 
-## Looking for any edge at all
+| Strategy | Out-of-sample result |
+|---|---|
+| Simple trend following, major pairs | Sharpe about 0 after costs |
+| Ranking pairs by momentum | Lost money at every setting |
+| Carry (earning the interest rate gap) | Sharpe 0.56 in training, -0.05 out of sample |
+| **200-day trend, only when ADX is 20 or more** | **Sharpe about 1.05**, max drawdown 3.3% |
 
-So I widened the search. Ten years of daily data on 8 instruments, everything measured after trading costs, with walk-forward splits and a gap between training and testing so nothing leaked. I wrote 23 validation checks for the testing tool itself, including one that makes sure my trend-strength indicator matched the engine's exact numbers.
+Sharpe is return divided by risk. Above 1 is good.
 
-- **Simple trend following on the major pairs** was about Sharpe 0 after costs. (Sharpe is return divided by risk. Above 1 is good.)
-- **Ranking pairs against each other by momentum** lost money out of sample at every setting.
-- **Carry** (earning the interest rate gap) looked fine in training at Sharpe 0.56, then went to -0.05 out of sample.
-- **Long-horizon trend, only when the trend is strong** (a 200-day lookback, filtered by an ADX trend-strength reading of 20 or more) did best: **out-of-sample Sharpe about 1.05**, with a max drawdown of 3.3%.
+That last row looked great until I checked two things. Its t-statistic was **1.74**, and you want at least 2 before calling something real. And when I removed gold and re-ran it on currencies only, it fell apart. Gold was doing almost all the work.
 
-That last one looked great until I checked two things. First, its t-statistic was **1.74**, and you want at least 2 before you call something real. Second, when I removed gold and re-ran it on currencies only, it fell apart. Gold was doing almost all the work. So the most honest summary is: there might be a small long-term trend edge in gold, and I haven't proven it.
+## Results
 
-## Why binaries can't work for this
+- The short-term signals **don't work**: 46% against 55.6% needed.
+- Real ML models couldn't do better than about 51%, which points at the market, not the model.
+- There **might** be a small long-term trend edge in gold. I haven't proven it.
 
-The bigger lesson was about the shape of the bet. Trend following works because of an uneven payoff. You lose small amounts often, and once in a while you catch a big move that pays for all of it. The win rate is usually below 50%, and that's fine.
+The bigger finding was about the shape of the bet. Trend following works because of an uneven payoff: you lose small amounts often, and now and then catch a big move that pays for everything. The win rate is usually below 50%, and that's fine.
 
-A binary option pays the same fixed amount whether the price moves a little or a lot. It cuts off the big wins that trend following depends on. So even the one idea that showed promise in my tests can't work as a binary bet. It only makes sense with a normal position where a big move can pay off big.
-
-## What I took from it
-
-- **Test before you believe.** The app looked convincing. The signals felt right on the chart. The numbers said otherwise, and the numbers win.
-- **Out of sample is the only number that counts.** Carry looked good in training and died on new data.
-- **When a real ML model can't beat a coin flip, stop tuning.** It's a signal problem, not a model problem.
-- **Check what's doing the work.** The "gold trend" result was really just gold.
-
-I stopped treating it as a signal app and turned it into a research and journal tool: log ideas, forward-test them on live data without money, and track whether they hold up. The same instincts went straight into my [Pokémon card scanner](/projects/pokemon-card-scanner/), which is a much messier market where an edge can actually exist.
+A binary option pays the same fixed amount whether the price moves a little or a lot. It cuts off the big wins trend following depends on. So even the one promising idea can't work as a binary bet. It only makes sense with a normal position, where a big move can pay big.
 
 <span class="todo">Add a real screenshot of the app's backtest view (no account balances)</span>
+
+## What I learned
+
+- **Test before you believe.** The signals felt right on the chart. The numbers said otherwise, and the numbers win.
+- **Out of sample is the only number that counts.** Carry looked good in training and died on new data.
+- **When a real ML model can't beat a coin flip, stop tuning.** It's a signal problem.
+- **Check what's doing the work.** The "gold trend" result was really just gold.
+
+## What's next
+
+I stopped treating it as a signal app and turned it into a **research and journal tool**: log ideas, forward-test them on live data without money, and track whether they hold up. The same habits went straight into my [Pokémon card scanner](/projects/pokemon-card-scanner/), a much messier market where an edge can actually exist.

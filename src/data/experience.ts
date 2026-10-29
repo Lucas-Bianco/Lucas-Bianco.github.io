@@ -57,7 +57,7 @@ export const jobs: Job[] = [
     via: 'Hired through Manpower',
     schedule: 'Alternating weeks: one week at Dell, one week at school',
     summary:
-      'I joined the Process Development team at Dell’s Franklin factory in October 2026 as a co-op. At a factory, process development is the group that works out how a product gets built: the steps, the order, the fixtures and the checks, and then how to make that faster and less error-prone.',
+      'I joined the Process Development team at Dell’s Franklin factory in October 2026 as a co-op, hired through Manpower. I’m only a few weeks in, so the details of what I work on are still coming.',
     bullets: [
       'Work on the alternating-week schedule with my Engineering Technology program: one week at Dell, one week at school.',
     ],
@@ -98,7 +98,7 @@ export const leadership: Role[] = [
       'Lead our design process, the robot code (C++ with EZ-Template), and competition strategy for the Push Back season.',
       'Led my middle school team to the VEX World Championship twice.',
     ],
-    link: { href: '/robotics/', label: 'Robotics, in detail' },
+    link: { href: '/projects/vex-3236a/', label: 'The VEX 3236A project' },
     todos: ['Worlds years and how you placed', 'One award or ranking from this season'],
   },
   {
@@ -115,7 +115,7 @@ export const leadership: Role[] = [
       'Set two team rules: ideas go on the board with no names, and anything we can test in under 10 minutes gets tested instead of argued about.',
       'Built the team website by hand in HTML and CSS.',
     ],
-    link: { href: '/robotics/', label: 'How we started the team' },
+    link: { href: '/projects/tri-county-frc/', label: 'How we started the team' },
   },
   {
     id: 'hexaflow',

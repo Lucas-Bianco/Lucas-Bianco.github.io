@@ -1,53 +1,54 @@
 ---
-// /projects/<slug>/ : one project write-up. Content comes from
-// src/content/projects/<slug>/index.mdx (frontmatter + MDX body).
+// /projects/<slug>/ : one project write-up for a reviewer (college, internship).
+// Content: src/content/projects/<slug>/index.mdx (frontmatter + MDX body).
 import { getCollection, render } from 'astro:content'
 import { Image, getImage } from 'astro:assets'
 import Base from '../../layouts/Base.astro'
-import TitleBlock from '../../components/TitleBlock.astro'
+import Figure from '../../components/Figure.astro'
+import Icon from '../../components/Icon.astro'
+import VideoEmbed from '../../components/VideoEmbed.astro'
+import { categoryLabel, statusLabel } from '../../data/labels'
 import { site } from '../../data/site'
 import '../../styles/pages/projects.css'
-
-const categoryLabel: Record<string, string> = {
-  engineering: 'Engineering', robotics: 'Robotics', making: 'Making', software: 'Software',
-}
-const statusLabel = { done: 'Done', ongoing: 'Ongoing', early: 'Early stage' } as const
 
 export async function getStaticPaths() {
   const order = ['engineering', 'robotics', 'making', 'software']
   const all = (await getCollection('projects')).sort(
     (a, b) => order.indexOf(a.data.category) - order.indexOf(b.data.category) || a.data.order - b.data.order,
   )
+  const n = all.length
   return all.map((entry, i) => ({
     params: { slug: entry.id },
-    props: { entry, prev: all[i - 1] ?? null, next: all[i + 1] ?? null },
+    props: {
+      entry,
+      prev: n > 1 ? all[(i - 1 + n) % n] : null,
+      next: n > 2 ? all[(i + 1) % n] : null,
+    },
   }))
 }
 
 const { entry, prev, next } = Astro.props
 const d = entry.data
-const { Content } = await render(entry)
+const { Content, headings } = await render(entry)
+const toc = headings.filter((h) => h.depth === 2)
 
-// "2026-03" -> "Mar 2026"
+// "2025-09" -> "Sep 2025"
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const fmt = (ym: string) => {
   const [y, m] = ym.split('-')
   return m ? `${months[Number(m) - 1]} ${y}` : y
 }
-const dates = d.ended ? `${fmt(d.started)} to ${fmt(d.ended)}` : d.status === 'done' ? fmt(d.started) : `${fmt(d.started)} to now`
+const timeline = d.ended
+  ? fmt(d.started) === fmt(d.ended) ? fmt(d.started) : `${fmt(d.started)} to ${fmt(d.ended)}`
+  : d.status === 'done' ? fmt(d.started) : `${fmt(d.started)} to now`
 
-const facts = [
-  { label: 'Role', value: d.role },
-  { label: 'Team', value: d.team },
-  { label: 'Dates', value: dates },
-  { label: 'Status', value: statusLabel[d.status] },
-  { label: 'Tools', value: d.tools.join(', ') },
-  ...d.results.map((r) => ({ label: 'Result', value: r })),
-]
+const statusClass = d.status === 'done' ? 'badge-done' : d.status === 'ongoing' ? 'badge-ongoing' : ''
+const isGithub = (href: string) => /github\.com/i.test(href)
+const isExternal = (href: string) => /^https?:\/\//i.test(href)
+const videoTitle = d.videoTitle ?? `${d.title} demo`
 
-// Share image + structured data
+// Share image (1200x630 crop of the cover) + structured data
 const og = await getImage({ src: d.cover, width: 1200, height: 630, fit: 'cover', format: 'jpg' })
-const cover = await getImage({ src: d.cover, width: 1600, format: 'jpg' })
 const pageUrl = new URL(`/projects/${entry.id}/`, site.url).href
 const jsonLd = [
   {
@@ -56,8 +57,8 @@ const jsonLd = [
     name: d.title,
     description: d.summary,
     url: pageUrl,
-    creator: { '@id': `${site.url}/#lucas` },
-    image: new URL(cover.src, site.url).href,
+    image: new URL(og.src, site.url).href,
+    creator: { '@id': 'https://lucasbianco.com/#lucas' },
     dateCreated: d.started,
     keywords: d.tools.join(', '),
   },
@@ -73,57 +74,113 @@ const jsonLd = [
 ---
 <Base title={d.title} description={d.summary} image={og.src} type="article" jsonLd={jsonLd}>
   <article class="project">
-    <header class="project-hero band-dark">
-      <div class="hero-photo">
-        <Image src={d.cover} alt={d.coverAlt} layout="full-width" loading="eager" fetchpriority="high" />
-      </div>
-      <div class="frame hero-text">
-        <nav aria-label="Breadcrumb" class="crumbs small">
-          <a href="/projects/">Projects</a> <span aria-hidden="true">/</span> <span>{categoryLabel[d.category]}</span>
+    <header class="project-head">
+      <div class="frame">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="/projects/">Projects</a> / <span>{categoryLabel[d.category]}</span>
         </nav>
+        <div class="project-badges">
+          <span class="badge badge-accent">{categoryLabel[d.category]}</span>
+          <span class:list={['badge', statusClass]}>{statusLabel[d.status]}</span>
+        </div>
         <h1>{d.title}</h1>
         <p class="lede">{d.summary}</p>
-        <div class="hero-facts">
-          <TitleBlock items={facts} />
-        </div>
+        <ul class="chips project-tools" aria-label="Tools used">{d.tools.map((t) => <li>{t}</li>)}</ul>
+        {(d.links.length > 0 || d.video) && (
+          <div class="actions project-actions">
+            {d.links.map((l) =>
+              isGithub(l.href) ? (
+                <a class="button button-outline" href={l.href} rel="noopener"><Icon name="github" />{l.label}</a>
+              ) : (
+                <a class="button" href={l.href} rel={isExternal(l.href) ? 'noopener' : undefined}><Icon name="external" />{l.label}</a>
+              ),
+            )}
+            {d.video && <a class="button button-outline" href="#demo"><Icon name="play" />Watch demo</a>}
+          </div>
+        )}
       </div>
     </header>
 
-    <div class="project-body">
-      <div class="frame">
+    <div class="frame project-cover">
+      <Figure src={d.cover} alt={d.coverAlt} eager sizes="(min-width: 1152px) 1088px, 100vw" />
+    </div>
+
+    <div class="frame project-layout">
+      <aside class="project-aside" aria-label="Project facts">
+        <section class="card project-facts" aria-labelledby="facts-title">
+          <h2 class="project-aside-title" id="facts-title">At a glance</h2>
+          <dl>
+            <div><dt>Role</dt><dd>{d.role}</dd></div>
+            <div><dt>Team</dt><dd>{d.team}</dd></div>
+            <div><dt>Timeline</dt><dd>{timeline}</dd></div>
+            <div><dt>Status</dt><dd>{statusLabel[d.status]}</dd></div>
+            <div><dt>Tools</dt><dd><ul class="chips">{d.tools.map((t) => <li>{t}</li>)}</ul></dd></div>
+          </dl>
+        </section>
+
+        {d.highlights.length > 0 && (
+          <section class="card project-list-card" aria-labelledby="highlights-title">
+            <h2 class="project-aside-title" id="highlights-title">Highlights</h2>
+            <ul>{d.highlights.map((h) => <li>{h}</li>)}</ul>
+          </section>
+        )}
+
+        {d.results.length > 0 && (
+          <section class="card project-list-card" aria-labelledby="results-title">
+            <h2 class="project-aside-title" id="results-title">Results</h2>
+            <ul>{d.results.map((r) => <li>{r}</li>)}</ul>
+          </section>
+        )}
+
+        {toc.length > 1 && (
+          <nav class="project-toc" aria-labelledby="toc-title">
+            <h2 class="project-aside-title" id="toc-title">On this page</h2>
+            <ol>
+              {toc.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}
+              <li><a href="#demo">Demo video</a></li>
+            </ol>
+          </nav>
+        )}
+      </aside>
+
+      <div class="project-main">
         <div class="prose project-prose">
           <Content />
         </div>
 
-        {d.links.length > 0 && (
-          <div class="project-links">
-            <h2 class="links-title">Links</h2>
-            <ul class="actions">
-              {d.links.map((l, i) => (
-                <li><a class:list={['button', i > 0 && 'button-quiet']} href={l.href}>{l.label}</a></li>
-              ))}
-            </ul>
-          </div>
-        )}
+        <section class="project-demo" id="demo" aria-labelledby="demo-title">
+          <h2 id="demo-title">Demo video</h2>
+          <VideoEmbed video={d.video} title={videoTitle} />
+        </section>
       </div>
     </div>
 
-    <nav class="project-nav band-tint" aria-label="More projects">
-      <div class="frame project-nav-grid">
-        {prev ? (
-          <a class="pn pn-prev" href={`/projects/${prev.id}/`}>
-            <span class="pn-label small muted">Previous project</span>
-            <span class="pn-title">{prev.data.title}</span>
-          </a>
-        ) : <span />}
-        <a class="pn pn-all" href="/projects/"><span class="pn-label small muted">Back to</span><span class="pn-title">All projects</span></a>
-        {next ? (
-          <a class="pn pn-next" href={`/projects/${next.id}/`}>
-            <span class="pn-label small muted">Next project</span>
-            <span class="pn-title">{next.data.title}</span>
-          </a>
-        ) : <span />}
+    <footer class="section section-tint project-foot">
+      <div class="frame">
+        {(prev || next) && (
+          <nav class="project-pager" aria-label="More projects">
+            {prev && (
+              <a class="card card-hover pager-card" href={`/projects/${prev.id}/`}>
+                <Image src={prev.data.cover} alt="" widths={[160, 320]} sizes="96px" />
+                <span><span class="pager-label">Previous project</span><span class="pager-title">{prev.data.title}</span></span>
+              </a>
+            )}
+            {next && (
+              <a class="card card-hover pager-card pager-next" href={`/projects/${next.id}/`}>
+                <Image src={next.data.cover} alt="" widths={[160, 320]} sizes="96px" />
+                <span><span class="pager-label">Next project</span><span class="pager-title">{next.data.title}</span></span>
+              </a>
+            )}
+          </nav>
+        )}
+        <div class="project-contact">
+          <p><strong>Want to talk about this project?</strong> I'm happy to walk through the design, the testing or the code.</p>
+          <div class="actions">
+            <a class="button button-accent" href="/#contact"><Icon name="mail" />Get in touch</a>
+            <a class="button button-outline" href="/projects/">All projects</a>
+          </div>
+        </div>
       </div>
-    </nav>
+    </footer>
   </article>
 </Base>

@@ -1,71 +1,54 @@
 /* timeline page styles. Owned by the timeline page only. */
 
-.timeline-section { padding-top: 0; }
+.timeline-section { padding: 0 0 clamp(64px, 9vw, 112px); }
+.timeline-section .filters { justify-content: flex-start; }
+.filters[hidden] { display: none; }
 
-/* ---- filter buttons (shown by JS) ---- */
-.timeline-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 48px; }
-.timeline-filters[hidden] { display: none; }
-.timeline-filters .filter-button {
-  font: inherit; font-size: 16px; font-weight: 550;
-  padding: 7px 14px; border-radius: 99px; cursor: pointer;
-  background: transparent; color: var(--ink); border: 1px solid var(--rule);
-  transition: border-color 0.15s, background 0.15s;
-}
-.timeline-filters .filter-button:hover { border-color: var(--pencil); }
-.timeline-filters .filter-button[aria-pressed='true'] { background: var(--blue); border-color: var(--blue); color: var(--paper); }
-
-/* ---- the line: year in a left column, events hang off a vertical rule ---- */
-.timeline { max-width: 56rem; }
-.timeline-year {
-  display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 0 32px;
-}
+/* ---- vertical line with year markers; events are compact cards hanging off it ---- */
+.timeline { position: relative; max-width: 52rem; }
+.timeline-year { position: relative; padding-left: 40px; }
 .timeline-year.is-hidden { display: none; }
-.timeline-year-label {
-  position: sticky; top: 88px; align-self: start;
-  padding-top: 2px; color: var(--ink);
-  font-size: clamp(30px, 4vw, 44px); font-weight: 800; font-stretch: 125%;
+.timeline-year::before {
+  content: ''; position: absolute; left: 11px; top: 0; bottom: 0;
+  width: 2px; background: var(--border);
 }
-.timeline-events { list-style: none; border-left: 1.5px solid var(--ink); padding-bottom: 40px; }
-.timeline-year:last-child .timeline-events { border-left-style: dashed; padding-bottom: 0; }
+.timeline-year:last-child::before { bottom: 40px; }
 
-.timeline-event { position: relative; padding: 0 0 36px 28px; }
+.timeline-year-label { position: relative; font-size: 22px; padding: 8px 0 16px; }
+.timeline-year-label span {
+  display: inline-block; padding: 2px 14px; border-radius: 99px;
+  background: var(--text); color: var(--bg); font-size: 16px; font-weight: 700;
+}
+.timeline-year-label::before {
+  content: ''; position: absolute; left: -36px; top: 15px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--text); border: 3px solid var(--bg);
+}
+
+.timeline-events { list-style: none; padding-bottom: 24px; }
+.timeline-event { position: relative; padding-bottom: 16px; }
 .timeline-event.is-hidden { display: none; }
-/* tick mark where the event meets the line, like a dimension tick */
 .timeline-event::before {
-  content: ''; position: absolute; left: -1px; top: 12px;
-  width: 18px; height: 1.5px; background: var(--ink);
+  content: ''; position: absolute; left: -33px; top: 24px;
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--accent); border: 2px solid var(--bg); box-shadow: 0 0 0 1px var(--accent);
 }
-.timeline-event::after {
-  content: ''; position: absolute; left: -6px; top: 8px;
-  width: 9px; height: 9px; border-radius: 50%;
-  background: var(--paper); border: 1.5px solid var(--ink);
-}
-.timeline-event.cat-robotics::after,
-.timeline-event.cat-project::after { background: var(--blue); border-color: var(--blue); }
+.timeline-event.is-upcoming::before { background: var(--bg); box-shadow: 0 0 0 1.5px var(--warn); }
 
-.timeline-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; font-size: 15px; color: var(--pencil); }
-.timeline-meta time { font-weight: 650; color: var(--ink); }
-.timeline-cat { color: var(--pencil); }
-.timeline-title { margin-top: 4px; font-size: clamp(20px, 2.2vw, 24px); }
-.timeline-title a { color: var(--ink); text-decoration-color: var(--rule); }
-.timeline-title a:hover { color: var(--blue); text-decoration-color: var(--blue); }
-.timeline-detail { margin-top: 6px; color: var(--pencil); max-width: 38em; }
+.timeline-card { padding: 18px 20px; }
+.timeline-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-size: 14px; color: var(--muted); }
+.timeline-meta time { font-weight: 650; color: var(--text); margin-right: 2px; }
+.timeline-title { margin-top: 8px; font-size: 18px; }
+.timeline-title a { color: var(--text); text-decoration: none; }
+.timeline-title a:hover { color: var(--accent); text-decoration: underline; }
+.timeline-detail { margin-top: 6px; color: var(--muted); font-size: 15px; }
+.timeline-link { margin-top: 10px; font-weight: 600; }
+.timeline-event.is-upcoming .timeline-card { border-style: dashed; box-shadow: none; }
 
-/* ---- upcoming: hollow marker, dashed, blue label ---- */
-.timeline-event.is-upcoming::before { background: none; border-top: 1.5px dashed var(--blue); height: 0; }
-.timeline-event.is-upcoming::after { background: var(--paper); border: 1.5px dashed var(--blue); }
-.timeline-event.is-upcoming .timeline-title,
-.timeline-event.is-upcoming .timeline-title a { color: var(--pencil); }
-.timeline-upcoming {
-  font-size: 13px; font-weight: 650; color: var(--blue);
-  border: 1px dashed var(--blue); border-radius: 99px; padding: 0 8px;
-}
-
-@media (max-width: 640px) {
-  .timeline-year { grid-template-columns: 1fr; }
-  .timeline-year-label { position: static; margin-bottom: 16px; }
-  .timeline-events { margin-left: 6px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .timeline-filters .filter-button { transition: none; }
+@media (max-width: 520px) {
+  .timeline-year { padding-left: 30px; }
+  .timeline-year::before { left: 6px; }
+  .timeline-year-label::before { left: -31px; }
+  .timeline-event::before { left: -28px; }
+  .timeline-card { padding: 16px; }
 }

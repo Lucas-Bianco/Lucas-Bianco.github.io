@@ -1,93 +1,72 @@
 ---
-// /projects/ : every project, grouped by category (engineering first).
+// /projects/ : every project as a card, engineering and robotics first,
+// with category filter buttons (progressive enhancement: no JS = all cards shown).
 import { getCollection } from 'astro:content'
-import { Image } from 'astro:assets'
 import Base from '../../layouts/Base.astro'
 import PageHeader from '../../components/PageHeader.astro'
+import ProjectCard from '../../components/ProjectCard.astro'
+import { categoryLabel } from '../../data/labels'
 import '../../styles/pages/projects.css'
 
-// Helpers (kept here so the projects pages own everything they need)
-const categories = [
-  { id: 'engineering', label: 'Engineering', blurb: 'Hardware with real constraints, tested and documented.' },
-  { id: 'robotics', label: 'Robotics', blurb: 'Competition robots and the teams that build them.' },
-  { id: 'making', label: 'Making', blurb: 'CAD, printing and shop work I do on my own.' },
-  { id: 'software', label: 'Software', blurb: 'Side projects I design, build and test solo.' },
-] as const
-const catIndex = (c: string) => categories.findIndex((x) => x.id === c)
-const sortProjects = <T extends { data: { category: string; order: number } }>(list: T[]) =>
-  [...list].sort((a, b) => catIndex(a.data.category) - catIndex(b.data.category) || a.data.order - b.data.order)
-const statusLabel = { done: 'Done', ongoing: 'Ongoing', early: 'Early stage' } as const
-const yearRange = (started: string, ended: string | undefined, status: string) => {
-  const a = started.slice(0, 4)
-  const thisYear = String(new Date().getFullYear())
-  const b = ended ? ended.slice(0, 4) : status === 'done' || a === thisYear ? a : 'now'
-  return a === b ? a : `${a} to ${b}`
-}
-
-const projects = sortProjects(await getCollection('projects'))
-const groups = categories
-  .map((c) => ({ ...c, items: projects.filter((p) => p.data.category === c.id) }))
-  .filter((g) => g.items.length > 0)
-
+const categoryOrder = ['engineering', 'robotics', 'making', 'software'] as const
+const projects = (await getCollection('projects')).sort(
+  (a, b) =>
+    categoryOrder.indexOf(a.data.category) - categoryOrder.indexOf(b.data.category) ||
+    a.data.order - b.data.order,
+)
+const present = categoryOrder.filter((c) => projects.some((p) => p.data.category === c))
 const count = `${projects.length} project${projects.length === 1 ? '' : 's'}`
 ---
 <Base
   title="Projects"
-  description="Everything Lucas Bianco has built: a NASA HUNCH nanolab, robotics teams, 3D printing and CAD, and software side projects, each written up in detail."
+  description="Lucas Bianco's projects: a NASA HUNCH nanolab, competition robots, CAD and 3D printing, and software he builds solo, each written up with problem, testing and results."
 >
   <PageHeader
     title="Projects"
     measure={count}
-    lede="Engineering work first: a NASA HUNCH payload, robots, things I designed and printed. Then the software I build on my own time. Each one has the full story, including what didn't work."
-  >
-    <div class="project-filter" data-filter hidden>
-      <p class="visually-hidden" id="filter-label">Show projects by category</p>
-      <div class="filter-buttons" role="group" aria-labelledby="filter-label">
-        <button type="button" class="filter-button" data-category="all" aria-pressed="true">All</button>
-        {groups.map((g) => (
-          <button type="button" class="filter-button" data-category={g.id} aria-pressed="false">{g.label}</button>
+    lede="Engineering and robotics first: a NASA HUNCH payload, competition robots, and things I designed and printed. Then the software I build on my own time."
+  />
+
+  <section class="projects-index" aria-label="All projects">
+    <div class="frame">
+      <p class="projects-intro muted">
+        Every write-up follows the same order: the problem, what I built, how it works, how I tested it,
+        the results, and what I learned. Team projects also say exactly what my part was.
+      </p>
+
+      <div class="filters projects-filters" role="group" aria-label="Filter projects by category" data-filters hidden>
+        <button type="button" data-category="all" aria-pressed="true">All</button>
+        {present.map((c) => (
+          <button type="button" data-category={c} aria-pressed="false">{categoryLabel[c]}</button>
         ))}
       </div>
-    </div>
-  </PageHeader>
+      <p class="visually-hidden" aria-live="polite" data-filter-status></p>
 
-  {groups.map((g) => (
-    <section class="section project-group" id={g.id} data-group={g.id} aria-labelledby={`h-${g.id}`}>
-      <div class="frame">
-        <div class="group-head">
-          <h2 id={`h-${g.id}`}>{g.label}</h2>
-          <p class="muted">{g.blurb}</p>
-        </div>
-        <div class="card-grid">
-          {g.items.map((p) => (
-            <a class="card project-card" href={`/projects/${p.id}/`}>
-              <div class="card-photo">
-                <Image src={p.data.cover} alt={p.data.coverAlt} width={720} sizes="(max-width: 720px) 100vw, 400px" />
-              </div>
-              <h3>{p.data.title}</h3>
-              <p>{p.data.summary}</p>
-              <p class="meta">{yearRange(p.data.started, p.data.ended, p.data.status)}, {statusLabel[p.data.status].toLowerCase()}</p>
-            </a>
-          ))}
-        </div>
+      <div class="card-grid">
+        {projects.map((p, i) => <ProjectCard project={p} eager={i < 2} />)}
       </div>
-    </section>
-  ))}
+    </div>
+  </section>
 </Base>
 
 <script>
-  // Category filter. Progressive enhancement: without JS every group is visible
-  // and the buttons stay hidden.
-  const filter = document.querySelector<HTMLElement>('[data-filter]')
-  if (filter) {
-    filter.hidden = false
-    const buttons = filter.querySelectorAll<HTMLButtonElement>('.filter-button')
-    const groups = document.querySelectorAll<HTMLElement>('[data-group]')
+  const bar = document.querySelector<HTMLElement>('[data-filters]')
+  const status = document.querySelector<HTMLElement>('[data-filter-status]')
+  if (bar) {
+    bar.hidden = false
+    const buttons = bar.querySelectorAll<HTMLButtonElement>('button')
+    const cards = document.querySelectorAll<HTMLElement>('.project-card[data-category]')
     buttons.forEach((btn) => {
       btn.addEventListener('click', () => {
         const cat = btn.dataset.category
         buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)))
-        groups.forEach((g) => { g.hidden = cat !== 'all' && g.dataset.group !== cat })
+        let shown = 0
+        cards.forEach((card) => {
+          const show = cat === 'all' || card.dataset.category === cat
+          card.hidden = !show
+          if (show) shown++
+        })
+        if (status) status.textContent = `Showing ${shown} project${shown === 1 ? '' : 's'}`
       })
     })
   }

@@ -11,6 +11,8 @@ const when = (date: string, label?: string) => {
   const [y, m] = date.split('-')
   return m ? `${months[Number(m) - 1]} ${y}` : y
 }
+const linkLabel = (href: string) =>
+  href.startsWith('/projects/') ? 'View project' : href.includes('#certifications') ? 'See certifications' : 'See experience'
 const catLabel = Object.fromEntries(timelineCategories.map((c) => [c.id, c.label]))
 
 // group by year, keeping data order inside a year
@@ -34,12 +36,12 @@ const last = years[years.length - 1].year
     lede="Robotics, school, work and side projects in the order they happened. The last few are still ahead of me."
   />
 
-  <section class="section timeline-section">
+  <section class="timeline-section">
     <div class="frame">
-      <div class="timeline-filters" role="group" aria-label="Filter timeline by category" hidden>
-        <button type="button" class="filter-button" data-filter="all" aria-pressed="true">Everything</button>
+      <div class="filters" role="group" aria-label="Filter timeline by category" hidden>
+        <button type="button" data-filter="all" aria-pressed="true">Everything</button>
         {timelineCategories.map((c) => (
-          <button type="button" class="filter-button" data-filter={c.id} aria-pressed="false">{c.label}</button>
+          <button type="button" data-filter={c.id} aria-pressed="false">{c.label}</button>
         ))}
       </div>
       <p class="visually-hidden" aria-live="polite" data-timeline-status></p>
@@ -47,22 +49,25 @@ const last = years[years.length - 1].year
       <div class="timeline">
         {years.map((g) => (
           <section class="timeline-year" aria-labelledby={`year-${g.year}`}>
-            <h2 class="timeline-year-label" id={`year-${g.year}`}>{g.year}</h2>
+            <h2 class="timeline-year-label" id={`year-${g.year}`}><span>{g.year}</span></h2>
             <ol class="timeline-events">
               {g.events.map((e) => (
-                <li class:list={['timeline-event', `cat-${e.category}`, e.upcoming && 'is-upcoming']} data-category={e.category}>
-                  <p class="timeline-meta">
-                    <time datetime={e.date}>{when(e.date, e.label)}</time>
-                    <span class="timeline-cat">{catLabel[e.category]}</span>
-                    {e.upcoming && <span class="timeline-upcoming">Upcoming</span>}
-                  </p>
-                  <h3 class="timeline-title">
-                    {e.href ? <a href={e.href}>{e.title}</a> : e.title}
-                  </h3>
-                  <p class="timeline-detail">
-                    {e.detail}
-                    {e.todo && <> <span class="todo">{e.todo}</span></>}
-                  </p>
+                <li class:list={['timeline-event', e.upcoming && 'is-upcoming']} data-category={e.category}>
+                  <article class="card timeline-card">
+                    <p class="timeline-meta">
+                      <time datetime={e.date}>{when(e.date, e.label)}</time>
+                      <span class="badge badge-accent">{catLabel[e.category]}</span>
+                      {e.upcoming && <span class="badge badge-ongoing">Upcoming</span>}
+                    </p>
+                    <h3 class="timeline-title">
+                      {e.href ? <a href={e.href}>{e.title}</a> : e.title}
+                    </h3>
+                    <p class="timeline-detail">
+                      {e.detail}
+                      {e.todo && <> <span class="todo">{e.todo}</span></>}
+                    </p>
+                    {e.href && <p class="timeline-link small"><a href={e.href} aria-label={`${linkLabel(e.href)}: ${e.title}`}>{linkLabel(e.href)}</a></p>}
+                  </article>
                 </li>
               ))}
             </ol>
@@ -74,16 +79,16 @@ const last = years[years.length - 1].year
 </Base>
 
 <script>
-  const filters = document.querySelector<HTMLElement>('.timeline-filters')
+  const filters = document.querySelector<HTMLElement>('.timeline-section .filters')
   if (filters) {
     filters.hidden = false
-    const buttons = Array.from(filters.querySelectorAll<HTMLButtonElement>('.filter-button'))
+    const buttons = Array.from(filters.querySelectorAll<HTMLButtonElement>('button[data-filter]'))
     const events = Array.from(document.querySelectorAll<HTMLElement>('.timeline-event'))
     const years = Array.from(document.querySelectorAll<HTMLElement>('.timeline-year'))
     const status = document.querySelector<HTMLElement>('[data-timeline-status]')
 
     filters.addEventListener('click', (e) => {
-      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.filter-button')
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-filter]')
       if (!btn) return
       const f = btn.dataset.filter
       buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)))

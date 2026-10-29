@@ -1,8 +1,10 @@
 ---
-// Experience: the detailed resume. Data lives in src/data/experience.ts and src/data/certs.ts.
+// Experience: the full resume, for colleges and employers.
+// Data lives in src/data/experience.ts and src/data/certs.ts.
 import Base from '../layouts/Base.astro'
 import PageHeader from '../components/PageHeader.astro'
 import TitleBlock from '../components/TitleBlock.astro'
+import Icon from '../components/Icon.astro'
 import { site } from '../data/site'
 import { jobs, leadership, education, skillGroups, strengths, sports } from '../data/experience'
 import { certs, filedCerts, unfiledCerts } from '../data/certs'
@@ -10,8 +12,7 @@ import '../styles/pages/experience.css'
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 // "2025-07-26" -> "Jul 2025", "2021" -> "2021". Parsed by hand so time zones can't shift the month.
-function fmt(d: string | null): string {
-  if (!d) return 'Now'
+function fmt(d: string): string {
   const [y, m] = d.split('-')
   return m ? `${months[Number(m) - 1]} ${y}` : y
 }
@@ -22,6 +23,7 @@ function fmtDay(d: string): string {
 function range(start: string, end: string | null) {
   return `${fmt(start)} to ${end ? fmt(end) : 'now'}`
 }
+const lower = (s: string) => s.charAt(0).toLowerCase() + s.slice(1)
 
 const resumeHref = `mailto:${site.email}?subject=${encodeURIComponent('Resume request')}`
 
@@ -40,6 +42,7 @@ const jump = [
   { href: '#certifications', label: 'Certifications' },
   { href: '#education', label: 'Education' },
   { href: '#skills', label: 'Skills' },
+  { href: '#strengths', label: 'Strengths' },
 ]
 
 // Structured data: merges into the Person node Base already outputs (same @id).
@@ -80,20 +83,23 @@ const jsonLd = {
   <PageHeader
     title="Experience"
     measure="since 2021"
+    crumbs={[{ href: '/', label: 'Home' }]}
     lede="I'm an Engineering Technology student who builds things. Right now that means a co-op at Dell's Franklin factory every other week, captaining a VEX team, restarting my school's FRC team, and a cashier job on the side. Here's all of it, with the details."
   >
-    <div class="xp-intro stack-md">
+    <div class="card xp-top stack-md">
       <TitleBlock items={quickFacts} />
-      <div class="actions">
-        <a class="button" href={resumeHref}>Request my resume</a>
-        <a class="button button-quiet" href={site.linkedin}>LinkedIn</a>
+      <div class="xp-top-row">
+        <p class="muted small">I send my resume by email so it's always the current one. References on request.</p>
+        <div class="actions">
+          <a class="button" href={resumeHref}><Icon name="mail" />Request my resume</a>
+          <a class="button button-outline" href={site.linkedin}><Icon name="linkedin" />LinkedIn</a>
+        </div>
       </div>
     </div>
   </PageHeader>
 
   <nav class="xp-jump" aria-label="Jump to a section">
     <div class="frame">
-      <span class="xp-jump-label">Jump to</span>
       <ul>
         {jump.map((j) => <li><a href={j.href}>{j.label}</a></li>)}
       </ul>
@@ -103,18 +109,20 @@ const jsonLd = {
   <!-- WORK -->
   <section class="section" id="work" aria-labelledby="work-h">
     <div class="frame">
-      <h2 id="work-h">Work</h2>
-      <ol class="xp-list">
+      <div class="section-head">
+        <h2 id="work-h">Work</h2>
+        <p>Paid work, newest first.</p>
+      </div>
+      <ol class="xp-timeline">
         {jobs.map((j) => (
-          <li class="xp-entry">
-            <div class="xp-meta">
-              <p class="xp-dates">{range(j.start, j.end)}</p>
-              <p class="muted small">{j.location}</p>
-              {j.via && <p class="muted small">{j.via}</p>}
-            </div>
-            <div class="xp-body stack-sm">
-              <h3>{j.role}<span class="xp-org">{j.org}</span></h3>
-              {j.schedule && <p class="xp-tag small">{j.schedule}</p>}
+          <li class="xp-item">
+            <article class="card xp-card stack-sm">
+              <div class="xp-card-head">
+                <h3 class="card-title"><Icon name="briefcase" />{j.role}</h3>
+                <span class="badge badge-accent">{range(j.start, j.end)}</span>
+              </div>
+              <p class="xp-org">{j.org}, {j.location}{j.via && <span class="muted">. {j.via}</span>}</p>
+              {j.schedule && <p><span class="badge">{j.schedule}</span></p>}
               <p>{j.summary}</p>
               {(j.bullets.length > 0 || j.todos) && (
                 <ul class="xp-bullets">
@@ -122,7 +130,7 @@ const jsonLd = {
                   {j.todos?.map((t) => <li><span class="todo">{t}</span></li>)}
                 </ul>
               )}
-            </div>
+            </article>
           </li>
         ))}
       </ol>
@@ -130,18 +138,21 @@ const jsonLd = {
   </section>
 
   <!-- LEADERSHIP -->
-  <section class="section band-tint" id="leadership" aria-labelledby="lead-h">
+  <section class="section section-tint" id="leadership" aria-labelledby="lead-h">
     <div class="frame">
-      <h2 id="lead-h">Leadership and teams</h2>
-      <p class="muted xp-sub">Robotics is where I learned to lead: six years of building, coding and running teams, plus a payload that NASA dropped.</p>
-      <ol class="xp-list">
+      <div class="section-head">
+        <h2 id="lead-h">Leadership and teams</h2>
+        <p>Robotics is where I learned to lead: six years of building, coding and running teams, plus a payload that NASA dropped.</p>
+      </div>
+      <ol class="xp-timeline">
         {leadership.map((r) => (
-          <li class="xp-entry">
-            <div class="xp-meta">
-              <p class="xp-dates">{range(r.start, r.end)}</p>
-            </div>
-            <div class="xp-body stack-sm">
-              <h3>{r.role}<span class="xp-org">{r.org}</span></h3>
+          <li class="xp-item">
+            <article class="card xp-card stack-sm">
+              <div class="xp-card-head">
+                <h3 class="card-title"><Icon name={r.id === 'freekicks' ? 'spark' : 'robot'} />{r.role}</h3>
+                <span class="badge badge-accent">{range(r.start, r.end)}</span>
+              </div>
+              <p class="xp-org">{r.org}</p>
               <p>{r.summary}</p>
               {(r.bullets.length > 0 || r.todos) && (
                 <ul class="xp-bullets">
@@ -149,8 +160,8 @@ const jsonLd = {
                   {r.todos?.map((t) => <li><span class="todo">{t}</span></li>)}
                 </ul>
               )}
-              {r.link && <p><a href={r.link.href}>{r.link.label}</a></p>}
-            </div>
+              {r.link && <p><a class="button button-outline button-sm" href={r.link.href}>{r.link.label}</a></p>}
+            </article>
           </li>
         ))}
       </ol>
@@ -158,40 +169,47 @@ const jsonLd = {
   </section>
 
   <!-- CERTIFICATIONS -->
-  <section class="section band-dark xp-certs" id="certifications" aria-labelledby="cert-h">
+  <section class="section" id="certifications" aria-labelledby="cert-h">
     <div class="frame">
-      <h2 id="cert-h">Certifications</h2>
-      <p class="xp-sub muted">Industry certifications in CAD, mechatronics and precision measurement. The PDFs are the real certificates, and the AutoCAD one can be checked directly with Certiport.</p>
+      <div class="section-head">
+        <h2 id="cert-h">Certifications</h2>
+        <p>Industry certifications in CAD, mechatronics and precision measurement. The PDFs are the real certificates, and the AutoCAD one can be checked directly with Certiport.</p>
+      </div>
 
-      <ul class="xp-cert-grid">
+      <ul class="card-grid xp-certs">
         {filedCerts.map((c) => (
-          <li class="xp-cert">
-            <p class="xp-cert-date">{c.date ? fmtDay(c.date) : <span class="todo">date</span>}</p>
-            <h3>{c.name}</h3>
-            <p class="xp-cert-issuer">{c.issuer}{c.issuerDetail && <span>, {c.issuerDetail.charAt(0).toLowerCase() + c.issuerDetail.slice(1)}</span>}</p>
-            <ul class="xp-cert-covers">
+          <li class="card card-hover xp-cert">
+            <div class="xp-cert-top">
+              <span class="badge badge-done">{c.date ? fmtDay(c.date) : 'Date to add'}</span>
+            </div>
+            <h3 class="card-title"><Icon name="award" />{c.name}</h3>
+            <p class="muted small">{c.issuer}{c.issuerDetail && <>, {lower(c.issuerDetail)}</>}</p>
+            <ul class="xp-bullets small">
               {c.covers.map((b) => <li>{b}</li>)}
             </ul>
-            <div class="xp-cert-links">
-              <a class="button" href={c.file!} target="_blank" rel="noopener">View certificate<span class="visually-hidden"> (PDF, opens in a new tab)</span></a>
+            {c.verify && <p class="small muted">Verification code <strong class="xp-code">{c.verify.code}</strong></p>}
+            <div class="actions xp-cert-links">
+              <a class="button button-sm" href={c.file!} target="_blank" rel="noopener"><Icon name="file" />View certificate<span class="visually-hidden"> (PDF, opens in a new tab)</span></a>
               {c.verify && (
-                <a class="button button-quiet" href={c.verify.url} target="_blank" rel="noopener">{c.verify.label}<span class="visually-hidden"> (opens in a new tab)</span></a>
+                <a class="button button-outline button-sm" href={c.verify.url} target="_blank" rel="noopener">Verify<span class="visually-hidden"> on Certiport (opens in a new tab)</span></a>
               )}
             </div>
-            {c.verify && <p class="xp-cert-code small">Verification code <strong>{c.verify.code}</strong></p>}
           </li>
         ))}
       </ul>
 
-      <h3 class="xp-unfiled-h">Also earned</h3>
-      <p class="muted small">These are listed on my resume. Their certificates aren't on the site yet.</p>
-      <ul class="xp-unfiled">
+      <div class="xp-unfiled-head">
+        <h3>Also earned</h3>
+        <p class="muted small">These are listed on my resume. Their certificates aren't on the site yet.</p>
+      </div>
+      <ul class="card-grid xp-unfiled">
         {unfiledCerts.map((c) => (
-          <li>
-            <div class="xp-unfiled-head">
-              <h4>{c.name}</h4>
-              <p class="muted small">{c.issuer}{c.date && `, ${fmtDay(c.date)}`}</p>
+          <li class="card xp-cert">
+            <div class="xp-cert-top">
+              <span class="badge">{c.date ? fmtDay(c.date) : 'Certificate coming'}</span>
             </div>
+            <h4>{c.name}</h4>
+            <p class="muted small">{c.issuer}</p>
             <p class="small">{c.covers.join('. ')}.</p>
             {c.todos && <p class="small"><span class="todo">Lucas: send {c.todos.join(' and ')}</span></p>}
           </li>
@@ -201,28 +219,33 @@ const jsonLd = {
   </section>
 
   <!-- EDUCATION -->
-  <section class="section" id="education" aria-labelledby="edu-h">
+  <section class="section section-tint" id="education" aria-labelledby="edu-h">
     <div class="frame">
-      <h2 id="edu-h">Education</h2>
-      <div class="split xp-edu">
-        <div class="stack-md">
-          <h3>{education.school}<span class="xp-org">{education.location}</span></h3>
-          <p>
-            I'm in the {education.program} program, a hands-on vocational track: CAD, technical
-            drawings, CNC, precision measurement and electronics, alongside regular academics.
-          </p>
-          <p><span class="todo">One or two favorite ET projects or classes, with what you made</span></p>
-        </div>
-        <div class="stack-md">
-          <TitleBlock items={[
-            { label: 'Program', value: education.program },
-            { label: 'Years', value: `${education.start} to ${education.end}` },
-            { label: 'GPA', value: education.gpa },
-            { label: 'Class of', value: String(education.end) },
-          ]} />
-          <ul class="chips" aria-label="Activities">
-            {education.activities.map((a) => <li>{a}</li>)}
-          </ul>
+      <div class="section-head">
+        <h2 id="edu-h">Education</h2>
+      </div>
+      <div class="card xp-edu">
+        <div class="split">
+          <div class="stack-md">
+            <h3 class="card-title"><Icon name="graduation" />{education.school}</h3>
+            <p class="muted small">{education.location}</p>
+            <p>
+              I'm in the {education.program} program, a hands-on vocational track: CAD, technical
+              drawings, CNC, precision measurement and electronics, alongside regular academics.
+            </p>
+            <p><span class="todo">One or two favorite ET projects or classes, with what you made</span></p>
+          </div>
+          <div class="stack-md">
+            <TitleBlock items={[
+              { label: 'Program', value: education.program },
+              { label: 'Years', value: `${education.start} to ${education.end}` },
+              { label: 'GPA', value: education.gpa },
+              { label: 'Class of', value: String(education.end) },
+            ]} />
+            <ul class="chips" aria-label="Activities">
+              {education.activities.map((a) => <li>{a}</li>)}
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -231,12 +254,14 @@ const jsonLd = {
   <!-- SKILLS -->
   <section class="section" id="skills" aria-labelledby="skills-h">
     <div class="frame">
-      <h2 id="skills-h">Skills</h2>
-      <p class="xp-sub muted">Grouped by what kind of work they're for. Next to each group is where I've actually used it, so you can check.</p>
-      <ul class="ruled-list xp-skills">
+      <div class="section-head">
+        <h2 id="skills-h">Skills</h2>
+        <p>Grouped by what kind of work they're for, with where I've actually used each group, so you can check.</p>
+      </div>
+      <ul class="card-grid xp-skills">
         {skillGroups.map((g) => (
-          <li>
-            <h3>{g.name}</h3>
+          <li class="card stack-sm">
+            <h3 class="card-title">{g.name}</h3>
             <ul class="chips">
               {g.skills.map((s) => <li>{s}</li>)}
             </ul>
@@ -248,30 +273,35 @@ const jsonLd = {
   </section>
 
   <!-- STRENGTHS -->
-  <section class="section" aria-labelledby="str-h">
-    <div class="frame split">
-      <div class="stack-md">
+  <section class="section section-tint" id="strengths" aria-labelledby="str-h">
+    <div class="frame">
+      <div class="section-head">
         <h2 id="str-h">Strengths</h2>
-        <p class="muted">Anyone can list these. So here's the evidence for each one.</p>
-        <p class="small muted">Outside of all this: {sports.join('; ').toLowerCase()}.</p>
+        <p>Anyone can list these, so here's the evidence for each one.</p>
       </div>
-      <dl class="xp-strengths">
+      <ul class="card-grid xp-strengths">
         {strengths.map((s) => (
-          <div><dt>{s.name}</dt><dd>{s.proof}</dd></div>
+          <li class="card stack-sm">
+            <h3 class="card-title"><Icon name="spark" />{s.name}</h3>
+            <p class="muted">{s.proof}</p>
+          </li>
         ))}
-      </dl>
+      </ul>
+      <p class="small muted xp-sports">Outside of all this: {sports.join('; ').toLowerCase()}.</p>
     </div>
   </section>
 
   <!-- RESUME REQUEST -->
-  <section class="section band-tint xp-cta" aria-labelledby="cta-h">
-    <div class="frame"><div class="column stack-md">
-      <h2 id="cta-h">Want the one-page version?</h2>
-      <p>I send my resume by email so it's always the current one. References are available on request.</p>
-      <div class="actions">
-        <a class="button" href={resumeHref}>Request my resume</a>
-        <a href={`mailto:${site.email}`}>{site.email}</a>
+  <section class="section" aria-labelledby="cta-h">
+    <div class="frame">
+      <div class="card xp-cta stack-md">
+        <h2 id="cta-h">Want the one-page version?</h2>
+        <p class="muted">I send my resume by email so it's always the current one. References are available on request.</p>
+        <div class="actions xp-cta-actions">
+          <a class="button" href={resumeHref}><Icon name="mail" />Request my resume</a>
+          <a class="button button-outline" href={`mailto:${site.email}`}>{site.email}</a>
+        </div>
       </div>
-    </div></div>
+    </div>
   </section>
 </Base>

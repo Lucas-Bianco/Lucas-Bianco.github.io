@@ -2,6 +2,8 @@
 // One note, rendered as prose with BlogPosting structured data.
 import { getCollection, render } from 'astro:content'
 import Base from '../../layouts/Base.astro'
+import PageHeader from '../../components/PageHeader.astro'
+import ProjectCard from '../../components/ProjectCard.astro'
 import { site } from '../../data/site'
 import '../../styles/pages/notes.css'
 
@@ -16,6 +18,7 @@ const { title, summary, date, project } = note.data
 
 const iso = date.toISOString()
 const pretty = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })
+const minutes = Math.max(1, Math.round((note.body ?? '').split(/\s+/).filter(Boolean).length / 220))
 const url = new URL(`/notes/${note.id}/`, site.url).href
 
 // link the related project only if that project page exists
@@ -47,26 +50,33 @@ const jsonLd = {
 ---
 <Base title={title} description={summary} type="article" publishedTime={iso} jsonLd={jsonLd}>
   <article class="note">
-    <header class="page-header note-header">
-      <div class="frame">
-        <p class="note-back"><a href="/notes/">All notes</a></p>
-        <h1 class="note-h1">{title}</h1>
-        <p class="note-byline muted">
-          <time datetime={iso.slice(0, 10)}>{pretty}</time>
-          {related && <> <span class="note-related">About <a href={`/projects/${project}/`}>{related.data.title}</a></span></>}
-        </p>
-      </div>
-    </header>
+    <PageHeader title={title} crumbs={[{ href: '/', label: 'Home' }, { href: '/notes/', label: 'Notes' }]}>
+      <p class="note-meta note-byline">
+        <time datetime={iso.slice(0, 10)}>{pretty}</time>
+        <span>{minutes} min read</span>
+        {related && <a class="badge badge-accent note-project" href={`/projects/${project}/`}>{related.data.title}</a>}
+      </p>
+    </PageHeader>
 
-    <div class="frame">
-      <div class="prose column note-prose">
+    <div class="frame note-body">
+      <div class="prose note-prose">
         <Content />
       </div>
 
-      <nav class="note-nav" aria-label="More notes">
-        {newer && <a class="note-nav-link" href={`/notes/${newer.id}/`}><span class="small muted">Newer</span>{newer.data.title}</a>}
-        {older && <a class="note-nav-link note-nav-older" href={`/notes/${older.id}/`}><span class="small muted">Older</span>{older.data.title}</a>}
-      </nav>
+      {related && (
+        <aside class="note-related" aria-labelledby="related-heading">
+          <h2 id="related-heading" class="note-aside-title">The project behind this note</h2>
+          <ProjectCard project={related} />
+        </aside>
+      )}
+
+      {(newer || older) && (
+        <nav class="note-nav" aria-label="More notes">
+          {newer && <a class="card card-hover note-nav-link" href={`/notes/${newer.id}/`}><span class="small muted">Newer note</span>{newer.data.title}</a>}
+          {older && <a class="card card-hover note-nav-link note-nav-older" href={`/notes/${older.id}/`}><span class="small muted">Older note</span>{older.data.title}</a>}
+        </nav>
+      )}
+      <p class="small muted note-all"><a href="/notes/">All notes</a></p>
     </div>
   </article>
 </Base>

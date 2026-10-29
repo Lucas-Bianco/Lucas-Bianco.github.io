@@ -2,17 +2,19 @@
 import Base from '../layouts/Base.astro'
 import PageHeader from '../components/PageHeader.astro'
 import Figure from '../components/Figure.astro'
+import Icon from '../components/Icon.astro'
 import '../styles/pages/uses.css'
 
 import deskSetup from '../assets/photos/uses/desk-setup.jpg'
 
 // Each item: name, one honest line on why/how. todo = what Lucas still needs to fill in.
 type Item = { name: string; why?: string; todo?: string }
-type Group = { id: string; title: string; intro?: string; items: Item[] }
+type Group = { id: string; title: string; icon: 'cube' | 'wrench' | 'code' | 'spark' | 'file'; intro?: string; items: Item[] }
 
 const groups: Group[] = [
   {
     id: 'making',
+    icon: 'cube',
     title: 'Making',
     intro: 'Most of what I design ends up on one of these two printers first.',
     items: [
@@ -25,6 +27,7 @@ const groups: Group[] = [
   },
   {
     id: 'cad',
+    icon: 'file',
     title: 'CAD and design software',
     intro: 'I learned most of these in the Engineering Technology program.',
     items: [
@@ -39,6 +42,7 @@ const groups: Group[] = [
   },
   {
     id: 'computers',
+    icon: 'spark',
     title: 'Computers',
     items: [
       { name: 'Desktop with an RTX 5070 Ti', why: 'CAD work, and the GPU that runs my local AI models for Jarvis. It sleeps until Jarvis wakes it over the network.', todo: 'CPU, RAM, storage, case' },
@@ -49,6 +53,7 @@ const groups: Group[] = [
   },
   {
     id: 'code',
+    icon: 'code',
     title: 'Code',
     items: [
       { name: 'Python', why: 'My default language. Backends, computer vision, backtests, scripts.' },
@@ -63,6 +68,7 @@ const groups: Group[] = [
   },
   {
     id: 'shop',
+    icon: 'wrench',
     title: 'Shop tools',
     intro: 'I hold NC3/Starrett Precision Measurement certifications for tape and rule and for slide calipers.',
     items: [
@@ -73,6 +79,7 @@ const groups: Group[] = [
   },
   {
     id: 'camera',
+    icon: 'spark',
     title: 'Camera gear',
     items: [
       { name: 'Camera', todo: 'body, lenses, and what you shoot with most' },
@@ -84,57 +91,54 @@ const groups: Group[] = [
 const description =
   'The tools Lucas Bianco uses: Bambu printers, SolidWorks and other CAD software, an RTX 5070 Ti desktop, six Raspberry Pi 5s, his code stack, and shop tools.'
 ---
-<Base title="Uses" description={description}>
+<Base title="My setup" description={description}>
   <PageHeader
-    title="Uses"
-    measure="what's on my desk"
+    title="My setup"
+    crumbs={[{ href: '/', label: 'Home' }]}
+    measure="last updated October 2026"
     lede="The hardware, software, and tools I actually use, and one honest line on why."
-  >
-    <p class="small muted uses-updated">Last updated October 2026.</p>
-  </PageHeader>
+  />
 
-  <section class="uses-hero">
+  <section class="section uses-hero">
     <div class="frame">
-      <Figure
-        src={deskSetup}
-        alt="Lucas's desk setup with two Bambu 3D printers, a SKÅDIS pegboard wall, and a vertical monitor"
-        caption="The desk: both printers, the pegboard wall, and the vertical Jarvis screen."
-        fig={1}
-        eager
-        sizes="(max-width: 1216px) 100vw, 1216px"
-      />
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="frame">
+      <div class="card uses-photo-card">
+        <Figure
+          src={deskSetup}
+          alt="Lucas's desk setup with two Bambu 3D printers, a SKÅDIS pegboard wall, and a vertical monitor"
+          caption="The desk: both printers, the pegboard wall, and the vertical Jarvis screen."
+          eager
+          sizes="(max-width: 1216px) 100vw, 1216px"
+        />
+      </div>
       <nav class="uses-toc" aria-label="Sections on this page">
         <ul>
           {groups.map((g) => <li><a href={`#${g.id}`}>{g.title}</a></li>)}
         </ul>
       </nav>
-
-      <div class="uses-groups">
-        {groups.map((g) => (
-          <section class="uses-group" id={g.id} aria-labelledby={`${g.id}-h`}>
-            <div class="uses-group-head">
-              <h2 id={`${g.id}-h`}>{g.title}</h2>
-              {g.intro && <p class="muted">{g.intro}</p>}
-            </div>
-            <ul class="ruled-list uses-list">
-              {g.items.map((i) => (
-                <li>
-                  <h3>{i.name}</h3>
-                  <p>
-                    {i.why}
-                    {i.todo && <> <span class="todo">{i.todo}</span></>}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))}
-      </div>
     </div>
   </section>
+
+  {groups.map((g, n) => (
+    <section class:list={['section', n % 2 === 0 && 'section-tint']} id={g.id} aria-labelledby={`${g.id}-h`}>
+      <div class="frame">
+        <div class="section-head">
+          <h2 id={`${g.id}-h`}>{g.title}</h2>
+          {g.intro && <p>{g.intro}</p>}
+        </div>
+        <ul class="card-grid uses-grid">
+          {g.items.map((i) => (
+            <li class="card uses-item">
+              <h3 class="card-title"><Icon name={g.icon} />{i.name}</h3>
+              {(i.why || i.todo) && (
+                <p class="muted small">
+                  {i.why}
+                  {i.todo && <> <span class="todo">{i.todo}</span></>}
+                </p>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  ))}
 </Base>

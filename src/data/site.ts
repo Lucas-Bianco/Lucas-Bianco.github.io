@@ -16,14 +16,11 @@ export const site = {
   updated: '2026-10-28',
 }
 
-// Tabs in the header. "more" ones go in the overflow menu on small screens.
+// Links in the header. Timeline, notes, my setup, etc. are in the footer.
 export const nav = [
+  { href: '/#about', label: 'About' },
   { href: '/projects/', label: 'Projects' },
-  { href: '/robotics/', label: 'Robotics' },
+  { href: '/#builds', label: 'CAD and builds' },
   { href: '/experience/', label: 'Experience' },
-  { href: '/about/', label: 'About' },
-  { href: '/timeline/', label: 'Timeline' },
   { href: '/gallery/', label: 'Gallery' },
-  { href: '/notes/', label: 'Notes' },
-  { href: '/uses/', label: 'Uses' },
 ]

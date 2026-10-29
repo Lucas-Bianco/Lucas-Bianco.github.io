@@ -23,6 +23,12 @@ tools:
 cover: ./cover.jpg
 coverAlt: The Jarvis wall setup, a vertical 24-inch monitor showing the HUD with a small touchscreen beside it.
 links: []
+videoTitle: A day with Jarvis on the wall, the touchscreen and my phone
+highlights:
+  - One Svelte web app drives a vertical wall display, a touchscreen and a phone app
+  - An AI router keeps private jobs on my own hardware and sends only non-private work to the cloud
+  - Every feature ships with a passing test run and a screenshot on the real screen
+  - Replaced a feature that passed its tests but failed with a real finger
 results:
   - Six Raspberry Pi 5s planned, kiosk Pi live first
   - Three layouts, one web app (wall, touch, phone)
@@ -34,86 +40,179 @@ import Figure from '../../../components/Figure.astro'
 import phonePis from '../../../assets/photos/jarvis/phone-pis.jpg'
 import phoneHabits from '../../../assets/photos/jarvis/phone-habits.jpg'
 
-The line at the top of the design doc says Jarvis is "a tool to running my life and helping me achieve my goals in the best way possible." It's a home operating system: a big screen on my wall, a touchscreen to tap things on, and an app on my phone, all running on Raspberry Pis in my room.
+## The problem
 
-It replaced something I built before it, a web dashboard I called the Command Console. The Console had a focus card, to-dos, deadlines, habits and a daily check-in. I used it for a while, and then I looked at the data. After the first few days, the habit and classwork trackers were blank on every day but one, and I usually finished 0 to 3 of my 5 to-dos. The features weren't the problem. Tracking took too much effort, and the dashboard just showed me empty boxes. So Jarvis has two design rules that came straight from that:
+Before Jarvis I built a web dashboard I called the **Command Console**: a focus card, to-dos, deadlines, habits and a daily check-in. I used it for a while, then looked at the data.
 
-- Tracking has to be near zero effort: one tap on the wall, one tap on the phone.
-- When a tracker goes unused, Jarvis should notice and ask me whether to change it, instead of showing empty boxes forever.
+After the first few days, the habit and classwork trackers were blank on every day but one. I usually finished 0 to 3 of my 5 to-dos. Tracking took too much effort, and the dashboard just showed me empty boxes.
 
-## The loop
+So two design rules came straight from that:
 
-Every feature has to serve one loop, and anything that doesn't goes to a parking lot:
+- **Tracking has to be near zero effort**: one tap on the wall, one tap on the phone.
+- **When a tracker goes unused, Jarvis should notice** and ask me whether to change it, instead of showing empty boxes forever.
 
-**Goals (6 to 12 months)** feed **this week's focus** (three items, each tied to a goal), which feeds **today's plan**. Then I do the work and capture things as they come up, and a **weekly review** looks at what moved and what slipped and goes back to the goals.
+## The solution
 
-Day to day, that turns into a focus card with a live countdown to when it's due, a list of what's coming up, deadlines, a "what's slipping" list, habits, a focus timer, and a project radar that shows how many days since I last touched each project and what the next step is. During my Dell co-op weeks, it also knows I'm not at school.
+The first line of my design doc reads: "A tool to running my life and helping me achieve my goals in the best way possible."
 
-## Hardware
+Jarvis is a home operating system: a big screen on my wall, a touchscreen to tap, and an app on my phone, all running on **Raspberry Pis** in my room. Every feature has to serve one loop, and anything that doesn't goes to a parking lot:
 
-- **Six Raspberry Pi 5s (8 GB).** Each gets a role in one config file: Core (the main server), Kiosk (drives the screens), Mind (the chat agent), Lab (backups and testing), and two more planned for voice and for a staging Pi that gets every deploy first. Moving a service to a different Pi is a config edit and a redeploy, not a rewrite.
-- **The wall display** is my Acer 24" monitor turned vertical (1080 by 1920). It's meant to be read from across the room, so it has no touch.
-- **A Raspberry Pi Touch Display 2** (10.1") for actually tapping things. I first had it portrait, then switched it to lying sideways, so the layout picks portrait or landscape from the screen's shape.
-- **My desktop with an RTX 5070 Ti** for the big AI models. It isn't always on, so the Pi wakes it up with Wake-on-LAN when there's a big job.
+**Goals (6 to 12 months)** feed **this week's focus** (three items, each tied to a goal), which feeds **today's plan**. I do the work and capture things as they come up, and a **weekly review** checks what moved and what slipped and goes back to the goals.
 
-The whole first version was designed to cost $0 in new hardware. Every purchase waits until the stage before it works. The touchscreen (about $80) was the first thing I bought.
+Day to day that means a focus card with a live countdown, what's coming up, deadlines, a "what's slipping" list, habits, a focus timer, and a **project radar** showing days since I last touched each project and its next step. During my Dell co-op weeks, it knows I'm not at school.
 
-One Pi drives both screens: two Chromium windows in kiosk mode, one per output, with touch mapped to the touchscreen only. Getting two displays, rotation and per-screen blanking right was its own fiddly task with its own tests.
+## How it works
 
-## Local-first AI, in tiers
+<figure class="figure">
+<svg viewBox="0 0 800 360" width="100%" role="img" aria-labelledby="jv-diagram-title jv-diagram-desc" xmlns="http://www.w3.org/2000/svg">
+<title id="jv-diagram-title">Jarvis system architecture</title>
+<desc id="jv-diagram-desc">The kiosk Pi with the wall display and touchscreen, the phone app over Tailscale, and read-only data sources all connect to jarvis-core on the core Pi, which runs FastAPI, MCP, SQLite and a server-sent event stream. jarvis-core sends AI jobs to a router that tries, in order, a small model on a Pi, the desktop GPU woken by Wake-on-LAN, the paid Ollama Pro cloud for non-private jobs, and free APIs for public jobs only.</desc>
+<defs>
+<marker id="jv-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M0 0 L10 5 L0 10 z" fill="currentColor" />
+</marker>
+</defs>
+<g fill="none" stroke="currentColor" stroke-width="1.5">
+<rect x="20" y="25" width="200" height="80" rx="10" />
+<rect x="20" y="140" width="200" height="80" rx="10" />
+<rect x="20" y="255" width="200" height="80" rx="10" stroke-dasharray="5 4" />
+<rect x="270" y="100" width="210" height="160" rx="10" stroke-width="2.5" />
+<rect x="580" y="20" width="200" height="64" rx="10" />
+<rect x="580" y="104" width="200" height="64" rx="10" />
+<rect x="580" y="188" width="200" height="64" rx="10" />
+<rect x="580" y="272" width="200" height="64" rx="10" />
+</g>
+<g stroke="currentColor" stroke-width="1.5" fill="none">
+<line x1="222" y1="75" x2="300" y2="102" marker-start="url(#jv-arrow)" marker-end="url(#jv-arrow)" />
+<line x1="222" y1="180" x2="268" y2="180" marker-start="url(#jv-arrow)" marker-end="url(#jv-arrow)" />
+<line x1="220" y1="285" x2="300" y2="258" marker-end="url(#jv-arrow)" />
+<line x1="480" y1="180" x2="540" y2="180" />
+<line x1="540" y1="52" x2="540" y2="304" />
+<line x1="540" y1="52" x2="578" y2="52" marker-end="url(#jv-arrow)" />
+<line x1="540" y1="136" x2="578" y2="136" marker-end="url(#jv-arrow)" />
+<line x1="540" y1="220" x2="578" y2="220" marker-end="url(#jv-arrow)" />
+<line x1="540" y1="304" x2="578" y2="304" marker-end="url(#jv-arrow)" />
+</g>
+<g fill="currentColor" text-anchor="middle">
+<text x="120" y="55" font-size="15" font-weight="600">Kiosk Pi</text>
+<text x="120" y="75" font-size="12">vertical wall display</text>
+<text x="120" y="91" font-size="12">+ Touch Display 2</text>
+<text x="120" y="170" font-size="15" font-weight="600">Phone app</text>
+<text x="120" y="190" font-size="12">over Tailscale</text>
+<text x="120" y="206" font-size="12">owner-only writes</text>
+<text x="120" y="285" font-size="15" font-weight="600">Data sources</text>
+<text x="120" y="305" font-size="12">calendar, Notion, vault</text>
+<text x="120" y="321" font-size="12">read-only</text>
+<text x="375" y="135" font-size="16" font-weight="600">jarvis-core</text>
+<text x="375" y="155" font-size="12">on the core Pi</text>
+<text x="375" y="185" font-size="12">FastAPI + MCP tools</text>
+<text x="375" y="205" font-size="12">SQLite</text>
+<text x="375" y="225" font-size="12">SSE event stream</text>
+<text x="510" y="170" font-size="12">AI</text>
+<text x="510" y="200" font-size="12">router</text>
+<text x="680" y="48" font-size="14" font-weight="600">1. Small Pi model</text>
+<text x="680" y="68" font-size="12">always on, small jobs</text>
+<text x="680" y="132" font-size="14" font-weight="600">2. Desktop GPU</text>
+<text x="680" y="152" font-size="12">woken by Wake-on-LAN</text>
+<text x="680" y="216" font-size="14" font-weight="600">3. Ollama Pro cloud</text>
+<text x="680" y="236" font-size="12">paid, non-private jobs only</text>
+<text x="680" y="300" font-size="14" font-weight="600">4. Free APIs</text>
+<text x="680" y="320" font-size="12">public jobs only</text>
+</g>
+</svg>
+<figcaption><span class="fig-no">Fig. 1</span>How the pieces connect. The router tries the tiers top to bottom, and a job's privacy tag decides how far down it is allowed to go.</figcaption>
+</figure>
 
-The rule is that running Jarvis should cost as little as possible, and my private data stays on my own machines. All AI calls go through one router with fake model names like "jarvis-fast" and "jarvis-smart", so swapping a real model is a one-line change. The router tries, in order:
+### Hardware
 
-1. A small model on a Pi (always on, for small jobs).
-2. A bigger model on my desktop GPU, woken up if it's asleep. If the wake fails, the job waits in a queue.
-3. Ollama's cloud models (a paid Ollama Pro plan) when the desktop is off, for things that aren't private.
-4. Free public AI APIs, only for public, non-personal jobs. Paid Claude API calls are off by default behind a $0 monthly cap.
+- **Six Raspberry Pi 5s (8 GB)**, each with a role in one config file: Core (the main server), Kiosk (drives the screens), Mind (the chat agent), Lab (backups and testing), and two planned for voice and for a staging Pi that gets every deploy first. Moving a service to another Pi is a config edit and a redeploy.
+- **The wall display** is my Acer 24" monitor turned vertical (1080 by 1920). It's read from across the room, so it has no touch.
+- **A Raspberry Pi Touch Display 2** (10.1") for tapping things. I started it portrait, then laid it sideways, so the layout picks portrait or landscape from the screen's shape.
+- **My desktop with an RTX 5070 Ti** for big models. It isn't always on, so a Pi wakes it with **Wake-on-LAN** when there's a big job. If the wake fails, the job waits in a queue.
 
-Every job carries a privacy tag. Private stuff only ever runs on my own hardware.
+The first version was designed to cost **$0 in new hardware**, and every purchase waits until the stage before it works. The touchscreen (about $80) was the first thing I bought.
 
-A lot of features don't need AI at all. Adding a to-do or flagging a stale project is plain code: instant and free. AI only writes things like the morning briefing.
+One Pi drives both screens: two **Chromium** windows in kiosk mode, one per output, with touch mapped to the touchscreen only. Getting two displays, rotation and per-screen blanking right was its own task with its own tests.
 
-## Privacy
+### The AI router
 
-This thing knows a lot about my life, so I was strict:
+All AI calls go through one router with made-up model names like "jarvis-fast" and "jarvis-smart", so swapping a real model is a one-line change. It tries, in order:
 
-- **Every job gets a privacy tag**, and the router (not the model) enforces it. "Private" jobs like journal entries or anything about money can only run on my own machines. They never go to a cloud model.
-- **Nothing is reachable from the public internet.** My phone reaches Jarvis over Tailscale, a private network that only my devices are on. The server itself only listens on the Pi.
-- **Owner-only writes.** Through Tailscale, every request looks like it comes from the Pi itself, so "it's local" no longer means "it's me." Any change from the phone has to carry the Tailscale login header, and it has to match the owner in config, or it gets rejected.
-- **Read-only first.** Calendar, Notion and my GitHub repos are read-only. Anything that could send, delete or spend money can never run without me confirming it on my phone.
-- **Email gets sandboxed.** The model that reads email gets the text and one job (pull out dates and action items) and no tools at all. Instructions inside an email are never followed.
+| Tier | Where it runs | Used for |
+|---|---|---|
+| 1 | Small **Ollama** model on a Pi | Always on, small jobs |
+| 2 | Bigger model on my desktop GPU | Big jobs, private ones included |
+| 3 | Ollama cloud models (my paid **Ollama Pro** plan) | Non-private jobs when the desktop is off |
+| 4 | Free public AI APIs | Public, non-personal jobs only |
 
-## Built in stages, with proof
+So running Jarvis isn't free. The Ollama Pro plan is a monthly cost, and other paid APIs like Claude are off by default behind a hard monthly cap. What stays fixed is privacy: **private jobs only ever run on my own hardware**.
 
-Jarvis is built in stages, and each one ends with something I can see: the HUD on sample data, then my real data, then the AI brains, then talking to it from my phone, then the full goal loop, then hardening, voice and a 3D-printed wall mount.
+A lot of features don't need AI at all. Adding a to-do or flagging a stale project is plain code: instant and free. AI writes things like the morning briefing.
 
-My standing rule is **proof for every feature**. Each one ships with its passing test run, a screenshot of it working on the real screen (wall, touch and phone), and for background jobs, the log line. Tests are written before the code. There's a real-browser fit check that fails the build if any panel clips text or scrolls on the actual screen sizes. And nothing counts as done until I've seen it work on the device.
+### Privacy
 
-That rule caught real stuff. I designed "tap the dark touchscreen to wake it up," and it passed with a simulated tap. With a real finger, the touch controller kept sending taps for a little while after the screen turned off and then, after about 60 seconds, nothing at all. So tap-to-wake couldn't work. I replaced it: "Screens off" now turns the wall display fully off, but keeps the touchscreen on with its backlight at zero and a black overlay. A tap anywhere wakes it, and that first tap is swallowed so you don't accidentally press something underneath.
+- **Every job has a privacy tag**, and the router enforces it, not the model. Journal entries or anything about money never go to a cloud model.
+- **Nothing is reachable from the public internet.** My phone reaches Jarvis over **Tailscale**, a private network only my devices are on.
+- **Owner-only writes.** Through Tailscale, every request looks like it comes from the Pi itself, so "it's local" no longer means "it's me." Any change from the phone must carry the Tailscale login header, and it has to match the owner in config.
+- **Read-only first.** Calendar, Notion and my GitHub repos are read-only. Anything that could send, delete or spend money needs me to confirm it on my phone.
+- **Email is sandboxed.** The model that reads email gets the text and one job (pull out dates and action items) and no tools. Instructions inside an email are never followed.
 
-Other things I added after trying it for real: a built-in on-screen keyboard (the kiosk has no keyboard, and I found out because I couldn't type a to-do during my own demo), bigger text on the touchscreen and the wall after I tried the landscape touch layout and some things were just too small, a 25 or 50 minute focus timer that shows on all three screens, and night dimming from 9 pm that warms the colors and drops the touchscreen backlight to 40%.
+### Software
 
-## The phone app
+- **jarvis-core** is **Python + FastAPI**, with an **MCP** server so AI agents use the same tools I do. It's the only thing allowed to write to my notes.
+- **The HUD** is one **Svelte + Vite** app with three layouts: wall, touch and phone. No blur or heavy 3D, because it has to stay smooth on a Pi.
+- **SQLite** holds fast-changing data. My Markdown notes vault holds anything I'd read myself, and every write to it is a git commit, so any change can be undone.
+- **Server-Sent Events** stream from the core, so when I send something from my phone at home, the wall reacts. At school it doesn't bother, since nobody's there to see it.
+- Everything runs in **Docker** on the Pis, deployed over Tailscale.
 
-I wanted the phone app to look like a real product, something I'd be fine showing friends. It has five tabs: Today, Tasks, Projects, Chat and Pis. Common actions are at most two taps from anywhere, and they sit in the thumb zone at the bottom. It installs to the home screen and caches the app shell so it opens offline, but the data is always live.
+### The phone app
+
+I wanted the phone app to look like a real product. It has five tabs: Today, Tasks, Projects, Chat and Pis. Common actions are at most two taps away and sit in the thumb zone. It installs to the home screen and opens offline, but the data is always live.
 
 <div class="photo-grid">
-<Figure src={phonePis} alt="Jarvis phone app, Pis tab: a temperature ring reading 52.3 degrees, CPU, memory, disk, load and fan speed tiles, service status rows, and Screens on and Screens off buttons." caption="The Pis tab. Live temperature, load, memory, disk and fan speed for the kiosk Pi, plus the screen controls." fig={1} />
-<Figure src={phoneHabits} alt="Jarvis phone app, habits bottom sheet: eight habits like Stretch or move and Read 15 min, each with dots for the week and a count against a weekly target." caption="Habits work on weekly targets instead of a fragile daily streak. One tap logs today." fig={2} />
+<Figure src={phonePis} alt="Jarvis phone app, Pis tab: a temperature ring reading 52.3 degrees, CPU, memory, disk, load and fan speed tiles, service status rows, and Screens on and Screens off buttons." caption="The Pis tab: live temperature, load, memory, disk and fan speed for the kiosk Pi, plus the screen controls." fig={2} />
+<Figure src={phoneHabits} alt="Jarvis phone app, habits bottom sheet: eight habits like Stretch or move and Read 15 min, each with dots for the week and a count against a weekly target." caption="Habits use weekly targets instead of a fragile daily streak. One tap logs today." fig={3} />
 </div>
 
 On the Pis tab, temperature is colored (OK below 60 °C, warm up to 75, hot above), and any throttle or under-voltage flag shows red. Machines that aren't set up yet show as a dim card saying which stage they join in. Every probe has a timeout, so a slow reading shows "n/a" with a reason instead of breaking the page.
 
-## Under the hood
+## Testing
 
-- **jarvis-core** is Python and FastAPI, with an MCP server so AI agents can use the same tools I do. It's the only thing allowed to write to my notes.
-- **The HUD** is one Svelte and Vite web app with three layouts: wall, touch and phone. No blur effects or heavy 3D, because it has to stay smooth on a Pi.
-- **SQLite** holds the fast-changing stuff. My notes vault (Markdown) holds anything I'd read myself, and every write to it is a git commit, so any change can be undone.
-- **A live event stream** (Server-Sent Events) goes out from the core, so when I send something from my phone while I'm home, the wall display reacts. If I'm at school, it doesn't bother, since nobody's there to see it.
-- Everything runs in Docker on the Pis, deployed over Tailscale. No coding on the Pis themselves.
+My standing rule is **proof for every feature**. Each one ships with:
 
-## What I'd do next
+- a **passing test run**, with tests written before the code,
+- a **screenshot of it working on the real screen** (wall, touch and phone),
+- and for background jobs, the log line.
 
-The big piece still ahead is the full goal loop: a short interview that writes my goals, and a weekly review that reads my week and proposes next week's focus. After that comes voice ("Jarvis" wake word on its own Pi) and the wall mount I'll print myself.
+A real-browser fit check with **Playwright** fails the build if any panel clips text or scrolls at the real screen sizes. Nothing counts as done until I've seen it work on the device.
+
+That rule caught a real failure. I designed "tap the dark touchscreen to wake it up," and it passed with a simulated tap. With a real finger, the touch controller kept sending taps for a little while after the screen turned off, then after about 60 seconds sent nothing at all. Tap-to-wake couldn't work.
+
+So I replaced it. "Screens off" now turns the wall display fully off but keeps the touchscreen on with its backlight at zero under a black overlay. A tap anywhere wakes it, and that first tap is swallowed so you don't press something underneath.
+
+Using it for real found more:
+
+- An **on-screen keyboard**, because the kiosk has no keyboard and I couldn't type a to-do during my own demo.
+- **Bigger text** on the touchscreen and wall, after the landscape layout turned out too small to read.
+- A **25 or 50 minute focus timer** that shows on all three screens.
+- **Night dimming** from 9 pm that warms the colors and drops the touchscreen backlight to 40%.
+
+## Results
+
+- The kiosk Pi runs the **wall display and touchscreen together**, proven on the device with a physical finger-tap drill.
+- **Three layouts from one app**, all checked by the fit test at their real sizes.
+- **Nothing exposed** to the public internet, and phone writes are owner-only.
+- In **daily use since October 2026**.
 
 <span class="todo">Say which stages are live today (real data, AI briefing, phone over Tailscale) and add a photo of the wall setup</span>
+
+## What I learned
+
+- **A passing test isn't proof.** The simulated tap passed. The real finger didn't.
+- **Design from your own data.** The blank tracker days in the Command Console shaped Jarvis more than any feature list.
+- **Put the privacy rule in code.** A router that refuses to send private jobs out is safer than trusting each prompt.
+- **Build in stages that each end in something visible**, so the project never stalls halfway.
+
+## What's next
+
+The big piece still ahead is the **full goal loop**: a short interview that writes my goals, and a weekly review that reads my week and proposes next week's focus. After that comes **voice** (a "Jarvis" wake word on its own Pi) and a **wall mount** I'll 3D print myself.

@@ -1,0 +1,32 @@
+---
+// Click-to-play YouTube video. Nothing from YouTube loads until the visitor clicks,
+// so pages stay fast and private. Pass a YouTube URL or ID; without one it shows a slot.
+interface Props { video?: string; title: string }
+const { video, title } = Astro.props
+const id = video?.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/)?.[1] ?? (video && /^[\w-]{11}$/.test(video) ? video : undefined)
+---
+{id ? (
+  <div class="video" data-video-id={id}>
+    <img src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`} alt="" loading="lazy" />
+    <button class="video-play" type="button" aria-label={`Play video: ${title}`}>
+      <span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 4l14 8-14 8z" /></svg></span>
+    </button>
+    <p class="video-label">{title}</p>
+  </div>
+) : (
+  <div class="video video-empty"><p>Demo video coming soon: {title}</p></div>
+)}
+
+<script>
+  document.querySelectorAll<HTMLElement>('.video[data-video-id]').forEach((box) => {
+    box.querySelector('.video-play')?.addEventListener('click', () => {
+      const frame = document.createElement('iframe')
+      frame.src = `https://www.youtube-nocookie.com/embed/${box.dataset.videoId}?autoplay=1&rel=0`
+      frame.title = box.querySelector('.video-label')?.textContent ?? 'Video'
+      frame.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture'
+      frame.allowFullscreen = true
+      box.replaceChildren(frame)
+      frame.focus()
+    })
+  })
+</script>

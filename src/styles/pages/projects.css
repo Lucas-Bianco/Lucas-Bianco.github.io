@@ -1,124 +1,148 @@
 /* =-=-=-=-=-=-=-=-=--
-   PROJECTS  (index + detail pages)
-   Owned by src/pages/projects/*. Tokens come from global.css.
+   PROJECTS  (/projects/ index + /projects/<slug>/ detail)
+   Owned by src/pages/projects/*. Tokens only, from global.css (light + dark).
 =-=-=-=-=-=-=-=-=-- */
 
 
-/* ---------- Index: category filter ---------- */
-.project-filter { margin-top: 32px; }
-.project-filter[hidden] { display: none; }
-.filter-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
-.filter-button {
-  font: inherit; font-size: 15px; font-weight: 550;
-  padding: 6px 14px; border: 1px solid var(--rule); border-radius: 99px;
-  background: transparent; color: var(--pencil); cursor: pointer;
+/* ---------- Index ---------- */
+.projects-index { padding-bottom: clamp(64px, 9vw, 112px); }
+.projects-intro { max-width: 40em; font-size: 16px; margin-bottom: 24px; }
+.projects-filters { justify-content: flex-start; }
+.filters[hidden] { display: none; }
+.filters button:hover { color: var(--text); border-color: var(--muted); }
+.filters button[aria-pressed='true']:hover { color: var(--bg); border-color: var(--text); }
+.project-card[hidden] { display: none; }
+
+
+/* ---------- Detail: header ---------- */
+.project-head { padding: clamp(40px, 6vw, 72px) 0 clamp(28px, 4vw, 40px); }
+.project-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.project-head h1 { font-size: clamp(34px, 5vw, 54px); max-width: 20em; }
+.project-head .lede { margin-top: 16px; }
+.project-tools { margin-top: 22px; max-width: 48rem; }
+.project-actions { margin-top: 24px; }
+
+
+/* ---------- Detail: cover photo ---------- */
+.project-cover .figure img {
+  aspect-ratio: 2 / 1; max-height: 560px; object-fit: cover;
+  box-shadow: var(--shadow);
 }
-.filter-button:hover { color: var(--ink); border-color: var(--pencil); }
-.filter-button[aria-pressed='true'] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+@media (max-width: 700px) { .project-cover .figure img { aspect-ratio: 4 / 3; } }
 
 
-/* ---------- Index: groups ---------- */
-.project-group { scroll-margin-top: 80px; }
-.project-group[hidden] { display: none; }
-.page-header + .project-group { padding-top: clamp(24px, 4vw, 48px); }
-.group-head {
-  display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 20px;
-  padding-bottom: 14px; margin-bottom: 32px; border-bottom: 1.5px solid var(--ink);
+/* ---------- Detail: facts column + write-up ---------- */
+.project-layout {
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px;
+  padding-top: clamp(32px, 5vw, 56px); padding-bottom: clamp(56px, 8vw, 96px);
 }
-.group-head p { font-size: 16px; }
-.project-card .meta { font-variant-numeric: tabular-nums; }
+@media (min-width: 1000px) {
+  .project-layout { grid-template-columns: 300px minmax(0, 1fr); gap: 48px; }
+}
+
+.project-aside { display: flex; flex-direction: column; gap: 16px; }
+.project-aside .card { padding: 20px; }
+.project-aside-title { font-size: 16px; font-weight: 650; letter-spacing: 0; margin-bottom: 12px; }
+
+.project-facts dl > div { padding: 10px 0; border-top: 1px solid var(--border); }
+.project-facts dl > div:first-child { border-top: 0; padding-top: 0; }
+.project-facts dt { font-size: 13px; color: var(--muted); }
+.project-facts dd { font-size: 15px; font-weight: 600; margin-top: 2px; }
+.project-facts dd .chips { margin-top: 6px; font-weight: 400; }
+
+.project-list-card ul { padding-left: 1.1em; font-size: 15px; }
+.project-list-card li + li { margin-top: 8px; }
+.project-list-card li::marker { color: var(--accent); }
+
+/* Sticky "On this page" (wide screens only; the aside stretches the full row) */
+.project-toc { display: none; }
+@media (min-width: 1000px) {
+  .project-toc {
+    display: block; position: sticky; top: 88px; margin-top: 8px;
+    padding: 16px 0 0; border-top: 1px solid var(--border);
+  }
+}
+.project-toc ol { list-style: none; border-left: 1px solid var(--border); }
+.project-toc a {
+  display: block; padding: 5px 0 5px 14px; margin-left: -1px; border-left: 2px solid transparent;
+  font-size: 14px; line-height: 1.4; color: var(--muted); text-decoration: none;
+}
+.project-toc a:hover { color: var(--text); border-left-color: var(--accent); }
+
+.project-main { min-width: 0; }
+.project-prose h2, .project-prose h3 { scroll-margin-top: 88px; }
+.project-prose > h2:first-child { margin-top: 0; }
+
+.project-demo { max-width: var(--text-w); margin-top: clamp(48px, 6vw, 72px); scroll-margin-top: 88px; }
+.project-demo h2 { font-size: clamp(24px, 2.6vw, 30px); margin-bottom: 18px; }
 
 
-/* ---------- Detail: hero ---------- */
-.project-hero { padding-bottom: clamp(48px, 7vw, 88px); }
-.hero-photo { position: relative; max-height: 62vh; overflow: hidden; background: var(--graphite-2); }
-.hero-photo img { width: 100%; height: 100%; max-height: 62vh; object-fit: cover; }
-.hero-text { padding-top: clamp(32px, 5vw, 56px); }
-.crumbs { color: var(--on-dark-dim); margin-bottom: 14px; }
-.crumbs span[aria-hidden] { margin: 0 6px; }
-.project-hero h1 { font-size: clamp(40px, 6.4vw, 84px); }
-.project-hero .lede { margin-top: 20px; color: var(--on-dark); }
-.hero-facts { margin-top: clamp(32px, 4vw, 48px); }
-.hero-facts .title-block dd { font-weight: 550; }
-
-
-/* ---------- Detail: body ---------- */
-/* The reading column is centred so wide figures and dark spreads can break out evenly. */
-.project-body { padding: clamp(56px, 8vw, 104px) 0; overflow-x: clip; }
-.project-prose { max-width: var(--text-w); margin: 0 auto; }
-.project-prose > h2 { scroll-margin-top: 88px; }
+/* ---------- Detail: classes the MDX write-ups use ---------- */
 .project-prose .figure { margin-top: 2em; margin-bottom: 2em; }
-.project-prose table { width: 100%; border-collapse: collapse; font-size: 16px; }
-.project-prose th, .project-prose td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; }
-.project-prose th { font-weight: 650; border-bottom: 1.5px solid var(--ink); }
-.project-prose strong { font-weight: 650; }
+.project-prose td { vertical-align: top; }
 
-/* Wider than the text column, up to the page frame. */
-.project-prose .wide {
-  width: min(calc(100vw - 2 * var(--gutter)), var(--wide-w) - 2 * var(--gutter));
-  margin-left: 50%; transform: translateX(-50%);
-}
+/* .wide: the full width of the write-up column */
+.project-prose .wide { max-width: none; width: 100%; }
 .project-prose .wide > .figure { margin-top: 0; margin-bottom: 0; }
 
-/* Photo grids inside the write-up. */
+/* photo grids */
 .project-prose .photo-grid { margin-top: 2em; margin-bottom: 2em; }
 .project-prose .photo-grid .figure { margin: 0; }
 .project-prose .photo-grid img { aspect-ratio: 4 / 3; object-fit: cover; }
 .project-prose .photo-grid.tall img { aspect-ratio: 3 / 4; }
-.project-prose .photo-grid.drawings img { aspect-ratio: auto; object-fit: contain; background: #eceee6; }
-.project-prose .grid-2 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
-.project-prose .grid-3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
+.project-prose .photo-grid.drawings img { aspect-ratio: auto; object-fit: contain; background: var(--surface-2); }
+.project-prose .grid-2 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
+.project-prose .grid-3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); }
 
-/* Full-width dark band inside the write-up, for photo-heavy runs. */
+/* .spread: a soft tinted panel for photo-heavy runs */
 .project-prose .spread {
-  width: 100vw; margin-left: calc(50% - 50vw);
-  margin-top: 3em; margin-bottom: 3em;
-  padding: clamp(48px, 7vw, 88px) 0;
-  background: var(--graphite); color: var(--on-dark);
+  margin-top: 2.4em; margin-bottom: 2.4em; padding: clamp(20px, 3vw, 32px);
+  background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius);
 }
-.project-prose .spread-inner { width: 100%; max-width: var(--wide-w); margin: 0 auto; padding: 0 var(--gutter); }
 .project-prose .spread-inner > * + * { margin-top: 1em; }
 .project-prose .spread-text { max-width: var(--text-w); }
-.project-prose .spread .figure figcaption { color: var(--on-dark-dim); }
-.project-prose .spread a { color: var(--blue-on-dark); }
 .project-prose .spread .photo-grid { margin-bottom: 0; }
+.project-prose .spread .photo-grid:first-child { margin-top: 0; }
 
-/* Numbers that matter, in a ruled row (not cards). */
+/* .figures-row: key numbers as small stat cards */
 .project-prose .figures-row {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  border-top: 1.5px solid currentColor; border-bottom: 1px solid var(--rule);
-  list-style: none; padding-left: 0;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px;
+  list-style: none; padding-left: 0; margin-top: 1.6em; margin-bottom: 1.6em;
 }
-.project-prose .figures-row li { margin: 0; padding: 16px 16px 16px 0; }
-.project-prose .figures-row li + li { margin-top: 0; }
+.project-prose .figures-row li {
+  margin: 0; padding: 16px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: var(--radius-sm); box-shadow: var(--shadow);
+}
 .project-prose .figures-row li::marker { content: none; }
-.project-prose .figures-row b { display: block; font-size: clamp(26px, 3vw, 34px); font-weight: 750; font-stretch: 115%; line-height: 1.1; color: var(--blue); }
-.project-prose .figures-row span { display: block; font-size: 15px; color: var(--pencil); margin-top: 4px; }
-.project-prose .spread .figures-row { border-bottom-color: var(--graphite-2); }
-.project-prose .spread .figures-row b { color: var(--blue-on-dark); }
-.project-prose .spread .figures-row span { color: var(--on-dark-dim); }
+.project-prose .figures-row b { display: block; font-size: clamp(24px, 2.8vw, 30px); font-weight: 750; line-height: 1.1; color: var(--accent); }
+.project-prose .figures-row span { display: block; font-size: 14px; line-height: 1.4; color: var(--muted); margin-top: 6px; }
 
-/* Side note, set off with the accent rule. */
-.project-prose .aside { border-left: 3px solid var(--blue); padding: 4px 0 4px 18px; color: var(--pencil); font-size: 16px; }
-
-
-/* ---------- Detail: links ---------- */
-.project-links { max-width: var(--text-w); margin: clamp(48px, 6vw, 72px) auto 0; padding-top: 24px; border-top: 1px solid var(--rule); }
-.links-title { font-size: 20px; font-stretch: 100%; margin-bottom: 14px; }
-.project-links .actions { list-style: none; }
+/* .aside: side note */
+.project-prose .aside {
+  border-left: 3px solid var(--accent); background: var(--accent-soft);
+  padding: 12px 16px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 16px;
+}
 
 
-/* ---------- Detail: previous / next ---------- */
-.project-nav { padding: 40px 0; }
-.project-nav-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px 32px; align-items: start; }
-.pn { display: flex; flex-direction: column; gap: 2px; text-decoration: none; color: var(--ink); padding: 8px 0; }
-.pn-title { font-size: 20px; font-weight: 700; font-stretch: 110%; line-height: 1.25; }
-.pn:hover .pn-title { color: var(--blue); }
-.pn-all { text-align: center; }
-.pn-next { text-align: right; }
-@media (max-width: 680px) {
-  .project-nav-grid { grid-template-columns: 1fr; }
-  .project-nav-grid > span:empty { display: none; }
-  .pn-all, .pn-next { text-align: left; }
-  .pn-all { order: 3; }
+/* ---------- Detail: previous / next + contact ---------- */
+.project-pager { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 16px; }
+.pager-card { display: flex; align-items: center; gap: 16px; padding: 12px; color: var(--text); text-decoration: none; }
+.pager-card img { width: 96px; height: 72px; object-fit: cover; border-radius: var(--radius-sm); flex: none; background: var(--surface-2); }
+.pager-card > span { display: flex; flex-direction: column; min-width: 0; }
+.pager-label { font-size: 13px; color: var(--muted); }
+.pager-title { font-weight: 650; line-height: 1.3; }
+.pager-card:hover .pager-title { color: var(--accent); }
+.pager-next { flex-direction: row-reverse; text-align: right; }
+@media (max-width: 700px) { .pager-next { flex-direction: row; text-align: left; } }
+
+.project-contact {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px;
+  margin-top: 40px; padding-top: 28px; border-top: 1px solid var(--border);
+}
+.project-contact p { max-width: 36em; }
+
+/* Diagrams: keep labels readable on phones by letting the drawing scroll sideways inside its figure */
+@media (max-width: 640px) {
+  .prose figure:has(> svg) { overflow-x: auto; }
+  .prose figure > svg { min-width: 620px; }
 }

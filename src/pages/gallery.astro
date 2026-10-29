@@ -16,6 +16,7 @@ const photos = await Promise.all(
 const counts = Object.fromEntries(
   galleryCategories.map((c) => [c.id, gallery.filter((p) => p.category === c.id).length]),
 )
+const catLabel = Object.fromEntries(galleryCategories.map((c) => [c.id, c.label]))
 const realCount = gallery.filter((p) => !p.placeholder).length
 ---
 <Base
@@ -28,12 +29,12 @@ const realCount = gallery.filter((p) => !p.placeholder).length
     lede="Build photos, drawings and the occasional picture of me outside the shop. Click any photo to see it big."
   />
 
-  <section class="band-dark gallery-band">
+  <section class="gallery-section">
     <div class="frame">
-      <div class="gallery-filters" role="group" aria-label="Filter photos by category" hidden>
-        <button type="button" class="filter-button" data-filter="all" aria-pressed="true">All <span class="filter-count">{gallery.length}</span></button>
+      <div class="filters" role="group" aria-label="Filter photos by category" hidden>
+        <button type="button" data-filter="all" aria-pressed="true">All <span class="filter-count">{gallery.length}</span></button>
         {galleryCategories.map((c) => (
-          <button type="button" class="filter-button" data-filter={c.id} aria-pressed="false">
+          <button type="button" data-filter={c.id} aria-pressed="false">
             {c.label} <span class="filter-count">{counts[c.id]}</span>
           </button>
         ))}
@@ -43,7 +44,7 @@ const realCount = gallery.filter((p) => !p.placeholder).length
       <ul class="gallery-grid">
         {photos.map((p, i) => (
           <li class="gallery-item" data-category={p.category}>
-            <figure class="figure">
+            <figure class="card card-hover gallery-card">
               <a
                 class="gallery-link"
                 href={p.large}
@@ -57,13 +58,14 @@ const realCount = gallery.filter((p) => !p.placeholder).length
                   src={p.src}
                   alt={p.alt}
                   widths={[360, 560, 800]}
-                  sizes="(max-width: 640px) 100vw, (max-width: 1080px) 50vw, 33vw"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1080px) 50vw, 360px"
                   loading={i < 3 ? 'eager' : 'lazy'}
                 />
               </a>
-              <figcaption>
-                <span class="fig-no">Fig. {i + 1}</span>{p.caption}
-                {p.placeholder && <> <span class="todo">placeholder: Lucas to add this photo</span></>}
+              <figcaption class="gallery-caption">
+                <span class="badge badge-accent">{catLabel[p.category]}</span>
+                <span>{p.caption}</span>
+                {p.placeholder && <span class="todo">placeholder: Lucas to add this photo</span>}
               </figcaption>
             </figure>
           </li>
@@ -78,31 +80,32 @@ const realCount = gallery.filter((p) => !p.placeholder).length
       <figure class="lightbox-figure">
         <img class="lightbox-img" alt="" />
         <figcaption class="lightbox-caption">
-          <span class="fig-no" data-lightbox-no></span><span data-lightbox-caption></span>
+          <span class="lightbox-count" data-lightbox-no></span><span data-lightbox-caption></span>
         </figcaption>
       </figure>
       <div class="lightbox-controls">
-        <button type="button" class="lightbox-button" data-lightbox-prev aria-label="Previous photo">Previous</button>
-        <button type="button" class="lightbox-button" data-lightbox-next aria-label="Next photo">Next</button>
-        <button type="button" class="lightbox-button lightbox-close" data-lightbox-close aria-label="Close photo viewer">Close</button>
+        <button type="button" class="button button-outline button-sm" data-lightbox-prev aria-label="Previous photo">Previous</button>
+        <button type="button" class="button button-outline button-sm" data-lightbox-next aria-label="Next photo">Next</button>
+        <button type="button" class="button button-sm" data-lightbox-close aria-label="Close photo viewer">Close</button>
       </div>
     </div>
   </dialog>
 </Base>
 
 <script>
-  const filters = document.querySelector<HTMLElement>('.gallery-filters')
+  const filters = document.querySelector<HTMLElement>('.gallery-section .filters')
   const items = Array.from(document.querySelectorAll<HTMLElement>('.gallery-item'))
   const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.gallery-link'))
   const status = document.querySelector<HTMLElement>('[data-gallery-status]')
   const dialog = document.querySelector<HTMLDialogElement>('.lightbox')
+  const inner = dialog?.querySelector<HTMLElement>('.lightbox-inner')
 
   // ---- filters ----
   if (filters) {
     filters.hidden = false
-    const buttons = Array.from(filters.querySelectorAll<HTMLButtonElement>('.filter-button'))
+    const buttons = Array.from(filters.querySelectorAll<HTMLButtonElement>('button[data-filter]'))
     filters.addEventListener('click', (e) => {
-      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.filter-button')
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-filter]')
       if (!btn) return
       const f = btn.dataset.filter
       buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)))
@@ -131,7 +134,7 @@ const realCount = gallery.filter((p) => !p.placeholder).length
       img.src = link.dataset.full || link.href
       img.alt = link.dataset.alt || ''
       cap.textContent = link.dataset.caption || ''
-      no.textContent = `Fig. ${current + 1}`
+      no.textContent = `${current + 1} of ${links.length}`
     }
 
     const step = (dir: number) => {
@@ -159,8 +162,8 @@ const realCount = gallery.filter((p) => !p.placeholder).length
       if (e.key === 'ArrowRight') { e.preventDefault(); step(1) }
       if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1) }
     })
-    // click on the dark backdrop (outside the inner box) closes
-    dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close() })
+    // a click on the empty area around the photo closes
+    dialog.addEventListener('click', (e) => { if (e.target === dialog || e.target === inner) dialog.close() })
     // Esc is native to <dialog>; on any close, send focus back to the photo that opened it
     // (the photo last viewed, so arrowing through the set doesn't lose your place)
     dialog.addEventListener('close', () => {

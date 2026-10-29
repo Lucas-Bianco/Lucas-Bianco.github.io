@@ -30,14 +30,14 @@ export const timeline: TimelineEvent[] = [
     title: 'Started VEX Robotics in middle school',
     detail: 'First competition robot team. I have been on a robotics team every year since.',
     category: 'robotics',
-    href: '/robotics/',
+    href: '/projects/vex-3236a/',
   },
   {
     date: '2022',
     title: 'VEX World Championship with my middle school team',
     detail: 'Led the team to Worlds for the first time.',
     category: 'robotics',
-    href: '/robotics/',
+    href: '/projects/vex-3236a/',
     todo: 'year to confirm, plus placing',
   },
   {
@@ -45,7 +45,7 @@ export const timeline: TimelineEvent[] = [
     title: 'VEX World Championship again',
     detail: 'Second trip to Worlds with the middle school team.',
     category: 'robotics',
-    href: '/robotics/',
+    href: '/projects/vex-3236a/',
     todo: 'year to confirm, plus placing',
   },
   {
@@ -87,7 +87,7 @@ export const timeline: TimelineEvent[] = [
     title: 'Captain of VEX team 3236A',
     detail: 'Push Back season, team of 8. I led design, wrote the C++ with EZ-Template, and ran competition strategy.',
     category: 'robotics',
-    href: '/robotics/',
+    href: '/projects/vex-3236a/',
   },
   {
     date: '2025-09',
@@ -145,7 +145,7 @@ export const timeline: TimelineEvent[] = [
     title: 'Relaunching the Tri-County FRC team',
     detail: 'Started from nothing with two other student leaders: no robot, no budget. Cold-emailed local companies for sponsors and built a warm-up basketball shooter.',
     category: 'robotics',
-    href: '/robotics/',
+    href: '/projects/tri-county-frc/',
   },
   {
     date: '2026-09',
@@ -175,7 +175,7 @@ export const timeline: TimelineEvent[] = [
     title: 'FRC rookie season',
     detail: 'First season for the relaunched team. The game is BIOCORE.',
     category: 'robotics',
-    href: '/robotics/',
+    href: '/projects/tri-county-frc/',
     upcoming: true,
   },
   {

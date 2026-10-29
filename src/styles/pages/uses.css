@@ -1,25 +1,20 @@
-/* uses page styles. Owned by the uses page only. */
+/* uses page styles. Owned by the uses page only. Tokens only. */
 
-.uses-updated { margin-top: 16px; }
-.uses-hero .figure img { aspect-ratio: 16 / 10; object-fit: cover; }
+/* Desk photo in a card, then the in-page links */
+.uses-hero { border-top: 0; padding-top: 0; }
+.uses-photo-card { padding: 12px; }
+.uses-photo-card .figure img { aspect-ratio: 16 / 9; object-fit: cover; border: 0; border-radius: var(--radius-sm); }
+.uses-photo-card figcaption { padding: 0 8px 4px; }
 
-/* In-page links to each group */
-.uses-toc ul { display: flex; flex-wrap: wrap; gap: 8px 20px; list-style: none; padding-bottom: 24px; border-bottom: 1.5px solid var(--ink); }
-.uses-toc a { font-weight: 600; font-size: 16px; }
-
-/* Each group: heading on the left, ruled list on the right */
-.uses-groups > * + * { margin-top: clamp(48px, 6vw, 80px); }
-.uses-groups { margin-top: clamp(40px, 5vw, 64px); }
-.uses-group {
-  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-  gap: 20px clamp(32px, 5vw, 72px); align-items: start;
+.uses-toc ul { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; list-style: none; margin-top: 28px; }
+.uses-toc a {
+  display: block; padding: 6px 14px; border-radius: 99px;
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 550;
 }
-.uses-group-head { position: sticky; top: 88px; }
-.uses-group-head p { margin-top: 10px; font-size: 16px; }
-.uses-list h3 { font-size: 19px; }
-.uses-list p { margin-top: 4px; color: var(--pencil); }
-.uses-list p:empty { display: none; }
-@media (max-width: 860px) {
-  .uses-group { grid-template-columns: 1fr; }
-  .uses-group-head { position: static; }
-}
+.uses-toc a:hover { color: var(--text); background: var(--surface-2); }
+
+/* Group cards */
+.uses-grid { list-style: none; }
+.uses-item { display: flex; flex-direction: column; gap: 8px; }
+.uses-item .card-title { font-size: 17px; }

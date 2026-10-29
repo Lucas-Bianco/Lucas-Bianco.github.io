@@ -1,17 +1,26 @@
 ---
-// Home: the "who is Lucas" front door. Hero, facts, right now, featured work, the other tabs, contact.
+// Home: the one-page summary of Lucas. Hero, about + skills, projects, CAD and builds,
+// experience, certifications, contact. Deeper pages are linked from each section.
 import { Image } from 'astro:assets'
 import { getCollection } from 'astro:content'
 import Base from '../layouts/Base.astro'
-import Figure from '../components/Figure.astro'
+import Icon from '../components/Icon.astro'
 import TitleBlock from '../components/TitleBlock.astro'
+import ProjectCard from '../components/ProjectCard.astro'
 import { site } from '../data/site'
-import portrait from '../assets/photos/home/lucas-portrait.jpg'
-import domeTop from '../assets/photos/hexaflow/project-15.jpg'
+import { certs } from '../data/certs'
+import { categoryLabel } from '../data/labels'
+import headshot from '../assets/photos/home/headshot.jpg'
+import buildDomeRender from '../assets/photos/hexaflow/geometry-2.jpg'
+import buildAssembly from '../assets/photos/hexaflow/cad-1.jpg'
+import buildDomeFrame from '../assets/photos/hexaflow/project-4.jpg'
+import buildPcb from '../assets/photos/hexaflow/project-7.jpg'
+import buildVex from '../assets/photos/home/build-vex-cad.jpg'
+import buildPrint from '../assets/photos/home/build-print.jpg'
 import '../styles/pages/home.css'
 
 const description =
-  'Lucas Bianco, Engineering Technology student in Massachusetts, class of 2027. Dell co-op, VEX robotics captain, NASA HUNCH finalist. Open to engineering co-ops.'
+  'Lucas Bianco, Engineering Technology student in Massachusetts, class of 2027. Dell co-op, VEX robotics captain, NASA HUNCH finalist, open to engineering co-ops.'
 
 const jsonLd = {
   '@type': 'ProfilePage',
@@ -21,47 +30,112 @@ const jsonLd = {
   mainEntity: { '@id': 'https://lucasbianco.com/#lucas' },
 }
 
-const facts = [
+// ---- About: skills, grouped like the resume
+const skillGroups = [
+  { name: 'CAD and design', icon: 'cube', skills: ['SolidWorks', 'AutoCAD', 'Revit', 'Fusion', 'Multisim', 'CorelDRAW', 'Tinkercad'] },
+  { name: 'Shop and manufacturing', icon: 'wrench', skills: ['CNC', 'Laser cutting', '3D printing', 'Precision measurement', 'Technical drawings', 'OSHA 10'] },
+  { name: 'Programming', icon: 'code', skills: ['Python', 'C++', 'JavaScript', 'TypeScript', 'HTML/CSS'] },
+  { name: 'Robotics and hardware', icon: 'robot', skills: ['VEX V5', 'EZ-Template', 'Raspberry Pi', 'Sensors', 'Electronics', 'PC building'] },
+  { name: 'Software and tools', icon: 'file', skills: ['FastAPI', 'React', 'Svelte', 'Astro', 'Git', 'Linux', 'OpenCV'] },
+] as const
+
+const glance = [
   { label: 'Program', value: site.program },
   { label: 'School', value: site.schoolShort },
   { label: 'Class of', value: String(site.classOf) },
   { label: 'GPA', value: site.gpa },
   { label: 'Co-op', value: 'Dell, Process Development' },
-  { label: 'Robotics', value: 'VEX captain, team 3236A' },
-  { label: 'NASA HUNCH', value: 'Finalist, HexaFlow' },
   { label: 'Looking for', value: 'Engineering internships and co-ops' },
 ]
 
-const now = [
+// ---- Projects: featured first, then by order, up to 6
+const allProjects = (await getCollection('projects')).sort(
+  (a, b) => Number(Boolean(b.data.featured)) - Number(Boolean(a.data.featured)) || (a.data.order ?? 99) - (b.data.order ?? 99),
+)
+const shown = allProjects.slice(0, 6)
+const categories = (Object.keys(categoryLabel) as (keyof typeof categoryLabel)[]).filter((c) =>
+  shown.some((p) => p.data.category === c),
+)
+
+// ---- CAD and builds
+const builds = [
   {
-    title: 'Dell co-op',
-    text: 'Process Development at the Franklin factory. I alternate weeks: one at Dell, one at school.',
+    img: buildDomeRender,
+    alt: 'SolidWorks render of the HexaFlow capillary dome from above: a round dome covered in a tight lattice of hexagons inside a square plate with four corner holes',
+    title: 'HexaFlow capillary dome',
+    line: 'The core of our NASA HUNCH payload: hex channels under half a millimeter wide that move water with no gravity.',
+    chips: ['SolidWorks', 'SLA resin'],
   },
   {
-    title: 'Relaunching FRC',
-    text: 'Two other student leaders and I are rebuilding Tri-County’s FIRST Robotics team from nothing for the 2027 season.',
+    img: buildAssembly,
+    alt: 'SolidWorks drawing sheet titled HexaFlow V2 Assembled, with an exploded isometric view of the nanolab and a fifteen-row parts list',
+    title: 'HexaFlow V2 assembly drawing',
+    line: 'Exploded view with a 15-line parts list. Every printed part on the payload has its own drawing.',
+    chips: ['Drawings', 'Parts list'],
   },
   {
-    title: 'HexaFlow at ASGSR',
-    text: 'Our NASA HUNCH team is presenting HexaFlow at the ASGSR conference in December.',
+    img: buildDomeFrame,
+    alt: 'The printed grey hex dome mounted on top of the open dark grey shelf frame, with three shelf slots visible',
+    title: 'Printed dome on the shelf frame',
+    line: 'Resin dome on an FDM frame. The shelves slide out so sensors and cameras can be swapped.',
+    chips: ['FDM', 'PLA', 'Heat-set inserts'],
+  },
+  {
+    img: buildPcb,
+    alt: 'A green custom circuit board with a hexagon pattern on the silkscreen, ringed by clear LEDs, on a desk in front of a lit keyboard',
+    title: 'HexaFlow PCB',
+    line: 'Custom board with the hex pattern on the silkscreen and an LED ring, to cut down on loose wiring.',
+    chips: ['PCB', 'LEDs', 'Raspberry Pi'],
+  },
+  {
+    img: buildVex,
+    alt: 'Placeholder for a CAD model of the VEX 3236A robot',
+    title: 'VEX 3236A robot',
+    line: 'Our Push Back robot. I lead the design process and write the C++ with EZ-Template.',
+    chips: ['VEX V5', 'CAD', 'C++'],
+  },
+  {
+    img: buildPrint,
+    alt: 'Placeholder for a photo of a part Lucas designed in SolidWorks and printed',
+    title: 'Desk-to-printer parts',
+    line: 'Holders, mounts and bins I design in SolidWorks and fit-test on SKÅDIS and Gridfinity.',
+    chips: ['SolidWorks', 'Bambu X2D + A1', 'AMS'],
   },
 ]
 
-const all = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order)
-const featuredOnly = all.filter((p) => p.data.featured)
-const featured = featuredOnly.length > 0 ? featuredOnly : all.slice(0, 4)
+// ---- Experience
+const experience = [
+  {
+    icon: 'briefcase', role: 'Co-op, Process Development', org: 'Dell Technologies, Franklin MA', dates: 'Oct 2026 to now',
+    line: 'On the team that works out how products get built at the Franklin factory. Alternating weeks between Dell and school, hired through Manpower.',
+  },
+  {
+    icon: 'briefcase', role: 'Cashier and customer service', org: 'Shaw’s, Medway MA', dates: 'Jul 2025 to now',
+    line: 'Quick, accurate transactions, a balanced drawer every shift, and whatever customers ask. Trained for more responsibility soon after I started.',
+  },
+  {
+    icon: 'robot', role: 'Team captain', org: 'VEX Robotics, team 3236A', dates: '2021 to now',
+    line: 'Captain of a team of 8 for Push Back. I lead design, the C++ code and match strategy. Took my middle school team to Worlds twice.',
+  },
+  {
+    icon: 'wrench', role: 'Co-founder, student leader', org: 'Tri-County FRC', dates: '2026 to now',
+    line: 'Restarting our school’s FIRST Robotics team from nothing with two other student leaders for the 2027 season. No robot and no budget, so we started by cold-emailing sponsors.',
+  },
+  {
+    icon: 'cube', role: 'Web development lead, NASA HUNCH finalist', org: 'HexaFlow', dates: 'Sep 2025 to now',
+    line: 'Built our site in Astro and Three.js with a 3D assembly viewer. The payload got 2.21 seconds of free fall in a NASA drop test, and we present at ASGSR in December 2026.',
+  },
+  {
+    icon: 'spark', role: 'Volunteer', org: 'FreeKicks Special Olympics, Franklin MA', dates: '2024 to now',
+    line: 'Teaching and playing soccer with kids of all abilities.',
+  },
+] as const
 
-const tabs = [
-  { href: '/robotics/', label: 'Robotics', line: 'Six years of VEX, two trips to Worlds, and a new FRC team.' },
-  { href: '/experience/', label: 'Experience', line: 'Dell co-op, Shaw’s, and the certifications behind them.' },
-  { href: '/about/', label: 'About', line: 'Soccer, track, volunteering, and what I like to build.' },
-  { href: '/timeline/', label: 'Timeline', line: 'Everything in order, from 2021 to now.' },
-  { href: '/gallery/', label: 'Gallery', line: 'Photos from the shop, competitions, and builds.' },
-  { href: '/notes/', label: 'Notes', line: 'Short write-ups on problems I got stuck on.' },
-  { href: '/uses/', label: 'Uses', line: 'The printers, software, and tools I work with.' },
-]
+// ---- Certifications
+const fmtDate = (d: string | null) =>
+  d ? new Date(d).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' }) : null
 
-const mailto = `mailto:${site.email}?subject=${encodeURIComponent('Resume request')}`
+const mailResume = `mailto:${site.email}?subject=Resume%20request`
 ---
 <Base
   title="Lucas Bianco | Engineering Technology Student, Massachusetts"
@@ -69,148 +143,249 @@ const mailto = `mailto:${site.email}?subject=${encodeURIComponent('Resume reques
   type="profile"
   jsonLd={jsonLd}
 >
-  <section class="page-header band-dark home-hero" aria-labelledby="hero-title">
-    <div class="frame home-hero-grid">
-      <div class="home-hero-text">
-        <div class="title-measure">
-          <h1 id="hero-title" class="home-name">Lucas Bianco</h1>
-          <div class="dimension" aria-hidden="true"><span>class of 2027</span></div>
-        </div>
-        <p class="lede home-intro">
-          I’m an Engineering Technology student at Tri-County in Franklin, Massachusetts. I’ve run
-          robotics teams for six years, and right now I split my weeks between school and a co-op on
-          Dell’s Process Development team. I like building things that are a little too hard for me
-          when I start.
-        </p>
-        <div class="actions">
-          <a class="button" href="/#contact">Get in touch</a>
-          <a class="button-quiet home-link" href="/projects/">See my projects</a>
-          <a class="button-quiet home-link" href={site.linkedin} rel="me">LinkedIn</a>
-        </div>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="frame hero-inner">
+      <Image class="avatar hero-avatar" src={headshot} alt="Headshot of Lucas Bianco" width={280} height={280} loading="eager" fetchpriority="high" />
+      <div class="hero-name">
+        <h1>Lucas Bianco</h1>
+        <p class="dimension"><span>class of 2027</span></p>
       </div>
-      <div class="home-portrait">
-        <Image
-          src={portrait}
-          alt="Portrait of Lucas Bianco"
-          loading="eager"
-          fetchpriority="high"
-          widths={[480, 720, 960, 1200]}
-          sizes="(max-width: 860px) 100vw, 40vw"
-        />
+      <p class="hero-subtitle">Engineering Technology student at Tri-County RVTHS</p>
+      <p class="lede hero-tagline">I build things that are a little too hard for me when I start: robots, CAD parts, payloads, and the software that ties them together. Right now I’m a co-op at Dell.</p>
+      <div class="actions hero-actions">
+        <a class="button" href="/projects/"><Icon name="cube" />View my projects</a>
+        <a class="button button-outline" href="/#contact"><Icon name="mail" />Contact me</a>
       </div>
-    </div>
-    <div class="frame home-hero-figure">
-      <Figure
-        src={domeTop}
-        alt="Top view of the HexaFlow dome: a gray printed bowl covered in hexagonal grooves, with brass inserts in the four corners"
-        caption="HexaFlow, our NASA HUNCH payload. The hexagonal grooves use capillary action to move water across the dome to the plant, no gravity needed."
-        fig={1}
-        bleed
-        sizes="100vw"
-      />
-    </div>
-  </section>
-
-  <section class="section" aria-labelledby="facts-title">
-    <div class="frame">
-      <h2 id="facts-title" class="home-h2">Quick facts</h2>
-      <TitleBlock items={facts} />
-    </div>
-  </section>
-
-  <section class="section" aria-labelledby="now-title">
-    <div class="frame home-now">
-      <div>
-        <h2 id="now-title" class="home-h2">Right now</h2>
-        <p class="muted small">Updated October 2026</p>
-      </div>
-      <ul class="ruled-list home-now-list">
-        {now.map((n) => (
-          <li>
-            <h3>{n.title}</h3>
-            <p class="muted">{n.text}</p>
-          </li>
-        ))}
+      <ul class="hero-social">
+        <li><a class="icon-button" href={site.github} aria-label="GitHub"><Icon name="github" /></a></li>
+        <li><a class="icon-button" href={site.linkedin} aria-label="LinkedIn"><Icon name="linkedin" /></a></li>
+        <li><a class="icon-button" href={`mailto:${site.email}`} aria-label="Email"><Icon name="mail" /></a></li>
       </ul>
     </div>
   </section>
 
-  <section class="section band-tint home-work" aria-labelledby="work-title">
+  <!-- ABOUT -->
+  <section class="section section-tint" id="about">
     <div class="frame">
-      <div class="home-section-head">
-        <h2 id="work-title">Featured work</h2>
-        <a href="/projects/">All projects</a>
-      </div>
-      {featured.length > 0 ? (
-        <div class="card-grid">
-          {featured.map((p) => (
-            <a class="card" href={`/projects/${p.id}/`}>
-              <div class="card-photo">
-                <Image src={p.data.cover} alt={p.data.coverAlt} widths={[400, 640, 800]} sizes="(max-width: 760px) 100vw, 33vw" />
-              </div>
-              <h3>{p.data.title}</h3>
-              <p>{p.data.summary}</p>
-              <p class="meta">{p.data.role}, {p.data.started.slice(0, 4)}</p>
-            </a>
+      <div class="section-head"><h2>About me</h2></div>
+      <div class="about-grid">
+        <div class="about-story">
+          <article class="card stack-md">
+            <h3 class="card-title"><Icon name="robot" />From VEX to the shop floor</h3>
+            <p>I’ve been on robotics teams for six years, starting with VEX in middle school. I led that team to the VEX World Championship twice.</p>
+            <p>Now I’m in the <strong>Engineering Technology</strong> program at Tri-County, where I captain VEX team 3236A and helped restart our FRC team. Every other week I trade the classroom for Dell’s factory in Franklin as a <strong>Process Development co-op</strong>.</p>
+          </article>
+          <article class="card stack-md">
+            <h3 class="card-title"><Icon name="spark" />What drives me</h3>
+            <p>I pick projects that are slightly too hard for me when I start. If I already know how to build it, I won’t learn much building it.</p>
+            <p>The other half is testing before I believe. On my card scanner, one method “found” 56 out of 56 cards. It was actually returning the border of the whole photo. Now I don’t trust a number until I’ve checked where it came from.</p>
+          </article>
+        </div>
+        <article class="card skills-card">
+          <h3 class="card-title"><Icon name="wrench" />Technical skills</h3>
+          {skillGroups.map((g) => (
+            <div class="skill-group">
+              <h4><Icon name={g.icon} />{g.name}</h4>
+              <ul class="chips">{g.skills.map((s) => <li>{s}</li>)}</ul>
+            </div>
           ))}
-        </div>
-      ) : (
-        <p class="muted">Project write-ups are on their way. For now, the <a href="/projects/">projects page</a> has the list.</p>
-      )}
+        </article>
+      </div>
+      <div class="glance">
+        <h3>At a glance</h3>
+        <TitleBlock items={glance} />
+      </div>
     </div>
   </section>
 
-  <section class="section" aria-labelledby="more-title">
+  <!-- PROJECTS -->
+  <section class="section" id="projects">
     <div class="frame">
-      <h2 id="more-title" class="home-h2">The rest of the site</h2>
-      <ul class="home-index">
-        {tabs.map((t) => (
-          <li>
-            <a href={t.href}>
-              <span class="home-index-label">{t.label}</span>
-              <span class="home-index-line">{t.line}</span>
-            </a>
+      <div class="section-head">
+        <h2>Projects</h2>
+        <p>Engineering first, then the software I build on the side. Each one has the problem, what I tried, and what broke.</p>
+      </div>
+      {categories.length > 1 && (
+        <div class="filters" role="group" aria-label="Filter projects" data-filters hidden>
+          <button type="button" data-filter="all" aria-pressed="true">All</button>
+          {categories.map((c) => <button type="button" data-filter={c} aria-pressed="false">{categoryLabel[c]}</button>)}
+        </div>
+      )}
+      <div class="card-grid" data-project-grid>
+        {shown.map((p) => <ProjectCard project={p} />)}
+      </div>
+      <div class="actions section-more">
+        <a class="button button-outline" href="/projects/">See all projects</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAD AND BUILDS -->
+  <section class="section section-tint" id="builds">
+    <div class="frame">
+      <div class="section-head">
+        <h2>CAD and builds</h2>
+        <p>Models, drawings and the parts that came off the printer. The HexaFlow work is a team effort; I’m the web lead and turned these models into our site’s 3D viewer.</p>
+      </div>
+      <div class="card-grid">
+        {builds.map((b) => (
+          <article class="card card-hover build-card">
+            <div class="card-media">
+              <Image src={b.img} alt={b.alt} widths={[400, 640, 900]} sizes="(min-width: 1100px) 360px, (min-width: 700px) 45vw, 100vw" quality={78} />
+            </div>
+            <h3>{b.title}</h3>
+            <p class="muted small">{b.line}</p>
+            <ul class="chips">{b.chips.map((c) => <li>{c}</li>)}</ul>
+          </article>
+        ))}
+      </div>
+      <div class="actions section-more">
+        <a class="button button-outline" href="/gallery/">Open the gallery</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section class="section" id="experience">
+    <div class="frame">
+      <div class="section-head">
+        <h2>Experience</h2>
+        <p>Work, teams I lead, and where I volunteer.</p>
+      </div>
+      <ol class="exp-list">
+        {experience.map((e) => (
+          <li class="card exp-item">
+            <span class="exp-icon"><Icon name={e.icon} /></span>
+            <div class="exp-body">
+              <div class="exp-top">
+                <h3>{e.role}</h3>
+                <p class="badge">{e.dates}</p>
+              </div>
+              <p class="exp-org">{e.org}</p>
+              <p class="muted small">{e.line}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+      <div class="actions section-more">
+        <a class="button button-outline" href="/experience/"><Icon name="file" />Full resume</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CERTIFICATIONS -->
+  <section class="section section-tint" id="certifications">
+    <div class="frame">
+      <div class="section-head">
+        <h2>Certifications</h2>
+        <p>Industry certifications from school and on my own. Files open as PDFs.</p>
+      </div>
+      <ul class="cert-grid">
+        {certs.map((c) => (
+          <li class="card cert-card">
+            <h3 class="card-title"><Icon name="award" />{c.name}</h3>
+            <p class="muted small">{c.issuer}{fmtDate(c.date) && <>, {fmtDate(c.date)}</>}</p>
+            {(c.file || c.verify) && (
+              <p class="cert-links small">
+                {c.file && <a href={c.file}>View certificate</a>}
+                {c.verify && <a href={c.verify.url}>Verify (code {c.verify.code})</a>}
+              </p>
+            )}
           </li>
         ))}
       </ul>
+      <div class="actions section-more">
+        <a class="button button-outline" href="/experience/#certifications">Certification details</a>
+      </div>
     </div>
   </section>
 
-  <section id="contact" class="section band-dark home-contact" aria-labelledby="contact-title">
-    <div class="frame home-contact-grid">
-      <div>
-        <h2 id="contact-title" class="home-contact-title">Let’s talk</h2>
+  <!-- CONTACT -->
+  <section class="section" id="contact">
+    <div class="frame">
+      <div class="section-head">
+        <h2>Get in touch</h2>
+        <p>I’m looking for engineering internships and co-ops. My resume and references are available on request.</p>
       </div>
-      <div class="stack-md">
-        <p class="lede">
-          I’m looking for engineering internships and co-ops. If you have something in mind, email me.
-          My resume and references are available on request.
-        </p>
-        <div class="actions">
-          <a class="button" href={mailto}>Email me for my resume</a>
-          <button type="button" class="button button-quiet" data-copy={site.email}>Copy email</button>
+      <div class="card contact-card">
+        <ul class="contact-list">
+          <li>
+            <span class="contact-icon"><Icon name="mail" /></span>
+            <div>
+              <p class="contact-label">Email</p>
+              <a href={`mailto:${site.email}`} data-email>{site.email}</a>
+            </div>
+          </li>
+          <li>
+            <span class="contact-icon"><Icon name="linkedin" /></span>
+            <div>
+              <p class="contact-label">LinkedIn</p>
+              <a href={site.linkedin}>linkedin.com/in/lucas-j-bianco</a>
+            </div>
+          </li>
+          <li>
+            <span class="contact-icon"><Icon name="github" /></span>
+            <div>
+              <p class="contact-label">GitHub</p>
+              <a href={site.github}>github.com/Lucas-Bianco</a>
+            </div>
+          </li>
+          <li>
+            <span class="contact-icon"><Icon name="map" /></span>
+            <div>
+              <p class="contact-label">Location</p>
+              <p>{site.region}</p>
+            </div>
+          </li>
+        </ul>
+        <div class="actions contact-actions">
+          <a class="button" href={mailResume}><Icon name="file" />Request my resume</a>
+          <button class="button button-outline" type="button" data-copy-email hidden><Icon name="mail" /><span data-copy-label>Copy email</span></button>
+          <span class="visually-hidden" aria-live="polite" data-copy-status></span>
         </div>
-        <p class="home-contact-links">
-          <a href={site.linkedin} rel="me">LinkedIn</a>
-          <a href={site.github} rel="me">GitHub</a>
-          <span class="muted">{site.email}</span>
-        </p>
       </div>
     </div>
   </section>
 </Base>
 
 <script>
-  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) => {
-    const label = btn.textContent
-    btn.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(btn.dataset.copy ?? '')
-        btn.textContent = 'Copied'
-      } catch {
-        btn.textContent = 'Copy failed'
-      }
-      setTimeout(() => { btn.textContent = label }, 2000)
+  // Project filters: only shown once this script runs; without JS every card stays visible.
+  const filters = document.querySelector<HTMLElement>('[data-filters]')
+  const cards = document.querySelectorAll<HTMLElement>('[data-project-grid] [data-category]')
+  if (filters) {
+    filters.hidden = false
+    const buttons = filters.querySelectorAll<HTMLButtonElement>('button[data-filter]')
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const f = btn.dataset.filter
+        buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)))
+        cards.forEach((card) => { card.hidden = f !== 'all' && card.dataset.category !== f })
+      })
     })
-  })
+  }
+
+  // Copy email: shows "Copied" for 2 seconds.
+  const copyBtn = document.querySelector<HTMLButtonElement>('[data-copy-email]')
+  const label = copyBtn?.querySelector('[data-copy-label]')
+  const status = document.querySelector('[data-copy-status]')
+  const email = document.querySelector('[data-email]')?.textContent?.trim()
+  if (copyBtn && label && email && navigator.clipboard) {
+    copyBtn.hidden = false
+    let timer: number | undefined
+    copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(email)
+        label.textContent = 'Copied'
+        if (status) status.textContent = 'Email address copied'
+        clearTimeout(timer)
+        timer = window.setTimeout(() => {
+          label.textContent = 'Copy email'
+          if (status) status.textContent = ''
+        }, 2000)
+      } catch {
+        window.location.href = `mailto:${email}`
+      }
+    })
+  }
 </script>
