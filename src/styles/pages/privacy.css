@@ -1,0 +1,8 @@
+/* privacy page styles. Owned by the privacy page only. Tokens only. */
+
+.privacy-body { border-top: 0; padding-top: 0; }
+.privacy-body .prose { margin: 0 auto; }
+.privacy-body h2 { font-size: 22px; margin-top: 1.8em; }
+.privacy-body h2:first-child { margin-top: 0; }
+.privacy-body ul { padding-left: 1.2em; }
+.privacy-body code { font-size: 0.9em; color: var(--muted); }

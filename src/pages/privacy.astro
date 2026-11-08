@@ -1,0 +1,76 @@
+---
+import Base from '../layouts/Base.astro'
+import PageHeader from '../components/PageHeader.astro'
+import { site } from '../data/site'
+import '../styles/pages/privacy.css'
+
+// The privacy policy for Jarvis, Lucas's personal home dashboard. Google's OAuth consent screen links here.
+const description = 'Privacy policy for Jarvis, the personal home dashboard Lucas Bianco built: what it reads from Google Calendar, how it is used, and how to remove access.'
+---
+
+<Base title="Privacy policy" description={description}>
+  <PageHeader
+    title="Privacy policy"
+    crumbs={[{ href: '/', label: 'Home' }]}
+    measure="Jarvis · last updated November 2026"
+    lede="Jarvis is a personal dashboard I built for my own room. This page explains what it reads from Google and what happens to it."
+  />
+
+  <section class="section privacy-body">
+    <div class="frame">
+      <div class="prose">
+        <h2>Who this covers</h2>
+        <p>
+          Jarvis is a private, personal project. Its only user is me, Lucas Bianco. It is not a public app, it has no
+          sign-ups, and it is not offered to anyone else.
+        </p>
+
+        <h2>What Jarvis reads from Google</h2>
+        <p>Jarvis asks Google for two read-only permissions on my own Google account:</p>
+        <ul>
+          <li><strong>See my list of calendars</strong> (<code>calendar.calendarlist.readonly</code>).</li>
+          <li><strong>See the events on those calendars</strong> (<code>calendar.events.readonly</code>).</li>
+        </ul>
+        <p>
+          It cannot create, change or delete events, and it asks for nothing else: no email, contacts, files or
+          other Google data.
+        </p>
+
+        <h2>How it is used</h2>
+        <p>
+          The events are shown on screens in my room: today's timeline, upcoming deadlines and reminders. That is the
+          only use.
+        </p>
+
+        <h2>Where it is stored</h2>
+        <p>
+          Event data is kept only on my own devices, a small computer at home that runs the dashboard. The sign-in token
+          is stored in a private settings file on those same devices and never published.
+        </p>
+
+        <h2>Sharing</h2>
+        <p>
+          Google data is never sold, shared with anyone, sent to other companies, used for advertising, or used to
+          train AI models. No analytics or tracking services receive it.
+        </p>
+
+        <h2>Limited Use</h2>
+        <p>
+          Jarvis's use and transfer of information received from Google APIs adheres to the
+          <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data
+          Policy</a>, including the Limited Use requirements.
+        </p>
+
+        <h2>Keeping and deleting data</h2>
+        <p>
+          Events are refreshed regularly and older copies are replaced. Access can be removed at any time from
+          <a href="https://myaccount.google.com/permissions">Google Account → Third-party connections</a>; after that,
+          Jarvis can no longer read anything, and I delete its stored copy from my devices.
+        </p>
+
+        <h2>Contact</h2>
+        <p>Questions about this policy: <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+      </div>
+    </div>
+  </section>
+</Base>
